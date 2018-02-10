@@ -1,8 +1,19 @@
+;;; to do:
+
+;;; add cf certainties (in deftemplate as default --> SO WE CAN CHANGE THE DEFAULTS IF A PERSON IS IRRATIONAL)
+;;; then we need a * indicator like pet --> easy
+;;; then two options with the 'black box' mechanism:
+;;; 1. with salience -10 get all inputs and calculate result;;; downside of this method is that we cannot have a in between
+;;; 2. function for each value that ~default (no not valid)... =new or something do the calculation
+;;; make a ranked grouping system.
+
+
 ;;; idea: in stead of changing all the elements of the different facts, we should rather
 ;;; make a user profile, that in the very end leads to one algorithm that selects (groups of
 ;;; charities based on these answers. This way we don't have to assert all 2000 charities with each question :-)
 ;;; Note that Charles also confesses in his solution that this is not the most elegant 
 ;;; and efficient one.
+
 
 (deftemplate current_goal (slot goal) (slot cf)) ;; the top-level
 ;;; some global variables
@@ -45,7 +56,7 @@
 (type NUMBER)
 ; default value of field age
 (default 40))
-
+(slot age-cf)
 )
 
 (deftemplate preferences-user
@@ -142,9 +153,6 @@
 
 ;JUST COPY THESE
 
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; BUSINESS RULES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -192,6 +200,7 @@ Possible answers (enter the number): 1 (totally not important) 2 (not really imp
 (defrule recommend_charity
 	(declare (salience -10))
     (background-info(ratio-or-emo "1"))
+    (background-info(health-cf 0.5))
     (background-info(healthsector "1"))
     => 
 	(printout t "Our recommendation is as follows: YOU SHOULD BE ASHAMED OF YOURSELF" crlf)
