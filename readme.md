@@ -1,6 +1,7 @@
 ## A Knowledge based system to recommend charities in Singapore
 
 [1. Data Set](#data-set)
+
 [2. How to Import facts from CSV file](#how-to-import-facts-from-csv-file)
 
 ### Data Set
