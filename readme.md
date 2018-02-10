@@ -38,7 +38,12 @@ title,url,category
 "CLIPS","http://clipsrules.sourceforge.net/","book"
 ```
 
-3. Run CSV-Import command
+3. Load CSV library
+```
+CLIPS> (load "csv.clp")
+```
+
+4. Run CSV-Import command
 
 **Format**
 ```
@@ -49,7 +54,7 @@ CLIPS> (CSV-import "filename" template-name)
 CLIPS> (CSV-import "link.csv" link)
 ```
 
-4. Verify the facts
+5. Verify the facts
 ```
 CLIPS> (facts)
 f-1     (link (title "CLIPSESG") (url "http://groups.google.com/group/CLIPSESG") (category "code"))
