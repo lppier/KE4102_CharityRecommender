@@ -124,7 +124,13 @@
 (default "3"))
 )
 
-
+(deftemplate sector
+ (slot name)
+ (type STRING)
+ (slot cf)
+ (type NUMBER)
+ (default 0.7)
+)
 ;;; Just thought: if we use the abovementioned strat then we actually don't need deftemplate for 
 ;;; the user pref because we can also put them in deffacts... oh well...
 
@@ -199,9 +205,9 @@ Possible answers (enter the number): 1 (totally not important) 2 (not really imp
 
 (defrule recommend_charity
 	(declare (salience -10))
-    (background-info(ratio-or-emo "1"))
+    (background-info(ratio-or-emo 1))
     (background-info(health-cf 0.5))
-    (background-info(healthsector "1"))
+    (background-info(healthsector 1))
     => 
 	(printout t "Our recommendation is as follows: YOU SHOULD BE ASHAMED OF YOURSELF" crlf)
 )
