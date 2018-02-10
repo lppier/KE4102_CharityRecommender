@@ -42,7 +42,7 @@ title,url,category
 
 **Format**
 ```
-CLIPS> CSV-import "filename" template-name
+CLIPS> (CSV-import "filename" template-name)
 ```
 **Example**
 ```
