@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This program is written by Charles Pang, 2018, ISS NUS (Copyright) 
 ;; This is a rule-based system for recommending a pet (red_cross, blue_cross, yellow_cross, purple_cross, black_cross) to
-;; the user. It is an interactive system that makes use of certainty factors. 
+;; the user. It is an interactive system that makes use of certainty factors.  
 ;; 
 ;; Progamming is an art more than a science. The solution here is not the most elegant and even
 ;; not the most efficient ... but I have traded those for readability and simplicity in design
