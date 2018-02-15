@@ -63,7 +63,7 @@ For a total of 2 facts.
 
 ```
 
-# Clips_Project
+# Clips_Project (Java GUI)
 
 **For Development :** 
 
@@ -92,7 +92,7 @@ Notes :
 
 Currently, it is still based on the AnimalDemo codes. *work in progress!*
 
-# Code Workings
+### Code Workings
 
 Find the fact UI-state (triggered for every question)  
 FactAddressValue fv = clips.findFact("UI-state");
