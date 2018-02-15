@@ -90,7 +90,7 @@ class CharityRecommender implements ActionListener {
 
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
-                k_ans.add("(assert (working_goal (goal yellow_cross) (cf (* 0.5 0.7))))"); // to do, get yellow_cross cf from fact list
+                k_ans.add("(assert (working_goal (goal yellow_cross) (cf (* 0.5 0.7))))"); // TODO, get current facts value and put in place of 0.5 here, and also for all rules
                 k_ans.add("(assert (working_goal (goal blue_cross) (cf (* 0.5 0.7))))");
                 k_ans.add("(assert (current_question charity_size))");
                 Vector<String> m_ans = new Vector<>();
