@@ -112,16 +112,13 @@ public class CharityRecommender implements ActionListener {
 
             {   // charity_size qn - NEED TO GET ACTUAL CF VALUE FROM list of facts: Idea get from latest_Facts and replace symbol with number
                 Vector<String> s_ans = new Vector<>();
-                s_ans.add("(assert (working_goal (goal yellow_cross) (cf (* 0.5 0.7))))"); // TODO, get yellow_cross cf from fact list
-                s_ans.add("(assert (working_goal (goal blue_cross) (cf (* 0.5 0.7))))");
+                s_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))"); // TODO, get yellow_cross cf from fact list
                 s_ans.add("(assert (current_question conclusion))");
                 Vector<String> m_ans = new Vector<>();
-                m_ans.add("(assert (working_goal (goal yellow_cross) (cf (* 0.5 0.4))))");
-                m_ans.add("(assert (working_goal (goal red_cross) (cf (* 0.5 0.8))))");
+                m_ans.add("(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE)))");
                 m_ans.add("(assert (current_question conclusion))");
                 Vector<String> l_ans = new Vector<>();
-                l_ans.add("(assert (working_goal (goal purple_cross) (cf (* 0.5 0.9))))");
-                l_ans.add("(assert (working_goal (goal black_cross) (cf (* 0.5 0.9))))");
+                l_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
                 l_ans.add("(assert (current_question conclusion))");
                 charity_size_hash.put("s", s_ans);
                 charity_size_hash.put("m", m_ans);

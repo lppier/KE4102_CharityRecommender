@@ -206,6 +206,24 @@
     (retract ?fcq)
 )
 
+;**** Rule3: Ask for charity size
+(defrule charity_size
+    (continue_interview)
+    (current_question charity_size)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>	 (retract ?f1)
+     (assert (UI-state
+              (question "Do you like small, midsize or large charity?")
+              (relation-asserted charity_size)
+              (valid-answers s m l)
+              (display-answers "Small" "Medium" "Large")
+              (state interview)))
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; ENGINE RULE (RULE THAT SELECTS THE RIGHT CHARITIES AND ADJUSTS THEIR CF)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -222,3 +240,31 @@
     ; assert the working goal to fire the combination rules
     (assert (working_goal (goal ?any_charity) (cf (* ?cf_any_charity ?cf_variable))))
 )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; RECOMMENDATIONS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defrule compile_recommendations
+        (continue_interview)
+        (current_question conclusion)
+	(current_goal (goal red_cross) (cf ?cf-r))
+	(current_goal (goal blue_cross) (cf ?cf-m))
+	(current_goal (goal yellow_cross) (cf ?cf-f))
+	(current_goal (goal purple_cross) (cf ?cf-c))
+	(current_goal (goal black_cross) (cf ?cf-d))
+        ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+        ?fci <- (continue_interview)
+        ?fcq <- (current_question ?f)
+=>      (retract ?f1)
+        (assert (UI-state
+                (question "Here are your results: ")
+                (relation-asserted conclusion)
+                (valid-answers)
+                (display-answers)
+                (state conclusion)))
+        (retract ?fci)
+        (retract ?fcq)
+        (assert (recomendation (red_cross ?cf-r) (blue_cross ?cf-m) (yellow_cross ?cf-f) (purple_cross ?cf-c) (black_cross ?cf-d)))
+)
+
