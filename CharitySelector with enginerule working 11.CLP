@@ -5,9 +5,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; To do's 
-;; adjust rule 3 in line with previous two
-
 ;;Ideas:
 ;; Rationality will influence the type of questions rather than the charities
 ;; Age will be a combined rule --> see rule 4 of the pet recommender
@@ -39,9 +36,9 @@
 	(current_fact (fact blue_cross) (cf 0.5)
                 (all_vars tax health medium kind))
 	(current_fact (fact yellow_cross) (cf 0.5)
-                (all_vars notax health medium volunteer))
+                (all_vars notax community medium volunteer))
 	(current_fact (fact purple_cross) (cf 0.5)
-                (all_vars tax health medium money))
+                (all_vars tax community medium money))
 	(current_fact (fact black_cross) (cf 0.5)
                 (all_vars tax health medium money))
 
@@ -101,7 +98,7 @@
 )
 
 
-;**** Rule3: Ask for donation size --> old fashioned way, still have to convert.
+;**** Rule3: Ask for donation size 
 (defrule charity_size
 =>	(printout t crlf "Do you prefer small, midsize or large charities? (s/m/l)") 
 	(bind ?response (read))
