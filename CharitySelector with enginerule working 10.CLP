@@ -12,13 +12,6 @@
 (deftemplate current_fact (slot fact) 
                 (slot cf) 
                 (multislot all_vars) ;contains all applicable parameters.               
-                (slot notax(type NUMBER))
-                (slot large(type NUMBER))
-                (slot medium(type NUMBER))
-                (slot small(type NUMBER))
-                (slot health_sector(type NUMBER))
-                (slot poverty_sector(type NUMBER))
-                (slot rational(type NUMBER))
 )
 (deftemplate current_goal (slot goal) (slot cf)) ;; the top-level
 (deftemplate working_goal (slot goal) (slot cf)) ;; 
