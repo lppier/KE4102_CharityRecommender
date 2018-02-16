@@ -1,9 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; For understanding, please use the *Watch all command
-;; 
-;; Progamming is an art more than a science. The solution here is not the most elegant and even
-;; not the most efficient ... but I have traded those for readability and simplicity in design
-;; so that you can follow the english rules closely and kickstart your passion in AI and CLIPS!
+;; You can use the (watch all) command or the agenda function in IDE. 
+;; I commented the final salience so you can see easily what happens
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -185,15 +182,14 @@
 )
 
 
-
-
 ;**** Print out the final results
 ; this is not an elegant way to program - imagine if you have 30 current_goals!
 ; also note the output is not sorted by CF
 
 ;I've deleted the salience to create some information
 (defrule compile_recommendations
-	(declare (salience -10))
+; you can comment the salience to get an easy insight in what it does
+	;(declare (salience -10))
 	(current_goal (goal red_cross) (cf ?cf-r))
 	(current_goal (goal blue_cross) (cf ?cf-m))
 	(current_goal (goal yellow_cross) (cf ?cf-f))
