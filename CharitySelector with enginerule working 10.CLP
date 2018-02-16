@@ -1,12 +1,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This program is written by Charles Pang, 2018, ISS NUS (Copyright) 
-;; This is a rule-based system for recommending a pet (red_cross, blue_cross, yellow_cross, purple_cross, black_cross) to
-;; the user. It is an interactive system that makes use of certainty factors.  
+;; For understanding, please use the *Watch all command
 ;; 
 ;; Progamming is an art more than a science. The solution here is not the most elegant and even
 ;; not the most efficient ... but I have traded those for readability and simplicity in design
 ;; so that you can follow the english rules closely and kickstart your passion in AI and CLIPS!
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DEFINING TEMPLATES AND FACTS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 
 (deftemplate current_fact (slot fact) 
@@ -26,12 +30,13 @@
 	(current_fact (fact blue_cross) (cf 0.5)
                 (all_vars tax health medium kind))
 	(current_fact (fact yellow_cross) (cf 0.5)
-                (all_vars tax health medium volunteer))
+                (all_vars notax health medium volunteer))
 	(current_fact (fact purple_cross) (cf 0.5)
                 (all_vars tax health medium money))
 	(current_fact (fact black_cross) (cf 0.5)
                 (all_vars tax health medium money))
 
+    ;see the pet recommender for how this works
 	(current_goal (goal red_cross) (cf 0.5))
 	(current_goal (goal blue_cross) (cf 0.5))
 	(current_goal (goal yellow_cross) (cf 0.5))
@@ -42,97 +47,30 @@
     (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; initialise current goal when a new_goal is asserted
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; (defrule initialise-current-goal
-;	(working_goal (goal ?ng) (cf ?cfng))
-;	(not (current_goal (goal ?cg) (cf ?cfg)))
-;	?newg <- (working_goal (goal ?ng) (cf ?cfng))
-;=> 	(assert (current_goal (goal ?ng) (cf ?cfng)))
-;	(retract ?newg)
-;)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; CF combination for multiple conclusions RULES
-;;; treat this as a black-box 
-
-; you get the input and this will in the pet case always add if it is positive!
-; in the end we have some negatives.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;combine POSITIVE certainty factors for multiple conclusions
-;cf(cf1,cf2) = cf1 + cf2 * (1- cf1)
-
-(defrule combine-positive-cf
-;;;;;;;;;;;;;;;;;;problem: if you use branch indicators the next question will fire before the combination black box
-  (declare (salience 101))
-  ?f1 <- (current_goal (goal ?g)(cf ?cf1&:(>= ?cf1 0)))
-  ?f2 <- (working_goal (goal ?g)(cf ?cf2&:(>= ?cf2 0)))
-  (test (neq ?f1 ?f2)) ; test pointers and not value
-  =>
-  (retract ?f2)
-  (modify ?f1 (cf =(+ ?cf1 (* ?cf2 (- 1 ?cf1)))))
-  (printout t crlf "+++++++++++++++++++++++++++++++++++++new value " (fact-slot-value ?f1 cf))
-)
-
-;combine NEGATIVE cf
-;cf(cf1,cf2) = cf1 + cf2 * (1 + cf1)
-
-(defrule combine-neg-cf
- (declare (salience 100))
-  ?f1 <- (current_goal   (goal ?g)(cf ?cf1&:(< ?cf1 0)))
-  ?f2 <- (working_goal (goal ?g)(cf ?cf2&:(< ?cf2 0)))
-  (test (neq ?f1 ?f2))
-  =>
-  (retract ?f2)
-  (modify ?f1 (cf =(+ ?cf1 (* ?cf2 (+ 1 ?cf1)))))
-  (printout t crlf "--------------------------------new value "(fact-slot-value ?f1 cf))
-
-)
-
-;combine one POSITIVE and one NEGATIVE
-;cf(cf1,cf2) = (cf1 + cf2) / 1 - MIN[abs(cf1),abs(cf2)]
-
-(defrule neg-pos-cf
- (declare (salience 100))
-  ?f1 <- (current_goal (goal ?g) (cf ?cf1))
-  ?f2 <- (working_goal (goal ?g) (cf ?cf2))
-  (test (neq ?f1 ?f2))
-  (test (< (* ?cf1 ?cf2) 0))
-  =>
-  (retract ?f2)
-  (modify ?f1 (cf =(/ (+ ?cf1 ?cf2) (- 1 (min (abs ?cf1) (abs ?cf2))))))
-  (printout t crlf "---------------+++++++++++++++++++new value "(fact-slot-value ?f1 cf))
-
-)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; BUSINESS RULES
-;;; note that stage1 and stage2 are combined into one assert statement within the defrule
+; The idea is: you want to ask for input, and then use that input to get the relevant cf for all relevant charities (see engine rule)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;**** Rule 1: Ask user preference for size.
-; The idea is: you want to ask for input, and then use that input to get the relevant cf for all relevant charities (see engine rule)
-
-
 (defrule donation_type
-    (declare (salience 10))
+    ; 1. You need an indicator for starting + CLIPS does not let you change this if you don't put it into a variable:
     ?branch_indicator <- (branch_indicator (name only_kind_or_time)(true_or_false UNKNOWN))
     =>	
     (printout t crlf " What is your preferred donation type? ") 
 	(printout t crlf "k=donation in kind,  m=donation in money, v=donation in volunteering (type in k/m/v)? ") 
 	(bind ?response (read))
 	(switch ?response
-        ; Create a name variable as input for the collector function
+        ;2a Create a name fact as input for the collector function (engine rule) --> in this case we want to edit the cf with 1 for all charities with the name 'kind'. Perhaps it is better to edit money and volunteer with -1, have to see.
 		(case k then (assert (nameofvariable (name kind)(cf 1)(true_or_false TRUE)))
+        ;2b here we make sure that the second rule, tax, doesn't fire.
                 (modify ?branch_indicator (true_or_false TRUE)))
         (case m then (assert (nameofvariable (name money)(cf 1)(true_or_false TRUE)))        
                 (modify ?branch_indicator (true_or_false FALSE)))
         (case v then (assert (nameofvariable (name volunteer)(cf 1)(true_or_false TRUE)))  
                 (modify ?branch_indicator (true_or_false TRUE)))
+        ;2c. the default is rest category (the wrong answer): ask again.        
         (default (printout t crlf "Not a valid answer, please try again.")
                 (retract ?branch_indicator)
                 (assert (branch_indicator (name only_kind_or_time)(true_or_false UNKNOWN))))
@@ -175,16 +113,79 @@
 	)
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ENGINE RULE (RULE THAT SELECTS THE RIGHT CHARITIES AND ADJUSTS THEIR CF)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; **** the engine rule :-)
 (defrule selecting_the_right_charities
-; for the time being --> to prevent from going to the next question after this
+    ; *for the time being I kept salience in --> to prevent from going to the next question after this:
     (declare (salience 10))
+    ;1. branch ind is the name variable of the current variable which true_or_false is set to TRUE.
+    ; *previously I modified this fact but given that CLIPS only uses each fact + rule once (you can adjust this)
+    ; I removed that (it also gave some issues):
     ?branch_ind <- (nameofvariable (name ?any_variable) (cf ?cf_variable) (true_or_false TRUE))
-	?charity_adress <- (current_fact (fact ?any_charity) (cf ?cf_any_charity) (all_vars $? ?any_variable $?))
+    ; 2. charity adress is the charity from the csv that has all_vars x in their multislot (eg. kind, health)
+    ?charity_adress <- (current_fact (fact ?any_charity) (cf ?cf_any_charity) (all_vars $? ?any_variable $?))
     =>
+    ; assert the working goal to fire the combination rules
     (assert (working_goal (goal ?any_charity) (cf (* ?cf_any_charity ?cf_variable))))
 )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; COMBINATION RULES (Combining the cf's)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defrule combine-positive-cf
+; *To keep in mind: if you remove this salience and use branch indicators and assert them after you make a 
+; new working_goal, the next question will fire before the combination black box, so the order is important
+; for now I keep it in
+  (declare (salience 2))
+  ?f1 <- (current_goal (goal ?g)(cf ?cf1&:(>= ?cf1 0)))
+  ?f2 <- (working_goal (goal ?g)(cf ?cf2&:(>= ?cf2 0)))
+  (test (neq ?f1 ?f2)) ; test pointers and not value
+  =>
+  (retract ?f2)
+  (modify ?f1 (cf =(+ ?cf1 (* ?cf2 (- 1 ?cf1)))))
+; I use these print outs to get a better understanding, but feel free to remove them
+;  (printout t crlf "+++++++++++++++++++++++++++++++++++++new value " (fact-slot-value ?f1 cf))
+)
+
+;combine NEGATIVE cf
+;cf(cf1,cf2) = cf1 + cf2 * (1 + cf1)
+
+(defrule combine-neg-cf
+ (declare (salience 1))
+  ?f1 <- (current_goal   (goal ?g)(cf ?cf1&:(< ?cf1 0)))
+  ?f2 <- (working_goal (goal ?g)(cf ?cf2&:(< ?cf2 0)))
+  (test (neq ?f1 ?f2))
+  =>
+  (retract ?f2)
+  (modify ?f1 (cf =(+ ?cf1 (* ?cf2 (+ 1 ?cf1)))))
+;  (printout t crlf "--------------------------------new value "(fact-slot-value ?f1 cf))
+
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; final print out function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;combine one POSITIVE and one NEGATIVE
+;cf(cf1,cf2) = (cf1 + cf2) / 1 - MIN[abs(cf1),abs(cf2)]
+
+(defrule neg-pos-cf
+ (declare (salience 1))
+  ?f1 <- (current_goal (goal ?g) (cf ?cf1))
+  ?f2 <- (working_goal (goal ?g) (cf ?cf2))
+  (test (neq ?f1 ?f2))
+  (test (< (* ?cf1 ?cf2) 0))
+  =>
+  (retract ?f2)
+  (modify ?f1 (cf =(/ (+ ?cf1 ?cf2) (- 1 (min (abs ?cf1) (abs ?cf2))))))
+;  (printout t crlf "---------------+++++++++++++++++++new value "(fact-slot-value ?f1 cf))
+
+)
+
+
+
 
 ;**** Print out the final results
 ; this is not an elegant way to program - imagine if you have 30 current_goals!
