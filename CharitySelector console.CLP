@@ -1,7 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; You can use the (watch all) command or the agenda function in IDE. 
-;; I commented the final salience so you can see easily what happens 
-;;; comments with stars (*) are only for improvement, not for understanding
+;; For easier understanding use:
+;; the (watch all) command 
+;; the agenda function in IDE. 
+;; I commented the final salience so you can see easily what happens for every question
+;; use the printout from the cf rules to see the output
+;; comments with stars (*) are only for improvement, not for understanding
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9,7 +12,11 @@
 ;; Rationality will influence the type of questions rather than the charities
 ;; Age will be a combined rule --> see rule 4 of the pet recommender
 ;; Make use of global variables for more complexity
-;; 
+;; Try to get likert scales in global variables and use them to multiply with the 
+;;   cf of a certain variable to get likert scales
+;; I think we should not mess with current_fact cf, as this will increase both 
+;;   negative as well as positive indicators (makes no sense to make this larger
+;;   for one charity)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -29,7 +36,8 @@
 (deftemplate recommendation (slot red_cross) (slot blue_cross) (slot yellow_cross) (slot purple_cross) (slot black_cross))
 (deftemplate nameofvariable (slot name) (slot cf)(slot true_or_false))
 
-;;; this will come from csv, only thing needed is some preprocessing
+;;; *this will probably come from csv, only thing needed is some preprocessing (if
+;;; healthsector ---> add health to all_vars, something like that)
 (deffacts load-facts
 	(current_fact (fact red_cross) (cf 0.5)
                 (all_vars notax health large money))
@@ -42,7 +50,7 @@
 	(current_fact (fact black_cross) (cf 0.5)
                 (all_vars tax health medium money))
 
-    ;see the pet recommender for how this works
+    ;also see the pet recommender, I just copied this
 	(current_goal (goal red_cross) (cf 0.5))
 	(current_goal (goal blue_cross) (cf 0.5))
 	(current_goal (goal yellow_cross) (cf 0.5))
@@ -88,10 +96,10 @@
     (branch_indicator (name only_kind_or_time) (true_or_false FALSE))	
 =>	(printout t crlf "Do you like your tax returned? (y/n)") 
     (bind ?response (read))
-; Create a name variable as input for the next function --> has to become a modify!
+; *Create a name variable as input for the next function --> can become a modify!
     (if (eq ?response y) then 
         (assert (nameofvariable (name notax)(cf -1)(true_or_false TRUE)))
-;change this in a version that acknowledges a bad answer
+; *change this in a version that acknowledges a bad answer like above (switch)
     else
         (assert (nameofvariable (name notax)(cf 0.1)(true_or_false TRUE)))
 	)
@@ -103,7 +111,7 @@
 =>	(printout t crlf "Do you prefer small, midsize or large charities? (s/m/l)") 
 	(bind ?response (read))
 	(switch ?response
-; edit true_or_false to something more intelligable
+; *edit true_or_false to something more intelligable --> run_engine_rule
 		(case s then (assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE))))
 		(case m then 	(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE))))
 		(case l then 	(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE))))
@@ -115,7 +123,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defrule selecting_the_right_charities
-    ; *for the time being I kept salience in --> to prevent from going to the next question after this:
+    ; *for the time being I kept salience in --> to make sure it doesn't go to the next question after this:
     (declare (salience 10))
     ;1. branch ind is the name variable of the current variable which true_or_false is set to TRUE.
     ; *previously I modified this fact but given that CLIPS only uses each fact + rule once (you can adjust this)
@@ -133,9 +141,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defrule combine-positive-cf
-; *To keep in mind: if you remove this salience and use branch indicators and assert them after you make a 
-; new working_goal, the next question will fire before the combination black box, so the order is important
-; for now I keep it in
+; *To keep in mind: if you remove this salience and use branch indicators and assert 
+; them after you make a new working_goal, the next question will fire before the 
+; combination black box (conflict resolution --> newest rule wins)
   (declare (salience 2))
   ?f1 <- (current_goal (goal ?g)(cf ?cf1&:(>= ?cf1 0)))
   ?f2 <- (working_goal (goal ?g)(cf ?cf2&:(>= ?cf2 0)))
@@ -143,7 +151,7 @@
   =>
   (retract ?f2)
   (modify ?f1 (cf =(+ ?cf1 (* ?cf2 (- 1 ?cf1)))))
-; I use these print outs to get a better understanding, but feel free to remove them
+; *I use these print outs to get a better understanding, but feel free to remove them
 ;  (printout t crlf "+++++++++++++++++++++++++++++++++++++new value " (fact-slot-value ?f1 cf))
 )
 
@@ -161,9 +169,6 @@
 ;  (printout t crlf "--------------------------------new value "(fact-slot-value ?f1 cf))
 
 )
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; final print out function
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;combine one POSITIVE and one NEGATIVE
 ;cf(cf1,cf2) = (cf1 + cf2) / 1 - MIN[abs(cf1),abs(cf2)]
@@ -181,12 +186,15 @@
 
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; final print out function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;**** Print out the final results
-; this is not an elegant way to program - imagine if you have 30 current_goals!
-; also note the output is not sorted by CF
+;** this is not an elegant way to program - imagine if you have 30 current_goals!
+;* also note the output is not sorted by CF
 
-;I've deleted the salience to create some information
+;I've deleted the salience to create some information in between
 (defrule compile_recommendations
 ; you can comment the salience to get an easy insight in what it does
 	;(declare (salience -10))
@@ -196,7 +204,7 @@
 	(current_goal (goal purple_cross) (cf ?cf-c))
 	(current_goal (goal black_cross) (cf ?cf-d))
 =>	(assert (recommendation (red_cross ?cf-r) (blue_cross ?cf-m) (yellow_cross ?cf-f) (purple_cross ?cf-c) (black_cross ?cf-d)))
-	(printout t crlf "Our recommendation is as currently as follows :")
+	(printout t crlf "Our recommendation is (currently) as follows :")
 	(printout t crlf "red_cross: " (integer (* ?cf-r 100)) "%")
 	(printout t crlf "blue_cross   : " (integer (* ?cf-m 100)) "%")
 	(printout t crlf "yellow_cross   : " (integer (* ?cf-f 100)) "%")
