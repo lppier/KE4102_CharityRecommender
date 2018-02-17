@@ -97,7 +97,7 @@ public class CharityRecommender implements ActionListener {
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
                 k_ans.add("(assert (nameofvariable (name kind)(cf 1)(true_or_false TRUE)))"); // TODO, get current facts value and put in place of 0.5 here, and also for all rules
-
+                k_ans.add("(assert (current_question tax_exemption))");
 
                 Vector<String> m_ans = new Vector<>();
                 m_ans.add("(assert (nameofvariable (name money)(cf 1)(true_or_false TRUE)))");
@@ -107,6 +107,7 @@ public class CharityRecommender implements ActionListener {
 
                 Vector<String> v_ans = new Vector<>();
                 v_ans.add("(assert (nameofvariable (name volunteer)(cf 1)(true_or_false TRUE)))");
+                v_ans.add("(assert (current_question conclusion))");
 
 
                 donation_hash.put("k", k_ans);
