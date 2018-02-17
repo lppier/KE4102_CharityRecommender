@@ -49,13 +49,17 @@ or makeInstance call, retain it and then release it after the call is made.
 */
 
 public class CharityRecommender implements ActionListener {
+
+    // AC: Update this location to point to the absolute location is your machine. We get this value from the resource which was not working on my dev environment
+    private String CLIPS_FILE_LOCATION = "H:\\KE4102 Project\\code\\Clips_Project_Updated\\src\\com\\company\\resources\\CharitySelector_Pier_Mod.clp";
+
     private enum InterviewState {
         GREETING,
         INTERVIEW,
         CONCLUSION
     }
 
-    ;
+
 
     JLabel displayLabel;
     JButton nextButton;
@@ -226,7 +230,7 @@ public class CharityRecommender implements ActionListener {
 //            clips.loadFromResource("/resources/charities_reco.clp");
 
             // Added by Pier to test assertion of charity
-            String clipsCode = new Helpers().getFileData("H:\\KE4102 Project\\code\\Clips_Project_Updated\\src\\com\\company\\resources\\CharitySelector_Pier_Mod.clp");
+            String clipsCode = new Helpers().getFileData(CLIPS_FILE_LOCATION);
             clips.loadFromString(clipsCode);
 
 
@@ -360,17 +364,26 @@ public class CharityRecommender implements ActionListener {
 
         String theText;
         if (fv.getSlotValue("state").toString().equals("conclusion")) {
-            //freco = clips.findFact("recomendation");
+            List<RecommendedCharityModel> recommendedCharities = new ArrayList<RecommendedCharityModel>();
             getGoals();
             theText="";
-            for (int i=0; i < goal_names.size(); i++)
-                theText += goal_names.elementAt(i).toString() + " " + goal_values.elementAt(i).toString() + " ";
+            for (int i=0; i < goal_names.size(); i++) {
+                RecommendedCharityModel recommendedCharity = new RecommendedCharityModel(goal_names.elementAt(i).toString(), goal_values.elementAt(i).toString());
+                recommendedCharities.add(recommendedCharity);
+            }
 
-//            theText =   " Red cross : " + ((freco.getSlotValue("red_cross")).getValue()).toString() +
-//                        " Blue cross : " + ((freco.getSlotValue("blue_cross")).getValue()).toString() +
-//                        " Yellow cross : " + ((freco.getSlotValue("yellow_cross")).getValue()).toString() +
-//                        " Purple cross : " + ((freco.getSlotValue("purple_cross")).getValue()).toString() +
-//                        " Black cross : " + ((freco.getSlotValue("black_cross")).getValue()).toString();
+            // Sort the recommended charities by their recommendation level in descending order
+            Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>()
+            {
+               public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2){
+                   return - Double.compare(c1.RecommendedValue, c2.RecommendedValue);
+               }
+            });
+
+            // get the value of the text to show
+            for(RecommendedCharityModel charityModel: recommendedCharities){
+                theText += charityModel.GetCharityNameAndRecommendedValueAppended();
+            }
         }
         else {
             theText = ((StringValue) fv.getSlotValue("question")).getValue();
@@ -586,18 +599,26 @@ public class CharityRecommender implements ActionListener {
         for (int end = boundary.next(); end != BreakIterator.DONE;
              start = end, end = boundary.next()) {
             String word = text.substring(start, end);
-            trial.append(word);
-            int trialWidth = SwingUtilities.computeStringWidth(fm, trial.toString());
-            if (trialWidth > containerWidth) {
-                trial = new StringBuffer(word);
-                real.append("<br>");
-                real.append(word);
-            } else if (trialWidth > desiredWidth) {
+
+            // Add a line break if the current word contains a line separator
+            if(word.contains(System.lineSeparator())){
                 trial = new StringBuffer("");
-                real.append(word);
                 real.append("<br>");
-            } else {
-                real.append(word);
+            }
+            else {
+                trial.append(word);
+                int trialWidth = SwingUtilities.computeStringWidth(fm, trial.toString());
+                if (trialWidth > containerWidth) {
+                    trial = new StringBuffer(word);
+                    real.append("<br>");
+                    real.append(word);
+                } else if (trialWidth > desiredWidth) {
+                    trial = new StringBuffer("");
+                    real.append(word);
+                    real.append("<br>");
+                } else {
+                    real.append(word);
+                }
             }
         }
 
