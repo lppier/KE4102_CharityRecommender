@@ -83,7 +83,7 @@ public class CharityRecommender implements ActionListener {
 
     CharityRecommender() {
         try {
-            charityResources = ResourceBundle.getBundle("AnimalResources", Locale.getDefault());
+            charityResources = ResourceBundle.getBundle("CharityResources", Locale.getDefault());
 
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
@@ -222,7 +222,6 @@ public class CharityRecommender implements ActionListener {
 //            clips.loadFromResource("/resources/charities_reco.clp");
 
             // Added by Pier to test assertion of charity
-            // String clipsCode = new Helpers().getFileData(CLIPS_FILE_LOCATION);
             String clipsCode = new Helpers().getFileData("/clips/CharitySelector_Pier_Mod.clp");
             clips.loadFromString(clipsCode);
 
