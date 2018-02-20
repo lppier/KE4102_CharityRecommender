@@ -8,10 +8,6 @@ import java.util.*;
 
 import net.sf.clipsrules.jni.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
 import java.util.List;
 
 
@@ -50,16 +46,11 @@ or makeInstance call, retain it and then release it after the call is made.
 
 public class CharityRecommender implements ActionListener {
 
-    // AC: Update this location to point to the absolute location is your machine. We get this value from the resource which was not working on my dev environment
-    private String CLIPS_FILE_LOCATION = "H:\\KE4102 Project\\code\\Clips_Project_Updated\\src\\com\\company\\resources\\CharitySelector_Pier_Mod.clp";
-
     private enum InterviewState {
         GREETING,
         INTERVIEW,
         CONCLUSION
     }
-
-
 
     JLabel displayLabel;
     JButton nextButton;
@@ -92,7 +83,7 @@ public class CharityRecommender implements ActionListener {
 
     CharityRecommender() {
         try {
-            charityResources = ResourceBundle.getBundle("com.company.resources.AnimalResources", Locale.getDefault());
+            charityResources = ResourceBundle.getBundle("AnimalResources", Locale.getDefault());
 
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
@@ -231,7 +222,8 @@ public class CharityRecommender implements ActionListener {
 //            clips.loadFromResource("/resources/charities_reco.clp");
 
             // Added by Pier to test assertion of charity
-            String clipsCode = new Helpers().getFileData(CLIPS_FILE_LOCATION);
+            // String clipsCode = new Helpers().getFileData(CLIPS_FILE_LOCATION);
+            String clipsCode = new Helpers().getFileData("/clips/CharitySelector_Pier_Mod.clp");
             clips.loadFromString(clipsCode);
 
 
