@@ -39,16 +39,11 @@
 ;;; you can give it a lower CF to begin with
 (deffacts load-facts
     ;;; Changed Charles
-	(current_fact (fact red_cross) (cf 0.5)
-                    (all_vars notax health large money))
-    	(current_fact (fact blue_cross) (cf 0.5)
-                    (all_vars tax health medium kind))
-    	(current_fact (fact yellow_cross) (cf 0.5)
-                    (all_vars notax health medium volunteer))
-    	(current_fact (fact purple_cross) (cf 0.5)
-                    (all_vars tax health medium money))
-    	(current_fact (fact black_cross) (cf 0.5)
-                    (all_vars tax health medium money))
+	(current_fact (fact red_cross) (cf 0.5) (all_vars notax health large money))
+    (current_fact (fact blue_cross) (cf 0.5) (all_vars tax health medium kind))
+    (current_fact (fact yellow_cross) (cf 0.5) (all_vars notax health medium volunteer))
+    (current_fact (fact purple_cross) (cf 0.5) (all_vars tax health medium money))
+    (current_fact (fact black_cross) (cf 0.5) (all_vars tax health medium money))
      ;;; End of change
 
 	(current_goal (goal red_cross) (cf 0.5))
@@ -154,7 +149,7 @@
    =>
     (retract ?f1)
     (assert (UI-state 
-                (question "Welcome to Charity Recommender! Do you want to start the recommendation?")
+                (question "Welcome to Give@SG! We will recommend a list of charities based on your preference.")
                 (relation-asserted greeting)
                 (valid-answers y)
                 (display-answers "Yes")

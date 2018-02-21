@@ -81,7 +81,78 @@ public class CharityRecommender implements ActionListener {
     Vector<String> goal_names = new Vector<>();
     Vector<Float> goal_values = new Vector<>();
 
-    CharityRecommender() {
+    private void initializeInterface() {
+        /*================================*/
+        /* Create a new JFrame container. */
+        /*================================*/
+
+        JFrame jfrm = new JFrame(charityResources.getString("CharityRecommender"));
+
+        /*=============================*/
+        /* Specify FlowLayout manager. */
+        /*=============================*/
+
+        jfrm.getContentPane().setLayout(new GridLayout(3, 1));
+
+        /*=================================*/
+        /* Give the frame an initial size. */
+        /*=================================*/
+
+        jfrm.setSize(600, 500);
+
+        /*=============================================================*/
+        /* Terminate the program when the user closes the application. */
+        /*=============================================================*/
+
+        jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        /*===========================*/
+        /* Create the display panel. */
+        /*===========================*/
+
+        JPanel displayPanel = new JPanel();
+        displayLabel = new JLabel();
+        displayPanel.add(displayLabel);
+
+        /*===========================*/
+        /* Create the choices panel. */
+        /*===========================*/
+
+        choicesPanel = new JPanel();
+        choicesButtons = new ButtonGroup();
+
+        /*===========================*/
+        /* Create the buttons panel. */
+        /*===========================*/
+
+        JPanel buttonPanel = new JPanel();
+
+        prevButton = new JButton(charityResources.getString("Prev"));
+        prevButton.setActionCommand("Prev");
+        buttonPanel.add(prevButton);
+        prevButton.addActionListener(this);
+
+        nextButton = new JButton(charityResources.getString("Next"));
+        nextButton.setActionCommand("Next");
+        buttonPanel.add(nextButton);
+        nextButton.addActionListener(this);
+
+        /*=====================================*/
+        /* Add the panels to the content pane. */
+        /*=====================================*/
+
+        jfrm.getContentPane().add(displayPanel);
+        jfrm.getContentPane().add(choicesPanel);
+        jfrm.getContentPane().add(buttonPanel);
+
+        /*====================*/
+        /* Display the frame. */
+        /*====================*/
+
+        jfrm.setVisible(true);
+    }
+
+    private boolean initializeStates() {
         try {
             charityResources = ResourceBundle.getBundle("CharityResources", Locale.getDefault());
 
@@ -131,100 +202,41 @@ public class CharityRecommender implements ActionListener {
                 tax_return_hash.put("y", y_ans);
                 tax_return_hash.put("n", n_ans);
             }
-
         } catch (MissingResourceException mre) {
             mre.printStackTrace();
-            return;
+            return false;
         }
-
-        /*================================*/
-        /* Create a new JFrame container. */
-        /*================================*/
-
-        JFrame jfrm = new JFrame(charityResources.getString("CharityRecommender"));
-
-        /*=============================*/
-        /* Specify FlowLayout manager. */
-        /*=============================*/
-
-        jfrm.getContentPane().setLayout(new GridLayout(3, 1));
-
-        /*=================================*/
-        /* Give the frame an initial size. */
-        /*=================================*/
-
-        jfrm.setSize(500, 400);
-
-        /*=============================================================*/
-        /* Terminate the program when the user closes the application. */
-        /*=============================================================*/
-
-        jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        /*===========================*/
-        /* Create the display panel. */
-        /*===========================*/
-
-        JPanel displayPanel = new JPanel();
-        displayLabel = new JLabel();
-        displayPanel.add(displayLabel);
-
-        /*===========================*/
-        /* Create the choices panel. */
-        /*===========================*/
-
-        choicesPanel = new JPanel();
-        choicesButtons = new ButtonGroup();
-
-        /*===========================*/
-        /* Create the buttons panel. */
-        /*===========================*/
-
-        JPanel buttonPanel = new JPanel();
-
-        prevButton = new JButton(charityResources.getString("Prev"));
-        prevButton.setActionCommand("Prev");
-        buttonPanel.add(prevButton);
-        prevButton.addActionListener(this);
-
-        nextButton = new JButton(charityResources.getString("Next"));
-        nextButton.setActionCommand("Next");
-        buttonPanel.add(nextButton);
-        nextButton.addActionListener(this);
-
-        /*=====================================*/
-        /* Add the panels to the content pane. */
-        /*=====================================*/
-
-        jfrm.getContentPane().add(displayPanel);
-        jfrm.getContentPane().add(choicesPanel);
-        jfrm.getContentPane().add(buttonPanel);
-
-        /*===================================*/
-        /* Initialize the state information. */
-        /*===================================*/
 
         variableAsserts = new ArrayList<String>();
         priorAnswers = new ArrayList<String>();
 
-        /*==================================*/
-        /* Load and run the animal program. */
-        /*==================================*/
+        return true;
+    }
 
-        clips = new Environment();
+    CharityRecommender() {
+        /*===================================*/
+        /* Initialize the state information. */
+        /*===================================*/
+        Boolean initStatus = initializeStates();
 
-        try {
+        if (initStatus) {
+            /*==================================*/
+            /* Load and run the animal program. */
+            /*==================================*/
+
+            clips = new Environment();
+
+            try {
 //            clips.loadFromResource("/resources/bcengine.clp");
 //            clips.loadFromResource("/resources/animal.clp");
 
-            // Added by Pier to test csv
+                // Added by Pier to test csv
 //            clips.loadFromResource("/resources/csv.clp");
 //            clips.loadFromResource("/resources/charities_reco.clp");
 
-            // Added by Pier to test assertion of charity
-            String clipsCode = new Helpers().getFileData("/clips/CharitySelector_Pier_Mod.clp");
-            clips.loadFromString(clipsCode);
-
+                // Added by Pier to test assertion of charity
+                String clipsCode = new Helpers().getFileData("/clips/CharitySelector.clp");
+                clips.loadFromString(clipsCode);
 
 //            try
 //            {
@@ -239,18 +251,18 @@ public class CharityRecommender implements ActionListener {
 //                { clips.loadFromResource("/resources/animal_en.clp"); }
 //            }
 
-            processRules();
+                processRules();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+
+            /*===================================*/
+            /* Initialize user interface. */
+            /*===================================*/
+            initializeInterface();
         }
-
-        /*====================*/
-        /* Display the frame. */
-        /*====================*/
-
-        jfrm.setVisible(true);
     }
 
     /*******************/
@@ -265,7 +277,6 @@ public class CharityRecommender implements ActionListener {
         printFacts();
         FactAddressValue fv = clips.findFact("UI-state");
         //FactAddressValue f_red_cross = clips.findFact("")
-        FactAddressValue freco;
         /*========================================*/
         /* Determine the Next/Prev button states. */
         /*========================================*/
@@ -276,11 +287,6 @@ public class CharityRecommender implements ActionListener {
             nextButton.setText(charityResources.getString("Restart"));
             prevButton.setVisible(true);
             choicesPanel.setVisible(false);
-
-
-
-
-
         } else if (fv.getSlotValue("state").toString().equals("greeting")) {
             interviewState = InterviewState.GREETING;
             nextButton.setActionCommand("Next");
@@ -353,31 +359,28 @@ public class CharityRecommender implements ActionListener {
         /*====================================*/
 
 
-
         String theText;
         if (fv.getSlotValue("state").toString().equals("conclusion")) {
             List<RecommendedCharityModel> recommendedCharities = new ArrayList<RecommendedCharityModel>();
             getGoals();
-            theText="";
-            for (int i=0; i < goal_names.size(); i++) {
+            theText = "";
+            for (int i = 0; i < goal_names.size(); i++) {
                 RecommendedCharityModel recommendedCharity = new RecommendedCharityModel(goal_names.elementAt(i).toString(), goal_values.elementAt(i).toString());
                 recommendedCharities.add(recommendedCharity);
             }
 
             // Sort the recommended charities by their recommendation level in descending order
-            Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>()
-            {
-               public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2){
-                   return - Double.compare(c1.RecommendedValue, c2.RecommendedValue);
-               }
+            Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>() {
+                public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2) {
+                    return -Double.compare(c1.RecommendedValue, c2.RecommendedValue);
+                }
             });
 
             // get the value of the text to show
-            for(RecommendedCharityModel charityModel: recommendedCharities){
+            for (RecommendedCharityModel charityModel : recommendedCharities) {
                 theText += charityModel.GetCharityNameAndRecommendedValueAppended();
             }
-        }
-        else {
+        } else {
             theText = ((StringValue) fv.getSlotValue("question")).getValue();
         }
         wrapLabelText(displayLabel, theText);
@@ -457,7 +460,7 @@ public class CharityRecommender implements ActionListener {
 
     // Print to console for debugging
     private void printFacts() {
-        System.out.println("####");
+        System.out.println("### Facts ###");
         for (FactInstance factInstance : latest_facts) {
             FactInstance fi = factInstance;
             System.out.print(fi.getRelationName() + " : ");
@@ -467,6 +470,7 @@ public class CharityRecommender implements ActionListener {
             }
             System.out.println("");
         }
+        System.out.println("#############");
     }
 
     private void getGoals() {
@@ -593,11 +597,10 @@ public class CharityRecommender implements ActionListener {
             String word = text.substring(start, end);
 
             // Add a line break if the current word contains a line separator
-            if(word.contains(System.lineSeparator())){
+            if (word.contains(System.lineSeparator())) {
                 trial = new StringBuffer("");
                 real.append("<br>");
-            }
-            else {
+            } else {
                 trial.append(word);
                 int trialWidth = SwingUtilities.computeStringWidth(fm, trial.toString());
                 if (trialWidth > containerWidth) {
