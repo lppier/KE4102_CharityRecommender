@@ -13,9 +13,10 @@
    (slot state (default interview)))                    ; 3 states: greeting, interview (mostly here) and conclusion
 
 ;;; Added by Charles
-(deftemplate current_fact (slot fact)
-                (slot cf)
-                (multislot all_vars) ;contains all applicable parameters.
+(deftemplate current_fact
+    (slot fact)
+    (slot cf)
+    (multislot all_vars) ;contains all applicable parameters.
 )
 ;;; End of addition
 
@@ -57,7 +58,7 @@
      ;;; End of change
 
       (UI-state
-            (question "Welcome to Charity Recommender! Do you want to start the recommendation?")
+            (question "Welcome to Give@SG, we will recommend a list of charities based on your preference.")
             (relation-asserted greeting)
             (valid-answers y)
             (display-answers "Yes")
@@ -143,13 +144,13 @@
 
 (defrule startup
    (current_question greeting)
-   ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s)) ; not req if no fact definition in front
+   ?f1 <- (UI-state (relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s)) ; not req if no fact definition in front
    ?fci <- (continue_interview)
    ?fcq <- (current_question ?f)
    =>
     (retract ?f1)
-    (assert (UI-state 
-                (question "Welcome to Give@SG! We will recommend a list of charities based on your preference.")
+    (assert (UI-state
+                (question "Welcome to Give@SG, we will recommend a list of charities based on your preference.")
                 (relation-asserted greeting)
                 (valid-answers y)
                 (display-answers "Yes")
@@ -173,11 +174,11 @@
     =>
       (retract ?f1)
       (assert (UI-state
-                  (question "What form of charity do you prefer doing?")
-                  (relation-asserted donation_type)
-                  (valid-answers k m v)
-                  (display-answers "Donation in kind" "Donation in money" "Donation by volunteering")
-                  (state interview)))
+                (question "What form of charity do you prefer doing?")
+                (relation-asserted donation_type)
+                (valid-answers k m v)
+                (display-answers "Donation in kind" "Donation in money" "Donation by volunteering")
+                (state interview)))
 	(retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
     (retract ?fcq)
 )
@@ -210,11 +211,11 @@
      ?fcq <- (current_question ?f)
 =>	 (retract ?f1)
      (assert (UI-state
-              (question "Do you like small, midsize or large charity?")
-              (relation-asserted charity_size)
-              (valid-answers s m l)
-              (display-answers "Small" "Medium" "Large")
-              (state interview)))
+                (question "Do you like small, midsize or large charity?")
+                (relation-asserted charity_size)
+                (valid-answers s m l)
+                (display-answers "Small" "Medium" "Large")
+                (state interview)))
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
      (retract ?fcq)
 )

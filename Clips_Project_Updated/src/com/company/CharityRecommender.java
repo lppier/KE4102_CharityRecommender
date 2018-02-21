@@ -44,112 +44,77 @@ or makeInstance call, retain it and then release it after the call is made.
 
 */
 
-public class CharityRecommender implements ActionListener {
+public class CharityRecommender {
 
-    private enum InterviewState {
+    private enum State {
         GREETING,
         INTERVIEW,
         CONCLUSION
     }
 
-    JLabel displayLabel;
-    JButton nextButton;
-    JButton prevButton;
-    JPanel choicesPanel;
-    ButtonGroup choicesButtons;
-    ResourceBundle charityResources;
+    private JFrame mainFrame;
+    private GreetingForm greetingForm = new GreetingForm(this);
+    private InterviewForm interviewForm = new InterviewForm(this);
+    private ConclusionForm conclusionForm = new ConclusionForm(this);
 
-    Environment clips;
-    boolean isExecuting = false;
-    Thread executionThread;
+    private ButtonGroup choicesButtons;
+    private ResourceBundle charityResources;
 
-    String lastAnswer;
-    String relationAsserted;
-    ArrayList<String> variableAsserts;
-    ArrayList<String> priorAnswers;
+    private Environment clips;
+    private State state;
+    private boolean isExecuting = false;
+    private Thread executionThread;
 
-    InterviewState interviewState;
+    private String lastAnswer;
+    private String relationAsserted;
+    private ArrayList<String> variableAsserts;
+    private ArrayList<String> priorAnswers;
 
-    List<FactInstance> latest_facts;
+    private List<FactInstance> latest_facts;
 
     // Hashtable storing the answers for each question. Pass in answer to get the vector of assert statements
-    Hashtable donation_hash = new Hashtable();
-    Hashtable charity_size_hash = new Hashtable();
-    Hashtable tax_return_hash = new Hashtable();
+    private Hashtable donation_hash = new Hashtable();
+    private Hashtable charity_size_hash = new Hashtable();
+    private Hashtable tax_return_hash = new Hashtable();
 
     // For result retrieval
-    Vector<String> goal_names = new Vector<>();
-    Vector<Float> goal_values = new Vector<>();
+    private Vector<String> goal_names = new Vector<>();
+    private Vector<Float> goal_values = new Vector<>();
 
     private void initializeInterface() {
         /*================================*/
         /* Create a new JFrame container. */
         /*================================*/
-
-        JFrame jfrm = new JFrame(charityResources.getString("CharityRecommender"));
-
-        /*=============================*/
-        /* Specify FlowLayout manager. */
-        /*=============================*/
-
-        jfrm.getContentPane().setLayout(new GridLayout(3, 1));
+        mainFrame = new JFrame(charityResources.getString("CharityRecommender"));
 
         /*=================================*/
         /* Give the frame an initial size. */
         /*=================================*/
-
-        jfrm.setSize(600, 500);
+        mainFrame.setSize(600, 500);
 
         /*=============================================================*/
         /* Terminate the program when the user closes the application. */
         /*=============================================================*/
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /*==============================*/
+        /* Prevent frame to be resized. */
+        /*==============================*/
+        mainFrame.setResizable(false);
 
-        /*===========================*/
-        /* Create the display panel. */
-        /*===========================*/
+        /*===========================================*/
+        /* Add multiple type of form into the frame. */
+        /*===========================================*/
+        mainFrame.getContentPane().setLayout(new CardLayout());
+        mainFrame.getContentPane().add(greetingForm.getMainPanel(), "greetingPanel");
+        mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
+        mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
 
-        JPanel displayPanel = new JPanel();
-        displayLabel = new JLabel();
-        displayPanel.add(displayLabel);
-
-        /*===========================*/
-        /* Create the choices panel. */
-        /*===========================*/
-
-        choicesPanel = new JPanel();
-        choicesButtons = new ButtonGroup();
-
-        /*===========================*/
-        /* Create the buttons panel. */
-        /*===========================*/
-
-        JPanel buttonPanel = new JPanel();
-
-        prevButton = new JButton(charityResources.getString("Prev"));
-        prevButton.setActionCommand("Prev");
-        buttonPanel.add(prevButton);
-        prevButton.addActionListener(this);
-
-        nextButton = new JButton(charityResources.getString("Next"));
-        nextButton.setActionCommand("Next");
-        buttonPanel.add(nextButton);
-        nextButton.addActionListener(this);
-
-        /*=====================================*/
-        /* Add the panels to the content pane. */
-        /*=====================================*/
-
-        jfrm.getContentPane().add(displayPanel);
-        jfrm.getContentPane().add(choicesPanel);
-        jfrm.getContentPane().add(buttonPanel);
-
-        /*====================*/
-        /* Display the frame. */
-        /*====================*/
-
-        jfrm.setVisible(true);
+        /*=================================*/
+        /* Set Default Form to be visible. */
+        /*=================================*/
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
     }
 
     private boolean initializeStates() {
@@ -220,36 +185,12 @@ public class CharityRecommender implements ActionListener {
         Boolean initStatus = initializeStates();
 
         if (initStatus) {
-            /*==================================*/
-            /* Load and run the animal program. */
-            /*==================================*/
-
             clips = new Environment();
 
             try {
-//            clips.loadFromResource("/resources/bcengine.clp");
-//            clips.loadFromResource("/resources/animal.clp");
-
-                // Added by Pier to test csv
-//            clips.loadFromResource("/resources/csv.clp");
-//            clips.loadFromResource("/resources/charities_reco.clp");
-
                 // Added by Pier to test assertion of charity
                 String clipsCode = new Helpers().getFileData("/clips/CharitySelector.clp");
                 clips.loadFromString(clipsCode);
-
-//            try
-//            {
-//                clips.loadFromResource("/resources/animal_" +
-//                        Locale.getDefault().getLanguage() + ".clp");
-//            }
-//            catch (FileNotFoundException fnfe)
-//            {
-//                if (Locale.getDefault().getLanguage().equals("en"))
-//                { throw fnfe; }
-//                else
-//                { clips.loadFromResource("/resources/animal_en.clp"); }
-//            }
 
                 processRules();
 
@@ -269,47 +210,33 @@ public class CharityRecommender implements ActionListener {
     /* handleResponse: */
 
     /*******************/
-    private void handleResponse() throws Exception {
-        /*===========================*/
-        /* Get the current UI state and list of facts. */
-        /*===========================*/
-        latest_facts = clips.getFactList(); // don't call getFactList() too often, just once here
-        printFacts();
-        FactAddressValue fv = clips.findFact("UI-state");
-        //FactAddressValue f_red_cross = clips.findFact("")
-        /*========================================*/
-        /* Determine the Next/Prev button states. */
-        /*========================================*/
+    private void handleGreetingRespose(FactAddressValue factAddressValue) throws Exception {
+        System.out.println("Show Greeting Page");
+        System.out.println("#############");
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "greetingPanel");
 
-        if (fv.getSlotValue("state").toString().equals("conclusion")) {
-            interviewState = InterviewState.CONCLUSION;
-            nextButton.setActionCommand("Restart");
-            nextButton.setText(charityResources.getString("Restart"));
-            prevButton.setVisible(true);
-            choicesPanel.setVisible(false);
-        } else if (fv.getSlotValue("state").toString().equals("greeting")) {
-            interviewState = InterviewState.GREETING;
-            nextButton.setActionCommand("Next");
-            nextButton.setText(charityResources.getString("Next"));
-            prevButton.setVisible(false);
-            choicesPanel.setVisible(false);
-        } else {
-            interviewState = InterviewState.INTERVIEW;
-            nextButton.setActionCommand("Next");
-            nextButton.setText(charityResources.getString("Next"));
-            prevButton.setVisible(true);
-            choicesPanel.setVisible(true);
-        }
+        /*====================================*/
+        /* Set the label to the display text. */
+        /*====================================*/
+        String theText = ((StringValue) factAddressValue.getSlotValue("question")).getValue();
+        greetingForm.setTextLabel(theText);
+    }
+
+    private void handleInterviewRespose(FactAddressValue factAddressValue) throws Exception {
+        System.out.println("Show Interview Page");
+        System.out.println("#############");
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "interviewPanel");
 
         /*=====================*/
         /* Set up the choices. */
         /*=====================*/
-
-        choicesPanel.removeAll();
+        interviewForm.getChoicePanel().removeAll();
         choicesButtons = new ButtonGroup();
 
-        MultifieldValue damf = (MultifieldValue) fv.getSlotValue("display-answers");
-        MultifieldValue vamf = (MultifieldValue) fv.getSlotValue("valid-answers");
+        MultifieldValue damf = (MultifieldValue) factAddressValue.getSlotValue("display-answers");
+        MultifieldValue vamf = (MultifieldValue) factAddressValue.getSlotValue("valid-answers");
 
         //String selected = fv.getSlotValue("response").toString();
         JRadioButton firstButton = null;
@@ -324,18 +251,17 @@ public class CharityRecommender implements ActionListener {
             buttonText = buttonName.substring(0, 1).toUpperCase() + buttonName.substring(1);
             buttonAnswer = va.getValue();
 
-            if (((lastAnswer != null) && buttonAnswer.equals(lastAnswer)))
-            //||
-            //    ((lastAnswer == null) && buttonAnswer.equals(selected)))
-            {
+            if (((lastAnswer != null) && buttonAnswer.equals(lastAnswer))) {
                 rButton = new JRadioButton(buttonText, true);
             } else {
                 rButton = new JRadioButton(buttonText, false);
             }
 
             rButton.setActionCommand(buttonAnswer);
-            choicesPanel.add(rButton);
+            System.out.println(interviewForm.getChoicePanel());
+            System.out.println(rButton);
             choicesButtons.add(rButton);
+            interviewForm.getChoicePanel().add(rButton);
 
             if (firstButton == null) {
                 firstButton = rButton;
@@ -346,71 +272,77 @@ public class CharityRecommender implements ActionListener {
             choicesButtons.setSelected(firstButton.getModel(), true);
         }
 
-        choicesPanel.repaint();
+        interviewForm.getChoicePanel().repaint();
+
+        relationAsserted = ((LexemeValue) factAddressValue.getSlotValue("relation-asserted")).getValue();
 
         /*====================================*/
         /* Set the label to the display text. */
         /*====================================*/
-
-        relationAsserted = ((LexemeValue) fv.getSlotValue("relation-asserted")).getValue();
-
-        /*====================================*/
-        /* Set the label to the display text. */
-        /*====================================*/
-
-
-        String theText;
-        if (fv.getSlotValue("state").toString().equals("conclusion")) {
-            List<RecommendedCharityModel> recommendedCharities = new ArrayList<RecommendedCharityModel>();
-            getGoals();
-            theText = "";
-            for (int i = 0; i < goal_names.size(); i++) {
-                RecommendedCharityModel recommendedCharity = new RecommendedCharityModel(goal_names.elementAt(i).toString(), goal_values.elementAt(i).toString());
-                recommendedCharities.add(recommendedCharity);
-            }
-
-            // Sort the recommended charities by their recommendation level in descending order
-            Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>() {
-                public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2) {
-                    return -Double.compare(c1.RecommendedValue, c2.RecommendedValue);
-                }
-            });
-
-            // get the value of the text to show
-            for (RecommendedCharityModel charityModel : recommendedCharities) {
-                theText += charityModel.GetCharityNameAndRecommendedValueAppended();
-            }
-        } else {
-            theText = ((StringValue) fv.getSlotValue("question")).getValue();
-        }
-        wrapLabelText(displayLabel, theText);
+        String theText = ((StringValue) factAddressValue.getSlotValue("question")).getValue();
+        interviewForm.setTextLabel(theText);
 
         executionThread = null;
-
         isExecuting = false;
     }
 
-    /*########################*/
-    /* ActionListener Methods */
-    /*########################*/
+    private void handleConclusionResponse(FactAddressValue factAddressValue) throws Exception {
+        System.out.println("Show Conclusion Page");
+        System.out.println("#############");
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
 
-    /*******************/
-    /* actionPerformed */
-
-    /*******************/
-    public void actionPerformed(
-            ActionEvent ae) {
-        try {
-            onActionPerformed(ae);
-        } catch (Exception e) {
-            e.printStackTrace();
+        /*====================================*/
+        /* Display charities list. */
+        /*====================================*/
+        String theText = "";
+        List<RecommendedCharityModel> recommendedCharities = new ArrayList<RecommendedCharityModel>();
+        getGoals();
+        for (int i = 0; i < goal_names.size(); i++) {
+            RecommendedCharityModel recommendedCharity = new RecommendedCharityModel(goal_names.elementAt(i).toString(), goal_values.elementAt(i).toString());
+            recommendedCharities.add(recommendedCharity);
         }
+
+        // Sort the recommended charities by their recommendation level in descending order
+        Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>() {
+            public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2) {
+                return -Double.compare(c1.RecommendedValue, c2.RecommendedValue);
+            }
+        });
+
+        // get the value of the text to show
+        for (RecommendedCharityModel charityModel : recommendedCharities) {
+            theText += charityModel.GetCharityNameAndRecommendedValueAppended();
+        }
+        conclusionForm.setTextLabel(theText);
     }
 
-    /*************/
-    /* runCharity */
+    private void handleResponse() throws Exception {
+        latest_facts = clips.getFactList(); // don't call getFactList() too often, just once here
+        printFacts();
+        FactAddressValue factValue = clips.findFact("UI-state");
 
-    /*************/
+        String state = factValue.getSlotValue("state").toString();
+        switch (state) {
+            case "interview":
+                this.state = State.INTERVIEW;
+                handleInterviewRespose(factValue);
+                break;
+            case "conclusion":
+                this.state = State.CONCLUSION;
+                handleConclusionResponse(factValue);
+                break;
+            case "greeting":
+                this.state = State.GREETING;
+                handleGreetingRespose(factValue);
+                break;
+        }
+
+    }
+
+    /**************/
+    /* runCharity */
+    /**************/
     public void runCharity() {
         Runnable runThread =
                 new Runnable() {
@@ -443,7 +375,6 @@ public class CharityRecommender implements ActionListener {
 
     /****************/
     /* processRules */
-
     /****************/
     private void processRules() throws CLIPSException {
         clips.reset();
@@ -451,8 +382,6 @@ public class CharityRecommender implements ActionListener {
         for (String factString : variableAsserts) {
             clips.eval(factString);
         }
-
-        //List<FactInstance> test = clips.getFactList();
 
         runCharity(); // need this to run before the clips can continue engine
 
@@ -486,59 +415,45 @@ public class CharityRecommender implements ActionListener {
                 }
             }
         }
-
     }
 
-    /********************/
-    /* nextButtonAction */
+    public void startInterview() throws CLIPSException {
+        variableAsserts.add("(assert (current_question donation_type))");
+        processRules();
+    }
 
-    /********************/
-    private void nextButtonAction() throws CLIPSException {
-        String theString;
-        String theAnswer;
+    public void continueInterview() throws CLIPSException {
+        clips.eval("(assert (continue_interview))");
+        String theAnswer = choicesButtons.getSelection().getActionCommand();
 
-        lastAnswer = null;
-        switch (interviewState) {
-            /* Handle Next button. */
-            case GREETING:
-                variableAsserts.add("(assert (current_question donation_type))");
+        Vector<String> answers;
+        switch (relationAsserted) {
+            case "donation_type":
+                answers = (Vector<String>) donation_hash.get(theAnswer);
+                variableAsserts.addAll(answers);
                 break;
-            case INTERVIEW:
-                clips.eval("(assert (continue_interview))");
-                theAnswer = choicesButtons.getSelection().getActionCommand();
-
-                //variableAsserts.clear();
-                if (relationAsserted.equals("donation_type")) {
-                    Vector<String> answers = (Vector<String>) donation_hash.get(theAnswer);
-                    variableAsserts.addAll(answers);
-                } else if (relationAsserted.equals("charity_size")) {
-                    Vector<String> answers = (Vector<String>) charity_size_hash.get(theAnswer);
-                    variableAsserts.addAll(answers);
-                } else if (relationAsserted.equals("tax_exemption")) {
-                    Vector<String> answers = (Vector<String>) tax_return_hash.get(theAnswer);
-                    variableAsserts.addAll(answers);
-                }
-
-//                theString = "(variable (name " + relationAsserted + ") (value " +  theAnswer + "))";
-//                variableAsserts.add(theString);
-//                priorAnswers.add(theAnswer);
+            case "charity_size":
+                answers = (Vector<String>) charity_size_hash.get(theAnswer);
+                variableAsserts.addAll(answers);
                 break;
-
-            /* Handle Restart button. */
-            case CONCLUSION:
-                variableAsserts.clear();
-                priorAnswers.clear();
+            case "tax_exemption":
+                answers = (Vector<String>) tax_return_hash.get(theAnswer);
+                variableAsserts.addAll(answers);
                 break;
         }
+        processRules();
+    }
 
+    public void restartInterview() throws CLIPSException {
+        variableAsserts.clear();
+        priorAnswers.clear();
         processRules();
     }
 
     /********************/
     /* prevButtonAction */
-
     /********************/
-    private void prevButtonAction() throws CLIPSException {
+    public void prevButtonAction() throws CLIPSException {
         lastAnswer = priorAnswers.get(priorAnswers.size() - 1);
 
         variableAsserts.remove(variableAsserts.size() - 1);
@@ -547,80 +462,6 @@ public class CharityRecommender implements ActionListener {
         processRules();
     }
 
-    /*********************/
-    /* onActionPerformed */
-
-    /*********************/
-    private void onActionPerformed(
-            ActionEvent ae) throws Exception {
-        if (isExecuting) return;
-
-        if (ae.getActionCommand().equals("Next")) {
-            nextButtonAction();
-        } else if (ae.getActionCommand().equals("Restart")) {
-            nextButtonAction();
-        } else if (ae.getActionCommand().equals("Prev")) {
-            prevButtonAction();
-        }
-    }
-
-    /*****************/
-    /* wrapLabelText */
-
-    /*****************/
-    private void wrapLabelText(
-            JLabel label,
-            String text) {
-        FontMetrics fm = label.getFontMetrics(label.getFont());
-        Container container = label.getParent();
-        int containerWidth = container.getWidth();
-        int textWidth = SwingUtilities.computeStringWidth(fm, text);
-        int desiredWidth;
-
-        if (textWidth <= containerWidth) {
-            desiredWidth = containerWidth;
-        } else {
-            int lines = (int) ((textWidth + containerWidth) / containerWidth);
-
-            desiredWidth = (int) (textWidth / lines);
-        }
-
-        BreakIterator boundary = BreakIterator.getWordInstance();
-        boundary.setText(text);
-
-        StringBuffer trial = new StringBuffer();
-        StringBuffer real = new StringBuffer("<html><center>");
-
-        int start = boundary.first();
-        for (int end = boundary.next(); end != BreakIterator.DONE;
-             start = end, end = boundary.next()) {
-            String word = text.substring(start, end);
-
-            // Add a line break if the current word contains a line separator
-            if (word.contains(System.lineSeparator())) {
-                trial = new StringBuffer("");
-                real.append("<br>");
-            } else {
-                trial.append(word);
-                int trialWidth = SwingUtilities.computeStringWidth(fm, trial.toString());
-                if (trialWidth > containerWidth) {
-                    trial = new StringBuffer(word);
-                    real.append("<br>");
-                    real.append(word);
-                } else if (trialWidth > desiredWidth) {
-                    trial = new StringBuffer("");
-                    real.append(word);
-                    real.append("<br>");
-                } else {
-                    real.append(word);
-                }
-            }
-        }
-
-        real.append("</html>");
-
-        label.setText(real.toString());
-    }
 
     public static void createNewDatabase(String fileName) {
 
