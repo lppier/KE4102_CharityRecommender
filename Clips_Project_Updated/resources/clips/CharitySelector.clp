@@ -39,18 +39,27 @@
 ;;; you can give it a lower CF to begin with
 (deffacts load-facts
     ;;; Changed Charles
-	(current_fact (fact red_cross) (cf 0.5) (all_vars notax health large money))
-    (current_fact (fact blue_cross) (cf 0.5) (all_vars tax health medium kind))
-    (current_fact (fact yellow_cross) (cf 0.5) (all_vars notax health medium volunteer))
-    (current_fact (fact purple_cross) (cf 0.5) (all_vars tax health medium money))
-    (current_fact (fact black_cross) (cf 0.5) (all_vars tax health medium money))
+	(current_fact (fact NGEEANNCULTURALCENTRELIMITED) (cf 0.5) (all_vars arts_heritage tax small money ))
+    (current_fact (fact SingaporeIndianFineArtsSociety,The) (cf 0.5) (all_vars arts_heritage tax large money ))
+    (current_fact (fact NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5) (all_vars arts_heritage notax large money ))
+    (current_fact (fact SINGAPORECLANFOUNDATION) (cf 0.5) (all_vars arts_heritage notax large money ))
+    (current_fact (fact DesignSociety,The) (cf 0.5) (all_vars arts_heritage notax smallest money ))
+    (current_fact (fact THEESPLANADECOLTD) (cf 0.5) (all_vars arts_heritage notax mega money ))
+    (current_fact (fact T.H.EDANCECOMPANYLTD.) (cf 0.5) (all_vars arts_heritage notax large money ))
+    (current_fact (fact ARTSTHEATREOFSINGAPORELTD) (cf 0.5) (all_vars arts_heritage tax smallest money ))
+    (current_fact (fact TampinesArtsTroupe) (cf 0.5) (all_vars arts_heritage notax smallest money ))
      ;;; End of change
 
-	(current_goal (goal red_cross) (cf 0.5))
-	(current_goal (goal blue_cross) (cf 0.5))
-	(current_goal (goal yellow_cross) (cf 0.5))
-	(current_goal (goal purple_cross) (cf 0.5))
-	(current_goal (goal black_cross) (cf 0.5))
+	(current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf 0.5))
+    (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf 0.5))
+    (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5))
+    (current_goal (goal SINGAPORECLANFOUNDATION) (cf 0.5))
+    (current_goal (goal DesignSociety,The) (cf 0.5))
+    (current_goal (goal THEESPLANADECOLTD) (cf 0.5))
+    (current_goal (goal T.H.EDANCECOMPANYLTD.) (cf 0.5))
+    (current_goal (goal ARTSTHEATREOFSINGAPORELTD) (cf 0.5))
+    (current_goal (goal TampinesArtsTroupe) (cf 0.5))
+
 
 	 ;;; Changed Charles
      (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
@@ -219,6 +228,41 @@
      (retract ?fcq)
 )
 
+(defrule religion
+    (continue_interview)
+    (current_question religion)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+              (question "What religion do you practice?")
+              (relation-asserted religion)
+              (valid-answers b c h i t o)
+              (display-answers "Buddhism" "Christianity" "Hinduism" "Islam" "Taoism" "Others")
+              (state interview)))
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule sector_preference
+    (continue_interview)
+    (current_question sector_preference)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+              (question "Which of the following sectors are you interested in giving to?")
+              (relation-asserted sector_preference)
+              (valid-answers a c e h r sw sp o)
+              (display-answers "Arts and Heritage" "Community" "Education" "Health" "Religious" "Social and Welfare" "Sports" "Others")
+              (state interview)))
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; ENGINE RULE (RULE THAT SELECTS THE RIGHT CHARITIES AND ADJUSTS THEIR CF)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -243,11 +287,15 @@
 (defrule compile_recommendations
         (continue_interview)
         (current_question conclusion)
-	(current_goal (goal red_cross) (cf ?cf-r))
-	(current_goal (goal blue_cross) (cf ?cf-m))
-	(current_goal (goal yellow_cross) (cf ?cf-f))
-	(current_goal (goal purple_cross) (cf ?cf-c))
-	(current_goal (goal black_cross) (cf ?cf-d))
+	(current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf ?cf-NGEEANNCULTURALCENTRELIMITED))
+    (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf ?cf-SingaporeIndianFineArtsSociety,The))
+    (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf ?cf-NationalBookDevelopmentCouncilofSingapore,The))
+    (current_goal (goal SINGAPORECLANFOUNDATION) (cf ?cf-SINGAPORECLANFOUNDATION))
+    (current_goal (goal DesignSociety,The) (cf ?cf-DesignSociety,The))
+    (current_goal (goal THEESPLANADECOLTD) (cf ?cf-THEESPLANADECOLTD))
+    (current_goal (goal T.H.EDANCECOMPANYLTD.) (cf ?cf-T.H.EDANCECOMPANYLTD.))
+    (current_goal (goal ARTSTHEATREOFSINGAPORELTD) (cf ?cf-ARTSTHEATREOFSINGAPORELTD))
+    (current_goal (goal TampinesArtsTroupe) (cf ?cf-TampinesArtsTroupe))
         ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
         ?fci <- (continue_interview)
         ?fcq <- (current_question ?f)
@@ -260,6 +308,5 @@
                 (state conclusion)))
         (retract ?fci)
         (retract ?fcq)
-        (assert (recomendation (red_cross ?cf-r) (blue_cross ?cf-m) (yellow_cross ?cf-f) (purple_cross ?cf-c) (black_cross ?cf-d)))
 )
 
