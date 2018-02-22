@@ -229,10 +229,10 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-              (question "Do you like small, midsize or large charity?")
+              (question "What charity size (in terms of total annual receipts, SGD) do you prefer to donate to?")
               (relation-asserted charity_size)
-              (valid-answers s m l)
-              (display-answers "Small" "Medium" "Large")
+              (valid-answers smallest small medium large huge mega)
+              (display-answers "Smallest (<250k)" "Small (>250K)" "Medium (>500k)" "Large (>1 million)" "Huge (>5 million)" "Mega (>10 million)")
               (state interview)
               (is-multi-choice no)
             )
