@@ -427,6 +427,7 @@ public class CharityRecommender {
         clips.eval("(assert (continue_interview))");
         String theAnswer;
         ArrayList<String> multiChoiceAsserts = new ArrayList<>();
+        priorAnswers = (ArrayList<String>) variableAsserts.clone();
 
         if (isMultiChoiceQn) {
             for (JCheckBox btn : checkboxGroup) {
@@ -443,7 +444,10 @@ public class CharityRecommender {
         } else {
             theAnswer = radioButtonsGroup.getSelection().getActionCommand();
             Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
-            if (answers != null) variableAsserts.addAll(answers);
+            if (answers != null)
+            {
+                variableAsserts.addAll(answers);
+            }
         }
 
 
@@ -466,8 +470,9 @@ public class CharityRecommender {
         return false;
     }
 
+    // may not be req, but clean up extra ((assert(current_question anyway
     private void removeExtraCurrentQnAsserts(ArrayList<String> tempAsserts) {
-        // may not be req, but clean up extra ((assert(current_question anyway
+
         String branchStr = "";
         int count = 0; // number of times "current_question" occurs in the list
 
@@ -494,16 +499,12 @@ public class CharityRecommender {
         processRules();
     }
 
-    /********************/
-    /* prevButtonAction */
-
-    /********************/
     public void prevButtonAction() throws CLIPSException {
-        lastAnswer = priorAnswers.get(priorAnswers.size() - 1);
-
-        variableAsserts.remove(variableAsserts.size() - 1);
-        priorAnswers.remove(priorAnswers.size() - 1);
-
+//        lastAnswer = priorAnswers.get(priorAnswers.size() - 1);
+//
+//        variableAsserts.remove(variableAsserts.size() - 1);
+//        priorAnswers.remove(priorAnswers.size() - 1);
+        variableAsserts = priorAnswers;
         processRules();
     }
 
