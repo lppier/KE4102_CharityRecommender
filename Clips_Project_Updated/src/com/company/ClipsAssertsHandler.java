@@ -135,7 +135,7 @@ public class ClipsAssertsHandler {
         return true;
     }
 
-    public Vector<String> getAnswers(String relationAsserted, String theAnswer) {
+    public Vector<String> getSingleAnswers(String relationAsserted, String theAnswer) {
 
         switch (relationAsserted) {
             case "donation_type":

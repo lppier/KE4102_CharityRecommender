@@ -2,8 +2,6 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.BreakIterator;
 import java.util.*;
 
 import net.sf.clipsrules.jni.*;
@@ -52,12 +50,14 @@ public class CharityRecommender {
         CONCLUSION
     }
 
+    private Boolean isMultiChoiceQn = false;
     private JFrame mainFrame;
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
 
-    private ButtonGroup choicesButtons;
+    private ButtonGroup radioButtonsGroup;
+    private List<JCheckBox> checkboxGroup;
     private ResourceBundle charityResources;
 
     private Environment clips;
@@ -178,7 +178,7 @@ public class CharityRecommender {
         greetingForm.setTextLabel(theText);
     }
 
-    private void handleInterviewRespose(FactAddressValue factAddressValue) throws Exception {
+    private void handleInterviewResponse(FactAddressValue factAddressValue) throws Exception {
         System.out.println("Show Interview Page");
         System.out.println("#############");
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
@@ -188,7 +188,61 @@ public class CharityRecommender {
         /* Set up the choices. */
         /*=====================*/
         interviewForm.getChoicePanel().removeAll();
-        choicesButtons = new ButtonGroup();
+
+        String isMultiChoiceStr = ((LexemeValue) factAddressValue.getSlotValue("is-multi-choice")).getValue();
+        isMultiChoiceQn = isMultiChoiceStr.equals("yes");
+
+        if (isMultiChoiceQn)
+            setupCheckBoxButtons(factAddressValue);
+        else
+            setupRadioButtons(factAddressValue);
+
+        interviewForm.getChoicePanel().repaint();
+
+        relationAsserted = ((LexemeValue) factAddressValue.getSlotValue("relation-asserted")).getValue();
+
+        /*====================================*/
+        /* Set the label to the display text. */
+        /*====================================*/
+        String theText = ((StringValue) factAddressValue.getSlotValue("question")).getValue();
+        interviewForm.setTextLabel(theText);
+
+        executionThread = null;
+        isExecuting = false;
+    }
+
+    private void setupCheckBoxButtons(FactAddressValue factAddressValue) {
+
+        checkboxGroup = new ArrayList<>();
+
+        MultifieldValue damf = (MultifieldValue) factAddressValue.getSlotValue("display-answers");
+        MultifieldValue vamf = (MultifieldValue) factAddressValue.getSlotValue("valid-answers");
+
+        // Do not use ButtonGroup as we need to select more than one, simply use JCheckBox
+        JCheckBox firstCheckBox = null;
+
+        for (int i = 0; i < damf.size(); i++) {
+            LexemeValue da = (LexemeValue) damf.get(i);
+            LexemeValue va = (LexemeValue) vamf.get(i);
+
+            String buttonName, buttonText, buttonAnswer;
+
+            buttonName = da.getValue();
+            buttonText = buttonName.substring(0, 1).toUpperCase() + buttonName.substring(1);
+            buttonAnswer = va.getValue();
+            JCheckBox rButton = new JCheckBox(buttonText, false);
+            rButton.setActionCommand(buttonAnswer);
+            checkboxGroup.add(rButton);
+
+            interviewForm.getChoicePanel().add(rButton);
+            if (firstCheckBox == null) {
+                firstCheckBox = rButton;
+            }
+        }
+    }
+
+    private void setupRadioButtons(FactAddressValue factAddressValue) {
+        radioButtonsGroup = new ButtonGroup();
 
         MultifieldValue damf = (MultifieldValue) factAddressValue.getSlotValue("display-answers");
         MultifieldValue vamf = (MultifieldValue) factAddressValue.getSlotValue("valid-answers");
@@ -215,7 +269,7 @@ public class CharityRecommender {
             rButton.setActionCommand(buttonAnswer);
             System.out.println(interviewForm.getChoicePanel());
             System.out.println(rButton);
-            choicesButtons.add(rButton);
+            radioButtonsGroup.add(rButton);
             interviewForm.getChoicePanel().add(rButton);
 
             if (firstButton == null) {
@@ -223,22 +277,9 @@ public class CharityRecommender {
             }
         }
 
-        if ((choicesButtons.getSelection() == null) && (firstButton != null)) {
-            choicesButtons.setSelected(firstButton.getModel(), true);
+        if ((radioButtonsGroup.getSelection() == null) && (firstButton != null)) {
+            radioButtonsGroup.setSelected(firstButton.getModel(), true);
         }
-
-        interviewForm.getChoicePanel().repaint();
-
-        relationAsserted = ((LexemeValue) factAddressValue.getSlotValue("relation-asserted")).getValue();
-
-        /*====================================*/
-        /* Set the label to the display text. */
-        /*====================================*/
-        String theText = ((StringValue) factAddressValue.getSlotValue("question")).getValue();
-        interviewForm.setTextLabel(theText);
-
-        executionThread = null;
-        isExecuting = false;
     }
 
     private void handleConclusionResponse(FactAddressValue factAddressValue) throws Exception {
@@ -281,7 +322,7 @@ public class CharityRecommender {
         switch (state) {
             case "interview":
                 this.state = State.INTERVIEW;
-                handleInterviewRespose(factValue);
+                handleInterviewResponse(factValue);
                 break;
             case "conclusion":
                 this.state = State.CONCLUSION;
@@ -297,6 +338,7 @@ public class CharityRecommender {
 
     /**************/
     /* runCharity */
+
     /**************/
     public void runCharity() {
         Runnable runThread =
@@ -330,6 +372,7 @@ public class CharityRecommender {
 
     /****************/
     /* processRules */
+
     /****************/
     private void processRules() throws CLIPSException {
         clips.reset();
@@ -378,12 +421,68 @@ public class CharityRecommender {
     }
 
     public void continueInterview() throws CLIPSException {
-        clips.eval("(assert (continue_interview))");
-        String theAnswer = choicesButtons.getSelection().getActionCommand();
 
-        Vector<String> answers = clipsAssertsHandler.getAnswers(relationAsserted, theAnswer);
-        if (answers != null) variableAsserts.addAll(answers);
+        if (isMultiChoiceQn && nothingSelected()) return; // single qn don't need this, at least one is pre-selected
+
+        clips.eval("(assert (continue_interview))");
+        String theAnswer;
+        ArrayList<String> multiChoiceAsserts = new ArrayList<>();
+
+        if (isMultiChoiceQn) {
+            for (JCheckBox btn : checkboxGroup) {
+                if (btn.isSelected()) {
+                    theAnswer = btn.getActionCommand();
+                    Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
+                    if (answers != null) multiChoiceAsserts.addAll(answers);
+                }
+            }
+
+            removeExtraCurrentQnAsserts(multiChoiceAsserts);
+            variableAsserts.addAll(multiChoiceAsserts);
+
+        } else {
+            theAnswer = radioButtonsGroup.getSelection().getActionCommand();
+            Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
+            if (answers != null) variableAsserts.addAll(answers);
+        }
+
+
         processRules();
+    }
+
+    private boolean nothingSelected() {
+        Boolean isSomethingSelected = false;
+        for (JCheckBox cb : checkboxGroup) {
+            if (cb.isSelected()) {
+                isSomethingSelected = true;
+                break;
+            }
+        }
+
+        if (!isSomethingSelected) {
+            JOptionPane.showMessageDialog(checkboxGroup.get(0), "Please select at least one option.", "Reminder", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;
+    }
+
+    private void removeExtraCurrentQnAsserts(ArrayList<String> tempAsserts) {
+        // may not be req, but clean up extra ((assert(current_question anyway
+        String branchStr = "";
+        int count = 0; // number of times "current_question" occurs in the list
+
+        for (String string : tempAsserts) {
+            if (string.contains("current_question")) {
+                branchStr = string;
+                count++;
+            }
+        }
+
+        // Remove all (assert (current_question except the last one
+        // Assumption here is that each answer ticked gives one (assert (current_question
+        if (!branchStr.equals(""))
+            for (int i = 0; i < count - 1; i++)
+                tempAsserts.remove(branchStr);
     }
 
     public void restartInterview() throws CLIPSException {
@@ -397,6 +496,7 @@ public class CharityRecommender {
 
     /********************/
     /* prevButtonAction */
+
     /********************/
     public void prevButtonAction() throws CLIPSException {
         lastAnswer = priorAnswers.get(priorAnswers.size() - 1);

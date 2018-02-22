@@ -5,13 +5,14 @@
 ; Added by pier - UI-related
 (deftemplate combined_value (slot fact) (slot cf))      ; test value to see whether combination fn was called
 (deftemplate UI-state 
-   ;(slot id (default-dynamic (gensym*)))                ; autogen id everytime UI-state is asserted
+   ;(slot id (default-dynamic (gensym*)))               ; autogen id everytime UI-state is asserted
    (slot question (type STRING))                        ; question text
    (slot relation-asserted (default none))              ; eg. donation-type (used in UI code for finding facts to assert)
    (multislot valid-answers)                            ; symbols to denote each ans selection (eg. k m v)
    (multislot display-answers)                          ; text for each answer's display in UI
-   (slot state (default interview)))                    ; 3 states: greeting, interview (mostly here) and conclusion
-
+   (slot state (default interview))                     ; 3 states: greeting, interview (mostly here) and conclusion
+   (slot is-multi-choice (default no))                    ; Whether question allows for multiple-choice 
+)
 ;;; Added by Charles
 (deftemplate current_fact (slot fact)
                 (slot cf)
@@ -39,7 +40,7 @@
 ;;; you can give it a lower CF to begin with
 (deffacts load-facts
     ;;; Changed Charles
-	(current_fact (fact NGEEANNCULTURALCENTRELIMITED) (cf 0.5) (all_vars arts_heritage tax small money ))
+  (current_fact (fact NGEEANNCULTURALCENTRELIMITED) (cf 0.5) (all_vars arts_heritage tax small money ))
     (current_fact (fact SingaporeIndianFineArtsSociety,The) (cf 0.5) (all_vars arts_heritage tax large money ))
     (current_fact (fact NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5) (all_vars arts_heritage notax large money ))
     (current_fact (fact SINGAPORECLANFOUNDATION) (cf 0.5) (all_vars arts_heritage notax large money ))
@@ -50,7 +51,7 @@
     (current_fact (fact TampinesArtsTroupe) (cf 0.5) (all_vars arts_heritage notax smallest money ))
      ;;; End of change
 
-	(current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf 0.5))
+  (current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf 0.5))
     (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf 0.5))
     (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5))
     (current_goal (goal SINGAPORECLANFOUNDATION) (cf 0.5))
@@ -61,7 +62,7 @@
     (current_goal (goal TampinesArtsTroupe) (cf 0.5))
 
 
-	 ;;; Changed Charles
+   ;;; Changed Charles
      (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
      ;;; End of change
 
@@ -79,19 +80,19 @@
 
 ;;; some global variables used in rules 4&5
 (defglobal
-	?*time-cf* = 0.0
-	?*money-cf* = 0.0)
+  ?*time-cf* = 0.0
+  ?*money-cf* = 0.0)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; initialise current goal when a new_goal is asserted
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; (defrule initialise-current-goal
-;	(working_goal (goal ?ng) (cf ?cfng))
-;	(not (current_goal (goal ?cg) (cf ?cfg)))
-;	?newg <- (working_goal (goal ?ng) (cf ?cfng))
-;=> 	(assert (current_goal (goal ?ng) (cf ?cfng)))
-;	(retract ?newg)
+; (working_goal (goal ?ng) (cf ?cfng))
+; (not (current_goal (goal ?cg) (cf ?cfg)))
+; ?newg <- (working_goal (goal ?ng) (cf ?cfng))
+;=>   (assert (current_goal (goal ?ng) (cf ?cfng)))
+; (retract ?newg)
 ;)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -162,7 +163,10 @@
                 (relation-asserted greeting)
                 (valid-answers y)
                 (display-answers "Yes")
-                (state greeting)))
+                (state greeting)
+                (is-multi-choice no)
+            )
+    )
     (retract ?fci)
     ;(retract ?fcq)
     (modify ?fcq (current_question donation_type))
@@ -186,8 +190,11 @@
                   (relation-asserted donation_type)
                   (valid-answers k m v)
                   (display-answers "Donation in kind" "Donation in money" "Donation by volunteering")
-                  (state interview)))
-	(retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+                  (state interview)
+                  (is-multi-choice no)
+              )
+      )
+  (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
     (retract ?fcq)
 )
 
@@ -205,7 +212,10 @@
                 (relation-asserted tax_exemption)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
-                (state interview)))
+                (state interview)
+                (is-multi-choice no)
+            )
+    )
     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
     (retract ?fcq)
 )
@@ -217,13 +227,16 @@
      ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
      ?fci <- (continue_interview)
      ?fcq <- (current_question ?f)
-=>	 (retract ?f1)
+=>   (retract ?f1)
      (assert (UI-state
               (question "Do you like small, midsize or large charity?")
               (relation-asserted charity_size)
               (valid-answers s m l)
               (display-answers "Small" "Medium" "Large")
-              (state interview)))
+              (state interview)
+              (is-multi-choice no)
+            )
+     )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
      (retract ?fcq)
 )
@@ -235,12 +248,15 @@
      ?fci <- (continue_interview)
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
-     (assert (UI-state
-              (question "What religion do you practice?")
-              (relation-asserted religion)
-              (valid-answers b c h i t o)
-              (display-answers "Buddhism" "Christianity" "Hinduism" "Islam" "Taoism" "Others")
-              (state interview)))
+     (assert  (UI-state
+                (question "What religion do you practice?")
+                (relation-asserted religion)
+                (valid-answers b c h i t o)
+                (display-answers "Buddhism" "Christianity" "Hinduism" "Islam" "Taoism" "Others")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
      (retract ?fcq)
 )
@@ -253,11 +269,14 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-              (question "Which of the following sectors are you interested in giving to?")
-              (relation-asserted sector_preference)
-              (valid-answers a c e h r sw sp o)
-              (display-answers "Arts and Heritage" "Community" "Education" "Health" "Religious" "Social and Welfare" "Sports" "Others")
-              (state interview)))
+                (question "Which of the following sectors are you interested in giving to?")
+                (relation-asserted sector_preference)
+                (valid-answers a c e h r sw sp o)
+                (display-answers "Arts and Heritage" "Community" "Education" "Health" "Religious" "Social and Welfare" "Sports" "Others")
+                (state interview)
+                (is-multi-choice yes)
+              )
+     )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
      (retract ?fcq)
 )
@@ -287,7 +306,7 @@
 (defrule compile_recommendations
         (continue_interview)
         (current_question conclusion)
-	(current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf ?cf-NGEEANNCULTURALCENTRELIMITED))
+  (current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf ?cf-NGEEANNCULTURALCENTRELIMITED))
     (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf ?cf-SingaporeIndianFineArtsSociety,The))
     (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf ?cf-NationalBookDevelopmentCouncilofSingapore,The))
     (current_goal (goal SINGAPORECLANFOUNDATION) (cf ?cf-SINGAPORECLANFOUNDATION))
