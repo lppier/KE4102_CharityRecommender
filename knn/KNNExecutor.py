@@ -37,7 +37,8 @@ class KNNExecutor:
 
             # Generate the nearest neighbors
             distances, indices = nbrs.kneighbors(testing_values)
-            output = ""
+            print(distances)
+            print(distances[0])
 
             # Get the column names for the output file
             output = self.getColumnNames();
@@ -49,11 +50,13 @@ class KNNExecutor:
                 if Configurations.knn_filter_column_name:
                     filter_value_test = list(testing_df[Configurations.knn_filter_column_name].iloc[idx])
 
-                for neighbor in indices[idx]:
+                for neighbor_number, neighbor in enumerate(indices[idx]):
                     if Configurations.knn_filter_column_name:
                         filter_value_training = list(training_df[Configurations.knn_filter_column_name].iloc[neighbor])
 
-                    if set(filter_value_test) == set(filter_value_training):
+                    distance = distances[idx, neighbor_number]
+                    print("Distance: " + str(distance))
+                    if distance > 0 and set(filter_value_test) == set(filter_value_training):
                         output += self.getTextForOutput(training_df[Configurations.knn_columns_to_select].iloc[neighbor])
 
                 output += "\n"
@@ -68,7 +71,7 @@ class KNNExecutor:
         text = ""
         if charity_details is not None:
             for column in Configurations.knn_columns_to_select:
-                text += charity_details[column] + ","
+                text += "\"" + charity_details[column] + "\"" + ","
 
         return text
 
