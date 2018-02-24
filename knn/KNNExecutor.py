@@ -10,6 +10,7 @@ class KNNExecutor:
 
     def executeKNN(self):
         training_df = pd.read_csv(os.path.join(Configurations.data_folder_name, Configurations.knn_training_file) + ".csv")
+        print("Read in training file: " + str(training_df.shape))
         testing_df = pd.read_csv(os.path.join(Configurations.data_folder_name, Configurations.knn_testing_file) + ".csv")
         self.performKNN(training_df, testing_df, Configurations.knn_kvalue, Configurations.knn_columns_for_distance)
 
