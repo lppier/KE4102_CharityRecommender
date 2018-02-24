@@ -47,15 +47,14 @@ class KNNExecutor:
 
                 # get the filter value if present
                 if Configurations.knn_filter_column_name:
-                    filter_value_test = testing_df[Configurations.knn_filter_column_name].iloc[idx]
-                print("Test filter values: " + filter_value_test)
+                    filter_value_test = list(testing_df[Configurations.knn_filter_column_name].iloc[idx])
 
                 for neighbor in indices[idx]:
                     if Configurations.knn_filter_column_name:
-                        filter_value_training = training_df[Configurations.knn_filter_column_name].iloc[neighbor]
-                        print("Training filter values: " + filter_value_training)
+                        filter_value_training = list(training_df[Configurations.knn_filter_column_name].iloc[neighbor])
 
-                    output += self.getTextForOutput(training_df[Configurations.knn_columns_to_select].iloc[neighbor])
+                    if set(filter_value_test) == set(filter_value_training):
+                        output += self.getTextForOutput(training_df[Configurations.knn_columns_to_select].iloc[neighbor])
 
                 output += "\n"
 
