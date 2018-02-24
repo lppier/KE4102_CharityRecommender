@@ -19,9 +19,9 @@ class KNNExecutor:
         """Perform the KNN algorithm on the testing data frame based on the training data frame selecting only the specified columns"""
         if training_df is not None and testing_df is not None and columns_to_use is not None and k > 0:
 
-            for column in columns_to_use:
-                training_df[column] = training_df[column].str.replace(",","")
-                testing_df[column] = testing_df[column].str.replace(",", "")
+            print("Shape before drop: " + str((training_df.shape)))
+            training_df = training_df.dropna(axis=0, how='any')
+            print("Shape after drop: " + str((testing_df.shape)))
 
             training_values = training_df.loc[:, columns_to_use]
             testing_values = testing_df.loc[:, columns_to_use]
@@ -44,7 +44,17 @@ class KNNExecutor:
 
             for idx in range(0, len(indices)):
                 output += self.getTextForOutput(testing_df[Configurations.knn_columns_to_select].iloc[idx])
+
+                # get the filter value if present
+                if Configurations.knn_filter_column_name:
+                    filter_value_test = testing_df[Configurations.knn_filter_column_name].iloc[idx]
+                print("Test filter values: " + filter_value_test)
+
                 for neighbor in indices[idx]:
+                    if Configurations.knn_filter_column_name:
+                        filter_value_training = training_df[Configurations.knn_filter_column_name].iloc[neighbor]
+                        print("Training filter values: " + filter_value_training)
+
                     output += self.getTextForOutput(training_df[Configurations.knn_columns_to_select].iloc[neighbor])
 
                 output += "\n"
