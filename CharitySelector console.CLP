@@ -231,7 +231,7 @@
 )
 
 ;**** Rule13:  preference for charities which submitted compliance 
-(defrule charity_gov_funded
+(defrule charity_gov_compl
 =>	(printout t crlf "Do you prefer to donate to charities which submitted code of compliance? (y/n)") 
 	(bind ?response (read))
     (if (eq ?response y) then 
@@ -411,7 +411,7 @@
 )
 
 ;**** Rule16:  choice of Sector
-(defrule charity_influence
+(defrule charity_choice
 =>	(printout t crlf "In which kind of charities,would you like to donate?  (Please enter the option number)") 
 	(printout t crlf "1.Arts_and_heritage")
 	(printout t crlf "2.Education")
