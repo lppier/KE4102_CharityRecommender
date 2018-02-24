@@ -13,58 +13,92 @@
    (slot state (default interview))                     ; 3 states: greeting, interview (mostly here) and conclusion
    (slot is-multi-choice (default no))                    ; Whether question allows for multiple-choice 
 )
-;;; Added by Charles
+
 (deftemplate current_fact (slot fact)
                 (slot cf)
                 (multislot all_vars) ;contains all applicable parameters.
 )
-;;; End of addition
+
 
 
 (deftemplate current_goal (slot goal) (slot cf)) ;; the top-level
 (deftemplate working_goal (slot goal) (slot cf)) ;; 
 
 (deftemplate recomendation (slot red_cross) (slot blue_cross) (slot yellow_cross) (slot purple_cross) (slot black_cross))
-
-;;; Changed Charles
 (deftemplate branch_indicator (slot name) (slot cf) (slot true_or_false))
 (deftemplate nameofvariable (slot name) (slot cf)(slot true_or_false))
-;;; End of change
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Initial facts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; by default (initially) all pets have equal chance of being recommended 
-;;; however, if you have knowledge that some pets are less popular
-;;; you can give it a lower CF to begin with
 (deffacts load-facts
-    ;;; Changed Charles
-  (current_fact (fact NGEEANNCULTURALCENTRELIMITED) (cf 0.5) (all_vars arts_heritage tax small money ))
-    (current_fact (fact SingaporeIndianFineArtsSociety,The) (cf 0.5) (all_vars arts_heritage tax large money ))
-    (current_fact (fact NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5) (all_vars arts_heritage notax large money ))
-    (current_fact (fact SINGAPORECLANFOUNDATION) (cf 0.5) (all_vars arts_heritage notax large money ))
-    (current_fact (fact DesignSociety,The) (cf 0.5) (all_vars arts_heritage notax smallest money ))
-    (current_fact (fact THEESPLANADECOLTD) (cf 0.5) (all_vars arts_heritage notax mega money ))
-    (current_fact (fact T.H.EDANCECOMPANYLTD.) (cf 0.5) (all_vars arts_heritage notax large money ))
-    (current_fact (fact ARTSTHEATREOFSINGAPORELTD) (cf 0.5) (all_vars arts_heritage tax smallest money ))
-    (current_fact (fact TampinesArtsTroupe) (cf 0.5) (all_vars arts_heritage notax smallest money ))
-     ;;; End of change
+  (current_fact (fact ngee_ann_cultural_centre_limited) (cf 0.5) (all_vars arts_and_heritage tax medium money historical_and_cultural_conservation exist_long invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact singapore_indian_fine_arts_society_the) (cf 0.5) (all_vars arts_and_heritage tax medium money music_and_orchestras exist_medium invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact national_book_development_council_of_singapore_the) (cf 0.5) (all_vars arts_and_heritage notax medium money literary_arts exist_short invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact singapore_clan_foundation) (cf 0.5) (all_vars arts_and_heritage notax medium money historical_and_cultural_conservation exist_long invest_no govfunded_no sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact design_society_the) (cf 0.5) (all_vars arts_and_heritage notax small money others_arts_and_heritage exist_medium invest_yes govfunded_yes sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact the_esplanade_co_ltd) (cf 0.5) (all_vars arts_and_heritage notax large money music_and_orchestras exist_short invest_no govfunded_no sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact the_dance_company_ltd) (cf 0.5) (all_vars arts_and_heritage notax medium money professional_contemporay_ethnic exist_long invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact cake_theatrical_productions_ltd) (cf 0.5) (all_vars arts_and_heritage tax medium money theatre_and_dramatic_arts exist_medium invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact tampines_arts_troupe) (cf 0.5) (all_vars arts_and_heritage notax small money traditional_ethnic_performing_arts exist_short invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact spot_art_limited) (cf 0.5) (all_vars arts_and_heritage tax small money visual_arts exist_long invest_no govfunded_no sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact radin_mas_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community notax medium money central exist_medium invest_yes govfunded_yes sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact kaki_bukit_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community notax medium money north_east exist_short invest_no govfunded_no sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact kebun_baru_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community notax small money north_west exist_long invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact fengshan_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community notax small money south_east exist_medium invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact bukit_batok_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community notax medium money south_west exist_short invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact the_friends_of_the_university_of_warwick_in_singapore) (cf 0.5) (all_vars education notax small money foreign_educational_institutions_and_funds exist_long invest_no govfunded_no sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact methodist_schools_foundation) (cf 0.5) (all_vars education notax medium money foundations_and_trusts exist_long invest_yes govfunded_yes sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact hwa_chong_international_school_education_fund) (cf 0.5) (all_vars education notax small money local_educational_institutions_and_funds exist_medium invest_no govfunded_no sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact girl_guides_singapore) (cf 0.5) (all_vars education notax medium money uniformed_groups exist_short invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact national_skin_centre_health_endowment_fund) (cf 0.5) (all_vars health notax small money cluster_and_hospital_funds exist_long invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact ren_ci_hospital) (cf 0.5) (all_vars health notax large money community_and_chronic_sick_hospital exist_medium invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact sata_commhealth) (cf 0.5) (all_vars health tax large money day_rehabilitation_centre exist_short invest_no govfunded_no sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact ronald_mcdonald_house_charities_singapore) (cf 0.5) (all_vars health tax medium money diseases_and_illnessess_support_group exist_long invest_yes govfunded_yes sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact academy_of_medicine_singapore) (cf 0.5) (all_vars health notax large money health_professional_group exist_medium invest_no govfunded_no sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact home_nursing_foundation) (cf 0.5) (all_vars health notax large money home_care exist_short invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact assisi_hospice) (cf 0.5) (all_vars health notax large money hospice exist_long invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact hca_hospice_care) (cf 0.5) (all_vars health notax large money palliative_home_care exist_medium invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact grace_lodge) (cf 0.5) (all_vars health notax large money nursing_home exist_short invest_no govfunded_no sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
+  (current_fact (fact alzheimers_disease_association) (cf 0.5) (all_vars health notax large money other_community_based_services exist_long invest_yes govfunded_yes sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
+  (current_fact (fact sma_charity_fund) (cf 0.5) (all_vars health notax small money others_health exist_medium invest_no govfunded_no sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
+  (current_fact (fact kidney_dialysis_foundation_limited) (cf 0.5) (all_vars health notax large money renal_dialysis exist_short invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
 
-  (current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf 0.5))
-    (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf 0.5))
-    (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf 0.5))
-    (current_goal (goal SINGAPORECLANFOUNDATION) (cf 0.5))
-    (current_goal (goal DesignSociety,The) (cf 0.5))
-    (current_goal (goal THEESPLANADECOLTD) (cf 0.5))
-    (current_goal (goal T.H.EDANCECOMPANYLTD.) (cf 0.5))
-    (current_goal (goal ARTSTHEATREOFSINGAPORELTD) (cf 0.5))
-    (current_goal (goal TampinesArtsTroupe) (cf 0.5))
+  (current_goal (goal ngee_ann_cultural_centre_limited) (cf 0.5))
+  (current_goal (goal singapore_indian_fine_arts_society_the) (cf 0.5))
+  (current_goal (goal national_book_development_council_of_singapore_the) (cf 0.5))
+  (current_goal (goal singapore_clan_foundation) (cf 0.5))
+  (current_goal (goal design_society_the) (cf 0.5))
+  (current_goal (goal the_esplanade_co_ltd) (cf 0.5))
+  (current_goal (goal the_dance_company_ltd) (cf 0.5))
+  (current_goal (goal cake_theatrical_productions_ltd) (cf 0.5))
+  (current_goal (goal tampines_arts_troupe) (cf 0.5))
+  (current_goal (goal spot_art_limited) (cf 0.5))
+  (current_goal (goal radin_mas_ccc_community_development_and_welfare_fund) (cf 0.5))
+  (current_goal (goal kaki_bukit_ccc_community_development_and_welfare_fund) (cf 0.5))
+  (current_goal (goal kebun_baru_ccc_community_development_and_welfare_fund) (cf 0.5))
+  (current_goal (goal fengshan_ccc_community_development_and_welfare_fund) (cf 0.5))
+  (current_goal (goal bukit_batok_ccc_community_development_and_welfare_fund) (cf 0.5))
+  (current_goal (goal the_friends_of_the_university_of_warwick_in_singapore) (cf 0.5))
+  (current_goal (goal methodist_schools_foundation) (cf 0.5))
+  (current_goal (goal hwa_chong_international_school_education_fund) (cf 0.5))
+  (current_goal (goal girl_guides_singapore) (cf 0.5))
+  (current_goal (goal national_skin_centre_health_endowment_fund) (cf 0.5))
+  (current_goal (goal ren_ci_hospital) (cf 0.5))
+  (current_goal (goal sata_commhealth) (cf 0.5))
+  (current_goal (goal ronald_mcdonald_house_charities_singapore) (cf 0.5))
+  (current_goal (goal academy_of_medicine_singapore) (cf 0.5))
+  (current_goal (goal home_nursing_foundation) (cf 0.5))
+  (current_goal (goal assisi_hospice) (cf 0.5))
+  (current_goal (goal hca_hospice_care) (cf 0.5))
+  (current_goal (goal grace_lodge) (cf 0.5))
+  (current_goal (goal alzheimers_disease_association) (cf 0.5))
+  (current_goal (goal sma_charity_fund) (cf 0.5))
+  (current_goal (goal kidney_dialysis_foundation_limited) (cf 0.5))
 
-
-   ;;; Changed Charles
-     (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
-     ;;; End of change
+    (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
 
       (UI-state
             (question "Welcome to Charity Recommender! Do you want to start the recommendation?")
@@ -289,8 +323,6 @@
 (defrule selecting_the_right_charities
     (declare (salience 10))
     ;1. branch ind is the name variable of the current variable which true_or_false is set to TRUE.
-    ; *previously I modified this fact but given that CLIPS only uses each fact + rule once (you can adjust this)
-    ; I removed that (it also gave some issues):
     ?branch_ind <- (nameofvariable (name ?any_variable) (cf ?cf_variable) (true_or_false TRUE))
     ; 2. charity adress is the charity from the csv that has all_vars x in their multislot (eg. kind, health)
     ?charity_adress <- (current_fact (fact ?any_charity) (cf ?cf_any_charity) (all_vars $? ?any_variable $?))
@@ -306,15 +338,37 @@
 (defrule compile_recommendations
         (continue_interview)
         (current_question conclusion)
-  (current_goal (goal NGEEANNCULTURALCENTRELIMITED) (cf ?cf-NGEEANNCULTURALCENTRELIMITED))
-    (current_goal (goal SingaporeIndianFineArtsSociety,The) (cf ?cf-SingaporeIndianFineArtsSociety,The))
-    (current_goal (goal NationalBookDevelopmentCouncilofSingapore,The) (cf ?cf-NationalBookDevelopmentCouncilofSingapore,The))
-    (current_goal (goal SINGAPORECLANFOUNDATION) (cf ?cf-SINGAPORECLANFOUNDATION))
-    (current_goal (goal DesignSociety,The) (cf ?cf-DesignSociety,The))
-    (current_goal (goal THEESPLANADECOLTD) (cf ?cf-THEESPLANADECOLTD))
-    (current_goal (goal T.H.EDANCECOMPANYLTD.) (cf ?cf-T.H.EDANCECOMPANYLTD.))
-    (current_goal (goal ARTSTHEATREOFSINGAPORELTD) (cf ?cf-ARTSTHEATREOFSINGAPORELTD))
-    (current_goal (goal TampinesArtsTroupe) (cf ?cf-TampinesArtsTroupe))
+  (current_goal (goal ngee_ann_cultural_centre_limited) (cf ?cf-ngee_ann_cultural_centre_limited))
+  (current_goal (goal singapore_indian_fine_arts_society_the) (cf ?cf-singapore_indian_fine_arts_society_the))
+  (current_goal (goal national_book_development_council_of_singapore_the) (cf ?cf-national_book_development_council_of_singapore_the))
+  (current_goal (goal singapore_clan_foundation) (cf ?cf-singapore_clan_foundation))
+  (current_goal (goal design_society_the) (cf ?cf-design_society_the))
+  (current_goal (goal the_esplanade_co_ltd) (cf ?cf-the_esplanade_co_ltd))
+  (current_goal (goal the_dance_company_ltd) (cf ?cf-the_dance_company_ltd))
+  (current_goal (goal cake_theatrical_productions_ltd) (cf ?cf-cake_theatrical_productions_ltd))
+  (current_goal (goal tampines_arts_troupe) (cf ?cf-tampines_arts_troupe))
+  (current_goal (goal spot_art_limited) (cf ?cf-spot_art_limited))
+  (current_goal (goal radin_mas_ccc_community_development_and_welfare_fund) (cf ?cf-radin_mas_ccc_community_development_and_welfare_fund))
+  (current_goal (goal kaki_bukit_ccc_community_development_and_welfare_fund) (cf ?cf-kaki_bukit_ccc_community_development_and_welfare_fund))
+  (current_goal (goal kebun_baru_ccc_community_development_and_welfare_fund) (cf ?cf-kebun_baru_ccc_community_development_and_welfare_fund))
+  (current_goal (goal fengshan_ccc_community_development_and_welfare_fund) (cf ?cf-fengshan_ccc_community_development_and_welfare_fund))
+  (current_goal (goal bukit_batok_ccc_community_development_and_welfare_fund) (cf ?cf-bukit_batok_ccc_community_development_and_welfare_fund))
+  (current_goal (goal the_friends_of_the_university_of_warwick_in_singapore) (cf ?cf-the_friends_of_the_university_of_warwick_in_singapore))
+  (current_goal (goal methodist_schools_foundation) (cf ?cf-methodist_schools_foundation))
+  (current_goal (goal hwa_chong_international_school_education_fund) (cf ?cf-hwa_chong_international_school_education_fund))
+  (current_goal (goal girl_guides_singapore) (cf ?cf-girl_guides_singapore))
+  (current_goal (goal national_skin_centre_health_endowment_fund) (cf ?cf-national_skin_centre_health_endowment_fund))
+  (current_goal (goal ren_ci_hospital) (cf ?cf-ren_ci_hospital))
+  (current_goal (goal sata_commhealth) (cf ?cf-sata_commhealth))
+  (current_goal (goal ronald_mcdonald_house_charities_singapore) (cf ?cf-ronald_mcdonald_house_charities_singapore))
+  (current_goal (goal academy_of_medicine_singapore) (cf ?cf-academy_of_medicine_singapore))
+  (current_goal (goal home_nursing_foundation) (cf ?cf-home_nursing_foundation))
+  (current_goal (goal assisi_hospice) (cf ?cf-assisi_hospice))
+  (current_goal (goal hca_hospice_care) (cf ?cf-hca_hospice_care))
+  (current_goal (goal grace_lodge) (cf ?cf-grace_lodge))
+  (current_goal (goal alzheimers_disease_association) (cf ?cf-alzheimers_disease_association))
+  (current_goal (goal sma_charity_fund) (cf ?cf-sma_charity_fund))
+  (current_goal (goal kidney_dialysis_foundation_limited) (cf ?cf-kidney_dialysis_foundation_limited))
         ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
         ?fci <- (continue_interview)
         ?fcq <- (current_question ?f)
