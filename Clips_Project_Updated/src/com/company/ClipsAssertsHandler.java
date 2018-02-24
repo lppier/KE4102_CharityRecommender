@@ -1,3 +1,9 @@
+/**
+ * ClipsAssertsHandler
+ *
+ * Note: All clips assert statements for questions belong here.
+ */
+
 package com.company;
 
 import java.util.*;
@@ -34,9 +40,6 @@ public class ClipsAssertsHandler {
             }
 
             {   // charity_size qn
-                Vector<String> smallest_ans = new Vector<>();
-                smallest_ans.add("(assert (nameofvariable (name smallest)(cf 0.3)(true_or_false TRUE)))");
-                smallest_ans.add("(assert (current_question religion))");
                 Vector<String> small_ans = new Vector<>();
                 small_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))");
                 small_ans.add("(assert (current_question religion))");
@@ -46,18 +49,9 @@ public class ClipsAssertsHandler {
                 Vector<String> large_ans = new Vector<>();
                 large_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
                 large_ans.add("(assert (current_question religion))");
-                Vector<String> huge_ans = new Vector<>();
-                huge_ans.add("(assert (nameofvariable (name huge)(cf 0.3)(true_or_false TRUE)))");
-                huge_ans.add("(assert (current_question religion))");
-                Vector<String> mega_ans = new Vector<>();
-                mega_ans.add("(assert (nameofvariable (name mega)(cf 0.3)(true_or_false TRUE)))");
-                mega_ans.add("(assert (current_question religion))");
-                charity_size_hash.put("smallest", smallest_ans);
                 charity_size_hash.put("small", small_ans);
                 charity_size_hash.put("medium", medium_ans);
                 charity_size_hash.put("large", large_ans);
-                charity_size_hash.put("huge", huge_ans);
-                charity_size_hash.put("mega", mega_ans);
             }
 
             {   // tax_return
