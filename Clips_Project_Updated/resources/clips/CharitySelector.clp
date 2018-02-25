@@ -586,7 +586,7 @@
                 (question "Which of the following type of charities have helped you in past?")
                 (relation-asserted charity_received_help)
                 (valid-answers a e h c t)
-                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Not married/Spouse doesn't donate")
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Not Applicable")
                 (state interview)
                 (is-multi-choice no)
               )
@@ -615,6 +615,25 @@
      (retract ?fcq)
 )
 
+(defrule charity_influence
+    (continue_interview)
+    (current_question charity_influence)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do you have role models who donate to charity? If so, which sector do they donate to?")
+                (relation-asserted charity_influence)
+                (valid-answers a e h c t)
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "They don't donate")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
 
 (defrule religion
     (continue_interview)
@@ -649,7 +668,7 @@
                 (valid-answers a c e h r sw sp o)
                 (display-answers "Arts and Heritage" "Community" "Education" "Health" "Religious" "Social and Welfare" "Sports" "Others")
                 (state interview)
-                (is-multi-choice yes)
+                (is-multi-choice no)
               )
      )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)

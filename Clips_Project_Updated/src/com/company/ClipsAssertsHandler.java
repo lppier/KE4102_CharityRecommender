@@ -27,6 +27,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> twelve_years_old_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_friends_sector_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_media_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_influence_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -334,11 +335,39 @@ public class ClipsAssertsHandler {
 
             {   // charity_media
                 Vector<String> y_ans = new Vector<>();
-                y_ans.add("(assert (current_question religion))"); // TODO there is no data, find out CF values!
+                y_ans.add("(assert (current_question charity_influence))"); // TODO there is no data, find out CF values!
                 Vector<String> n_ans = new Vector<>();
-                n_ans.add("(assert (current_question religion))");
+                n_ans.add("(assert (current_question charity_influence))");
                 charity_media_hash.put("y", y_ans);
                 charity_media_hash.put("n", n_ans);
+            }
+
+            {
+                // charity_influence
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (nameofvariable (name arts_and_heritage)(cf 0.4)(true_or_false TRUE)))");
+                a_ans.add("(assert (current_question sector_preference))");
+
+                Vector<String> e_ans = new Vector<>();
+                e_ans.add("(assert (nameofvariable (name education)(cf 0.4)(true_or_false TRUE)))");
+                e_ans.add("(assert (current_question sector_preference))");
+
+                Vector<String> h_ans = new Vector<>();
+                h_ans.add("(assert (nameofvariable (name health)(cf 0.4)(true_or_false TRUE)))");
+                h_ans.add("(assert (current_question sector_preference))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (nameofvariable (name community)(cf 0.4)(true_or_false TRUE)))");
+                c_ans.add("(assert (current_question sector_preference))");
+
+                Vector<String> t_ans = new Vector<>();
+                t_ans.add("(assert (current_question sector_preference))");
+
+                charity_influence_hash.put("a", a_ans);
+                charity_influence_hash.put("e", e_ans);
+                charity_influence_hash.put("h", h_ans);
+                charity_influence_hash.put("c", c_ans);
+                charity_influence_hash.put("t", t_ans);
             }
 
             {   // religion
@@ -405,6 +434,14 @@ public class ClipsAssertsHandler {
                 sector_preference_hash.put("o", others_ans);
             }
 
+            // ---------------------- Health Sub-Sector Questions --------------------- //
+            // ---------------------- Arts and Heritage Sub-Sector Questions --------------------- //
+            // ---------------------- Community Sub-Sector Questions --------------------- //
+            // ---------------------- Education Sub-Sector Questions --------------------- //
+            // ---------------------- Religious Sub-Sector Questions --------------------- //
+            // ---------------------- Social and Welfare Sub-Sector Questions --------------------- //
+            // ---------------------- Sports Sub-Sector Questions --------------------- //
+            // ---------------------- Others Sub-Sector Questions --------------------- //
 
         } catch (MissingResourceException mre) {
             mre.printStackTrace();
@@ -452,6 +489,8 @@ public class ClipsAssertsHandler {
                 return charity_received_help_hash.get(theAnswer);
             case "charity_media":
                 return charity_media_hash.get(theAnswer);
+            case "charity_influence":
+                return charity_influence_hash.get(theAnswer);
             case "religion":
                 return religion_hash.get(theAnswer);
             case "sector_preference":
