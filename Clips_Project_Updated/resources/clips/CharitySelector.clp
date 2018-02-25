@@ -435,6 +435,26 @@
      (retract ?fcq)
 )
 
+(defrule charity_research
+    (continue_interview)
+    (current_question charity_research)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "I do my own extensive research before making a donation decision.")
+                (relation-asserted charity_research)
+                (valid-answers a b c d e)
+                (display-answers "Highly Unlikely" "Unlikely" "Neutral" "Likely" "Highly Likely")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 (defrule religion
     (continue_interview)
     (current_question religion)

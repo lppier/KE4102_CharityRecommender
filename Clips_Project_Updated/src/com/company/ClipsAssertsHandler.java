@@ -18,6 +18,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_gov_funded_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_fin_eff_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_gov_compl_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -131,12 +132,51 @@ public class ClipsAssertsHandler {
                 y_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf 1)(true_or_false TRUE)))");
                 y_ans.add("(assert (nameofvariable (name sub_gov_no)(cf -0.1)(true_or_false TRUE)))");
                 y_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf -0.1)(true_or_false TRUE)))");
-                y_ans.add("(assert (current_question religion))");
+                y_ans.add("(assert (current_question charity_research))");
                 Vector<String> n_ans = new Vector<>();
                 n_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf -0.4)(true_or_false TRUE)))");
-                n_ans.add("(assert (current_question religion))");
+                n_ans.add("(assert (current_question charity_research))");
                 charity_gov_compl_hash.put("y", y_ans);
                 charity_gov_compl_hash.put("n", n_ans);
+            }
+
+            {
+                // charity_research_hash (likert scale)
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.3)(true_or_false TRUE)))");
+                a_ans.add("(assert (nameofvariable (name sub_gov_no)(cf 0.3)(true_or_false TRUE)))");
+                a_ans.add("(assert (nameofvariable (name gov_rating_low)(cf 0.3)(true_or_false TRUE))))");
+                a_ans.add("(assert (current_question religion))");
+
+                Vector<String> b_ans = new Vector<>();
+                b_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.2)(true_or_false TRUE)))");
+                b_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf 0.2)(true_or_false TRUE)))");
+                b_ans.add("(assert (nameofvariable (name gov_rating_low)(cf 0.2)(true_or_false TRUE)))");
+                b_ans.add("(assert (current_question religion))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (nameofvariable (name ratio_eff_med)(cf 0.1)(true_or_false TRUE)))");
+                c_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf 0.1)(true_or_false TRUE)))");
+                c_ans.add("(assert (nameofvariable (name gov_rate_med)(cf 0.1)(true_or_false TRUE)))");
+                c_ans.add("(assert (current_question religion))");
+
+                Vector<String> d_ans = new Vector<>();
+                d_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.5)(true_or_false TRUE)))");
+                d_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf 0.5)(true_or_false TRUE)))");
+                d_ans.add("(assert (nameofvariable (name gov_rate_med)(cf 0.5)(true_or_false TRUE)))");
+                d_ans.add("(assert (current_question religion))");
+
+                Vector<String> e_ans = new Vector<>();
+                e_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.8)(true_or_false TRUE)))");
+                e_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf 0.8)(true_or_false TRUE)))");
+                e_ans.add("(assert (nameofvariable (name gov_rate_high)(cf 0.8)(true_or_false TRUE)))");
+                e_ans.add("(assert (current_question religion))");
+
+                charity_research_hash.put("a", a_ans);
+                charity_research_hash.put("b", b_ans);
+                charity_research_hash.put("c", c_ans);
+                charity_research_hash.put("d", d_ans);
+                charity_research_hash.put("e", e_ans);
             }
 
             {   // religion
@@ -232,6 +272,8 @@ public class ClipsAssertsHandler {
                 return charity_fin_eff_hash.get(theAnswer);
             case "charity_gov_compl":
                 return charity_gov_compl_hash.get(theAnswer);
+            case "charity_research":
+                return charity_research_hash.get(theAnswer);
             case "religion":
                 return religion_hash.get(theAnswer);
             case "sector_preference":
