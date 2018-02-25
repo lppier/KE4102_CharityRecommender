@@ -64,6 +64,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deffacts load-facts
+
 	(current_fact (fact ngee_ann_cultural_centre_limited) (cf 0.5) (all_vars arts_and_heritage tax medium money historical_and_cultural_conservation exist_long invest_yes govfunded_yes sub_fin_yes ratio_eff_low sub_gov_yes gov_rating_low ))
 	(current_fact (fact singapore_indian_fine_arts_society_the) (cf 0.5) (all_vars arts_and_heritage tax medium money music_and_orchestras exist_medium invest_no govfunded_no sub_fin_no ratio_eff_med sub_gov_no gov_rate_med ))
 	(current_fact (fact national_book_development_council_of_singapore_the) (cf 0.5) (all_vars arts_and_heritage notax medium money literary_arts exist_short invest_yes govfunded_yes sub_fin_not_req ratio_eff_high sub_gov_not_req gov_rate_high ))
@@ -237,7 +238,30 @@
     
 )        
 
-;**** Rule 1: Ask user preference for size.
+
+(defrule corporate_or_individual
+    (continue_interview)
+    (current_question corporate_or_individual)
+
+    ; 1. You need an indicator for starting + CLIPS does not let you change this if you don't put it into a variable:
+    ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+            ?fci <- (continue_interview)
+            ?fcq <- (current_question ?f)
+    =>
+      (retract ?f1)
+      (assert (UI-state
+                  (question "Are you donating as an individual or corporation?")
+                  (relation-asserted corporate_or_individual)
+                  (valid-answers i c)
+                  (display-answers "Individual" "Corporate")
+                  (state interview)
+                  (is-multi-choice no)
+              )
+      )
+  (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+    (retract ?fcq)
+)
+
 (defrule donation_type
     (continue_interview)
     (current_question donation_type)
@@ -261,6 +285,33 @@
     (retract ?fcq)
 )
 
+;**** Rules for branching corporate/individual donations
+(defrule donation_from_corporate
+  (corporate)
+  (or (donation_type_money)
+      (donation_type_volunteering)
+      (donation_type_kind)
+  )
+  =>
+  (assert (current_question tax_exemption))
+)
+
+(defrule donation_from_individual_money
+  (individual)
+  (donation_type_money)
+  =>
+  (assert (current_question tax_exemption))
+)
+
+(defrule donation_from_individual_kind_volunteering
+  (individual)
+  (or (donation_type_volunteering)
+      (donation_type_kind)
+  )
+  =>
+  (assert (current_question charity_size))
+)
+
 ;**** Rule2: Ask if want tax
 (defrule tax
     (continue_interview)
@@ -271,7 +322,7 @@
 =>
     (retract ?f1)
     (assert (UI-state
-                (question "Do you like your tax returned?")
+                (question "Do you want tax exemption for your donation?")
                 (relation-asserted tax_exemption)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -297,6 +348,7 @@
                 (valid-answers small medium large)
                 (display-answers "Small" "Medium" "Large")
                 (state interview)
+                (is-multi-choice no)
               )
      )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)

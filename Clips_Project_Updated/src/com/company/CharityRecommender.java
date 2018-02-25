@@ -416,7 +416,7 @@ public class CharityRecommender {
     }
 
     public void startInterview() throws CLIPSException {
-        variableAsserts.add("(assert (current_question donation_type))");
+        variableAsserts.add("(assert (current_question corporate_or_individual))");
         processRules();
     }
 

@@ -11,8 +11,9 @@ import java.util.*;
 public class ClipsAssertsHandler {
 
     // Hashtable storing the answers for each question. Pass in answer to get the vector of assert statements
-    private Hashtable<String, Vector<String>> donation_hash = new Hashtable<String, Vector<String>>();
-    private Hashtable<String, Vector<String>> charity_size_hash = new Hashtable<String, Vector<String>>();
+    private Hashtable<String, Vector<String>> corporate_individual_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> donation_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_size_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -20,19 +21,33 @@ public class ClipsAssertsHandler {
     public boolean initializeHashes() {
         try {
 
+            {  // corporate_or_individual
+                Vector<String> i_ans = new Vector<>();
+                i_ans.add("(assert (individual))");
+                i_ans.add("(assert (current_question donation_type))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (corporate))");
+                c_ans.add("(assert (current_question donation_type))");
+
+                corporate_individual_hash.put("c", c_ans);
+                corporate_individual_hash.put("i", i_ans);
+            }
+
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
                 k_ans.add("(assert (nameofvariable (name kind)(cf 1)(true_or_false TRUE)))");
-                k_ans.add("(assert (current_question tax_exemption))");
+                //k_ans.add("(assert (current_question tax_exemption))");
+                k_ans.add("(assert (donation_type_kind))");
 
                 Vector<String> m_ans = new Vector<>();
                 m_ans.add("(assert (nameofvariable (name money)(cf 1)(true_or_false TRUE)))");
-                m_ans.add("(assert (current_question tax_exemption))");
-
+                //m_ans.add("(assert (current_question tax_exemption))");
+                m_ans.add("(assert (donation_type_money))");
                 Vector<String> v_ans = new Vector<>();
                 v_ans.add("(assert (nameofvariable (name volunteer)(cf 1)(true_or_false TRUE)))");
-                v_ans.add("(assert (current_question charity_size))");
-
+                //v_ans.add("(assert (current_question charity_size))");
+                v_ans.add("(assert (donation_type_volunteering))");
 
                 donation_hash.put("k", k_ans);
                 donation_hash.put("m", m_ans);
@@ -144,6 +159,8 @@ public class ClipsAssertsHandler {
     public Vector<String> getSingleAnswers(String relationAsserted, String theAnswer) {
 
         switch (relationAsserted) {
+            case "corporate_or_individual":
+                return corporate_individual_hash.get(theAnswer);
             case "donation_type":
                 return donation_hash.get(theAnswer);
             case "charity_size":
