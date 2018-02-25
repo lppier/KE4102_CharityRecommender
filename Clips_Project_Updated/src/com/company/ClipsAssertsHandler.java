@@ -21,6 +21,9 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_established_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_past_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_parents_sector_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> twelve_years_old_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_friends_sector_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -198,11 +201,76 @@ public class ClipsAssertsHandler {
 
             {   // charity_past
                 Vector<String> y_ans = new Vector<>();
-                y_ans.add("(assert (current_question religion))"); // TODO there is no data, find out CF values!
+                y_ans.add("(assert (current_question charity_parents_sector))"); // TODO there is no data, find out CF values!
                 Vector<String> n_ans = new Vector<>();
-                n_ans.add("(assert (current_question religion))");
+                n_ans.add("(assert (current_question charity_parents_sector))");
                 charity_past_hash.put("y", y_ans);
                 charity_past_hash.put("n", n_ans);
+            }
+
+            {
+                // charity_parents_sector
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (nameofvariable (name arts_and_heritage)(cf 0.7)(true_or_false TRUE)))");
+                a_ans.add("(assert (current_question twelve_years_old))");
+
+                Vector<String> e_ans = new Vector<>();
+                e_ans.add("(assert (nameofvariable (name education)(cf 0.7)(true_or_false TRUE)))");
+                e_ans.add("(assert (current_question twelve_years_old))");
+
+                Vector<String> h_ans = new Vector<>();
+                h_ans.add("(assert (nameofvariable (name health)(cf 0.7)(true_or_false TRUE)))");
+                h_ans.add("(assert (current_question twelve_years_old))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (nameofvariable (name community)(cf 0.7)(true_or_false TRUE)))");
+                c_ans.add("(assert (current_question twelve_years_old))");
+
+                Vector<String> t_ans = new Vector<>();
+                t_ans.add("(assert (current_question twelve_years_old))");
+
+                charity_parents_sector_hash.put("a", a_ans);
+                charity_parents_sector_hash.put("e", e_ans);
+                charity_parents_sector_hash.put("h", h_ans);
+                charity_parents_sector_hash.put("c", c_ans);
+                charity_parents_sector_hash.put("t", t_ans);
+            }
+
+            {   // twelve_years_old
+                Vector<String> u_ans = new Vector<>();
+                u_ans.add("(assert (current_question religion))");
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (current_question charity_friends_sector))");
+                twelve_years_old_hash.put("u", u_ans);
+                twelve_years_old_hash.put("a", a_ans);
+            }
+
+            {
+                // charity_friends_sector
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (nameofvariable (name arts_and_heritage)(cf 0.6)(true_or_false TRUE)))");
+                a_ans.add("(assert (current_question religion))");
+
+                Vector<String> e_ans = new Vector<>();
+                e_ans.add("(assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE)))");
+                e_ans.add("(assert (current_question religion))");
+
+                Vector<String> h_ans = new Vector<>();
+                h_ans.add("(assert (nameofvariable (name health)(cf 0.6)(true_or_false TRUE)))");
+                h_ans.add("(assert (current_question religion))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (nameofvariable (name community)(cf 0.6)(true_or_false TRUE)))");
+                c_ans.add("(assert (current_question religion))");
+
+                Vector<String> t_ans = new Vector<>();
+                t_ans.add("(assert (current_question religion))");
+
+                charity_friends_sector_hash.put("a", a_ans);
+                charity_friends_sector_hash.put("e", e_ans);
+                charity_friends_sector_hash.put("h", h_ans);
+                charity_friends_sector_hash.put("c", c_ans);
+                charity_friends_sector_hash.put("t", t_ans);
             }
 
             {   // religion
@@ -304,6 +372,12 @@ public class ClipsAssertsHandler {
                 return charity_established_hash.get(theAnswer);
             case "charity_past":
                 return charity_past_hash.get(theAnswer);
+            case "charity_parents_sector":
+                return charity_parents_sector_hash.get(theAnswer);
+            case "twelve_years_old":
+                return twelve_years_old_hash.get(theAnswer);
+            case "charity_friends_sector":
+                return charity_friends_sector_hash.get(theAnswer);
             case "religion":
                 return religion_hash.get(theAnswer);
             case "sector_preference":

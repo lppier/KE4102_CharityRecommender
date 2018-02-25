@@ -495,6 +495,67 @@
      (retract ?fcq)
 )
 
+(defrule charity_parents_sector
+    (continue_interview)
+    (current_question charity_parents_sector)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do your parents donate to charity? If so, please choose the type of the charity to which your parents donate to.")
+                (relation-asserted charity_parents_sector)
+                (valid-answers a e h c t)
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "They don't donate")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule twelve_years_old
+    (continue_interview)
+    (current_question twelve_years_old)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Are you under or above 12 years old?")
+                (relation-asserted twelve_years_old)
+                (valid-answers u a)
+                (display-answers "Under" "Above")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule charity_friends_sector
+    (continue_interview)
+    (current_question charity_friends_sector)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do your friends donate to charity? If so, please choose the type of the charity to which your friends donate to.")
+                (relation-asserted charity_friends_sector)
+                (valid-answers a e h c t)
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "They don't donate")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+
 (defrule religion
     (continue_interview)
     (current_question religion)
