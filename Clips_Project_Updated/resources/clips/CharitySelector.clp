@@ -375,6 +375,47 @@
      (retract ?fcq)
 )
 
+(defrule charity_gov_funded
+    (continue_interview)
+    (current_question charity_gov_funded)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do you prefer to donate to charities which are Government funded?")
+                (relation-asserted charity_gov_funded)
+                (valid-answers y n)
+                (display-answers "Yes" "No")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule charity_fin_eff
+    (continue_interview)
+    (current_question charity_fin_eff)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "How financially efficient the charity should be?")
+                (relation-asserted charity_fin_eff)
+                (valid-answers l m h)
+                (display-answers "Low" "Medium" "High")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+
 (defrule religion
     (continue_interview)
     (current_question religion)
