@@ -14,6 +14,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> corporate_individual_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> donation_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_size_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_invest_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -37,16 +38,14 @@ public class ClipsAssertsHandler {
             {   // donation_type
                 Vector<String> k_ans = new Vector<>();
                 k_ans.add("(assert (nameofvariable (name kind)(cf 1)(true_or_false TRUE)))");
-                //k_ans.add("(assert (current_question tax_exemption))");
                 k_ans.add("(assert (donation_type_kind))");
 
                 Vector<String> m_ans = new Vector<>();
                 m_ans.add("(assert (nameofvariable (name money)(cf 1)(true_or_false TRUE)))");
-                //m_ans.add("(assert (current_question tax_exemption))");
                 m_ans.add("(assert (donation_type_money))");
+
                 Vector<String> v_ans = new Vector<>();
                 v_ans.add("(assert (nameofvariable (name volunteer)(cf 1)(true_or_false TRUE)))");
-                //v_ans.add("(assert (current_question charity_size))");
                 v_ans.add("(assert (donation_type_volunteering))");
 
                 donation_hash.put("k", k_ans);
@@ -57,16 +56,31 @@ public class ClipsAssertsHandler {
             {   // charity_size qn
                 Vector<String> small_ans = new Vector<>();
                 small_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))");
-                small_ans.add("(assert (current_question religion))");
+                small_ans.add("(assert (current_question charity_investment))");
                 Vector<String> medium_ans = new Vector<>();
                 medium_ans.add("(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE)))");
-                medium_ans.add("(assert (current_question religion))");
+                medium_ans.add("(assert (current_question charity_investment))");
                 Vector<String> large_ans = new Vector<>();
                 large_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
-                large_ans.add("(assert (current_question religion))");
+                large_ans.add("(assert (current_question charity_investment))");
                 charity_size_hash.put("small", small_ans);
                 charity_size_hash.put("medium", medium_ans);
                 charity_size_hash.put("large", large_ans);
+            }
+
+            {   // charity_invest qn
+                Vector<String> yes_ans = new Vector<>();
+                yes_ans.add("(assert (nameofvariable (name invest_yes)(cf 0.7)(true_or_false TRUE)))");
+                yes_ans.add("(assert (current_question religion))");
+
+                Vector<String> no_ans = new Vector<>();
+                no_ans.add("(assert (nameofvariable (name invest_yes)(cf -0.7)(true_or_false TRUE)))");
+                no_ans.add("(assert (nameofvariable (name invest_no)(cf 0.7)(true_or_false TRUE)))");
+                no_ans.add("(assert (current_question religion))");
+
+                charity_invest_hash.put("y", yes_ans);
+                charity_invest_hash.put("n", no_ans);
+
             }
 
             {   // tax_return
@@ -165,6 +179,8 @@ public class ClipsAssertsHandler {
                 return donation_hash.get(theAnswer);
             case "charity_size":
                 return charity_size_hash.get(theAnswer);
+            case "charity_investment":
+                return charity_invest_hash.get(theAnswer);
             case "tax_exemption":
                 return tax_return_hash.get(theAnswer);
             case "religion":
