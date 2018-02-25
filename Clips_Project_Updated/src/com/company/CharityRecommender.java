@@ -450,7 +450,6 @@ public class CharityRecommender {
             }
         }
 
-
         processRules();
     }
 

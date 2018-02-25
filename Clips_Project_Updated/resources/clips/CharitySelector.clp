@@ -555,6 +555,66 @@
      (retract ?fcq)
 )
 
+(defrule charity_spouse
+    (continue_interview)
+    (current_question charity_spouse)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "If you are married, what type of charity does your spouse contribute to?")
+                (relation-asserted charity_spouse)
+                (valid-answers a e h c t)
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Not married/Spouse doesn't donate")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule charity_received_help
+    (continue_interview)
+    (current_question charity_received_help)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Which of the following type of charities have helped you in past?")
+                (relation-asserted charity_received_help)
+                (valid-answers a e h c t)
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Not married/Spouse doesn't donate")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule charity_media
+    (continue_interview)
+    (current_question charity_media)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do you prefer to give to charities that you have heard about in the media?")
+                (relation-asserted charity_media)
+                (valid-answers y n)
+                (display-answers "Yes" "No")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 
 (defrule religion
     (continue_interview)
