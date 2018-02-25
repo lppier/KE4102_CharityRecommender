@@ -20,6 +20,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_gov_compl_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_established_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_past_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religion_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> sector_preference_hash = new Hashtable<>();
@@ -183,16 +184,25 @@ public class ClipsAssertsHandler {
             {   //  charity_established qn
                 Vector<String> short_ans = new Vector<>();
                 short_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.4)(true_or_false TRUE)))");
-                short_ans.add("(assert (current_question religion))");
+                short_ans.add("(assert (current_question charity_past))");
                 Vector<String> medium_ans = new Vector<>();
                 medium_ans.add("(assert (nameofvariable (name ratio_eff_med)(cf 0.5)(true_or_false TRUE)))");
-                medium_ans.add("(assert (current_question religion))");
+                medium_ans.add("(assert (current_question charity_past))");
                 Vector<String> long_ans = new Vector<>();
                 long_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.8)(true_or_false TRUE)))");
-                long_ans.add("(assert (current_question religion))");
+                long_ans.add("(assert (current_question charity_past))");
                 charity_established_hash.put("s", short_ans);
                 charity_established_hash.put("m", medium_ans);
                 charity_established_hash.put("l", long_ans);
+            }
+
+            {   // charity_past
+                Vector<String> y_ans = new Vector<>();
+                y_ans.add("(assert (current_question religion))"); // TODO there is no data, find out CF values!
+                Vector<String> n_ans = new Vector<>();
+                n_ans.add("(assert (current_question religion))");
+                charity_past_hash.put("y", y_ans);
+                charity_past_hash.put("n", n_ans);
             }
 
             {   // religion
@@ -292,6 +302,8 @@ public class ClipsAssertsHandler {
                 return charity_research_hash.get(theAnswer);
             case "charity_established":
                 return charity_established_hash.get(theAnswer);
+            case "charity_past":
+                return charity_past_hash.get(theAnswer);
             case "religion":
                 return religion_hash.get(theAnswer);
             case "sector_preference":
