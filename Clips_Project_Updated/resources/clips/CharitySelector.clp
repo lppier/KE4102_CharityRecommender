@@ -455,6 +455,26 @@
      (retract ?fcq)
 )
 
+(defrule charity_established
+    (continue_interview)
+    (current_question charity_established)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "How established do you prefer your charities to be?")
+                (relation-asserted charity_established)
+                (valid-answers s m l)
+                (display-answers "Newly Established" "Somewhat Established" "Very Established")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 (defrule religion
     (continue_interview)
     (current_question religion)
