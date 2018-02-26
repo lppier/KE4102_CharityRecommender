@@ -410,33 +410,33 @@
 ;**** Rule16:  choice of Sector
 (defrule charity_choice
 ; for debugging purposes, I put salience in so this one will fire first.
-
     (declare (salience 99))
-=>  (printout t crlf "What charity sector would you prefer?  (Please enter the option number)") 
-  (printout t crlf "dummy: 1.User choses Arts_and_heritage AND education 
-        [To get the multi-answer thing fully working in clips, 
-        I have to think a little harder,
-        but for Java however, this will work I think?
-         (press 1) to continue]")
-   (printout t crlf "2.Education")
-   (printout t crlf "3.Health")
-  ; (printout t crlf "4.Community")
-  ; (printout t crlf "5.Other " crlf)
-  ; (printout t crlf "6.Don't care " crlf)
-  (bind ?response (read))
-  (switch ?response
-    (case 1 then (assert (nameofvariable (name arts_and_heritage)(cf 0.6)(true_or_false TRUE)))
-    (assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE)))
+=>(printout t crlf "Would you like to donate to arts (type in 'Y' OR 'N')")
+  (bind ?response1 (read))
+  (printout t crlf "Would you like to donate to education (type in 'Y' OR 'N')")
+  (bind ?response2 (read))
+  (printout t crlf "Would you like to donate to community (type in 'Y' OR 'N')")
+  (bind ?response3 (read))
+  (printout t crlf "Would you like to donate to health (type in 'Y' OR 'N')")
+  (bind ?response4 (read))
+  ; (bind ?response5 (read))
+  (if (eq ?response1 Y) then 
+    (assert (nameofvariable (name arts_and_heritage)(cf 0.5)(true_or_false TRUE)))
     (assert (numbersector (arts TRUE)))
-    (assert (numbersector (education TRUE))))
-    ; (case 2 then  (assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE))))
-    ; (case 3 then  (assert (nameofvariable (name health)(cf 0.6)(true_or_false TRUE))))
-    ; (case 4 then  (assert (nameofvariable (name community)(cf 0.6)(true_or_false TRUE))))
-    ; (case 5 then  (assert (nameofvariable (name other)(cf -0.1)(true_or_false TRUE)))    
-  )
+  else (printout t crlf "arts won't be adjusted"))
+  (if (eq ?response2 Y) then 
+    (assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE)))
+    (assert (numbersector (education TRUE)))
+    else (printout t crlf "arts won't be adjusted"))
+ (if (eq ?response3 Y) then 
+    (assert (nameofvariable (name community)(cf 0.6)(true_or_false TRUE)))
+    (assert (numbersector (community TRUE)))
+    else (printout t crlf "arts won't be adjusted"))
+  (if (eq ?response4 Y) then 
+    (assert (nameofvariable (name health)(cf 0.6)(true_or_false TRUE)))
+    (assert (numbersector (health TRUE)))
+    else (printout t crlf "arts won't be adjusted"))
 )
-
-
 
 (defrule charity_arts_subsector1
   (numbersector (arts TRUE))
