@@ -425,9 +425,10 @@
   ; (printout t crlf "6.Don't care " crlf)
   (bind ?response (read))
   (switch ?response
-    (case 1 then  (assert (nameofvariable (name arts_and_heritage)(cf 0.6)(true_or_false TRUE)))
+    (case 1 then (assert (nameofvariable (name arts_and_heritage)(cf 0.6)(true_or_false TRUE)))
+    (assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE)))
     (assert (numbersector (arts TRUE)))
-    (assert (numbersector (education TRUE)))
+    (assert (numbersector (education TRUE))))
     ; (case 2 then  (assert (nameofvariable (name education)(cf 0.6)(true_or_false TRUE))))
     ; (case 3 then  (assert (nameofvariable (name health)(cf 0.6)(true_or_false TRUE))))
     ; (case 4 then  (assert (nameofvariable (name community)(cf 0.6)(true_or_false TRUE))))
