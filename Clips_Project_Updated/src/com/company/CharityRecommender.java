@@ -329,7 +329,7 @@ public class CharityRecommender {
         System.out.println("Show Detail Page");
         System.out.println("--------------------");
 
-        ArrayList<Map<String, String>> neighbours = getNeighbours(item, csvRecords);
+        ArrayList<Map<String, String>> neighbours = getNeighbours(item);
         detailForm.loadDetail(item);
         detailForm.loadSimilarCharities(neighbours);
 
