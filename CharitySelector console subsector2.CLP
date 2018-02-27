@@ -398,6 +398,7 @@
 ;**** Rule16:  choice of Sector
 (defrule charity_choice
 ; for debugging purposes, I put salience in so this one will fire first.
+    (declare (salience 999))
 =>(printout t crlf "Would you like to donate to arts (type in 'Y' OR 'N')")
   (bind ?response1 (read))
   (printout t crlf "Would you like to donate to education (type in 'Y' OR 'N')")
@@ -497,25 +498,23 @@
 )
 
 ;**** Rule13:  preference for charities which submitted compliance 
-(defrule charity_gov_compl
-; salience for debugging purposes
-    (declare (salience 999))
-=>      (printout t crlf "Can you let us know if you agree with the following statement?:
+; (defrule charity_gov_compl
+; ; salience for debugging purposes
+;     (declare (salience 999))
+; =>      (printout t crlf "Can you let us know if you agree with the following statement?:
 
-        I don't mind to donate to charities which did not voluntarily submitted a code of compliance? (y/n)") 
-        (bind ?response (read))
-    (if (eq ?response y) then 
-        (printout t crlf "Do have a problem with donating to charities which did not submitted code of compliance? (y/n)") 
-        (bind ?response2 (read))
-        (assert (nameofvariable (name sub_gov_yes)(cf 1)(true_or_false TRUE)))
-                (assert (nameofvariable (name sub_gov_no)(cf -0.1)(true_or_false TRUE)))
-                (assert (nameofvariable (name sub_gov_not_req)(cf -0.1)(true_or_false TRUE)))
-                
-    else
-        (assert (nameofvariable (name sub_gov_yes)(cf -0.4)(true_or_false TRUE)))
-                
-        )
-)
+;         I don't mind to donate to charities which did not voluntarily submitted a code of compliance? (y/n)") 
+;         (bind ?response (read))
+;     (if (eq ?response y) then 
+;         (printout t crlf "Do have a problem with donating to charities which did not submitted code of compliance? (y/n)") 
+;         (bind ?response2 (read))
+;         (assert (nameofvariable (name sub_gov_yes)(cf 1)(true_or_false TRUE)))
+;                 (assert (nameofvariable (name sub_gov_no)(cf -0.1)(true_or_false TRUE)))
+;                 (assert (nameofvariable (name sub_gov_not_req)(cf -0.1)(true_or_false TRUE)))
+;     else
+;         (assert (nameofvariable (name sub_gov_yes)(cf -0.4)(true_or_false TRUE)))                
+;         )
+; )
 
 
 
