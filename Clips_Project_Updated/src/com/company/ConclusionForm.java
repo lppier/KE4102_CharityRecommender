@@ -71,15 +71,17 @@ public class ConclusionForm {
 
         constraints.gridx = 0;
         constraints.gridy = (itemCount * 2);
-        constraints.weightx = 1;
-        constraints.weighty = 1;
+        constraints.weightx = 0.9;
+        constraints.weighty = 0.5;
+        constraints.insets = new Insets(0,0,0,0);
         Component charityName = new JLabel(WordUtils.capitalizeFully(record.get("Name of Organisation")));
         listPanel.add(charityName, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = (itemCount * 2);
         constraints.weightx = 0.1;
-        constraints.weighty = 1;
+        constraints.weighty = 0.5;
+        constraints.insets = new Insets(0,0,0,0);
         JProgressBar cfProgessBar = new JProgressBar();
         cfProgessBar.setValue((int)(cfValue * 100));
         cfProgessBar.setString(String.format("%.4f", cfValue));
@@ -88,15 +90,17 @@ public class ConclusionForm {
 
         constraints.gridx = 0;
         constraints.gridy = (itemCount * 2) + 1;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
+        constraints.weightx = 0.9;
+        constraints.weighty = 0.5;
+        constraints.insets = new Insets(0,0,7,0);
         Component linkButton = createHyperLink(record.get("website"));
         listPanel.add(linkButton, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = (itemCount * 2) + 1;
         constraints.weightx = 0.1;
-        constraints.weighty = 1;
+        constraints.weighty = 0.5;
+        constraints.insets = new Insets(0,0,7,0);
         listPanel.add(createDetailLink(record), constraints);
 
         itemCount += 1;
