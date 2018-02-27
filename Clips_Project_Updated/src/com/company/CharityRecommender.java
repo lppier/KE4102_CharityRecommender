@@ -302,7 +302,7 @@ public class CharityRecommender {
         conclusionForm.clearListPanel();
         goals = new Helpers().getFirstN(goals, 10);
         goals.forEach((charityNameId, charityCfValue) -> {
-            conclusionForm.addItem(csvRecords.get(charityNameId));
+            conclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
         });
     }
 

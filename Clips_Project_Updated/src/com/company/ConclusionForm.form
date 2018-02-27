@@ -41,7 +41,7 @@
             <border type="none"/>
             <children/>
           </grid>
-          <grid id="747a" binding="listPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="747a" binding="listPanel" layout-manager="GridBagLayout">
             <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>

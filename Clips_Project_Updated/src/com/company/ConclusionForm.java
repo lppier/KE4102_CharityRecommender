@@ -23,14 +23,17 @@ public class ConclusionForm {
     private JPanel leftBorder;
     private JPanel listPanel;
     private JLabel textLabel;
+    private GridBagLayout layout = new GridBagLayout();
+    private GridBagConstraints constraints = new GridBagConstraints();
+    private Integer itemCount = 0;
 
     ConclusionForm(CharityRecommender recommender) {
 
         charityRecommender = recommender;
 
-        GridLayout gridListLayout = new GridLayout(10, 1);
-        gridListLayout.setVgap(10);
-        listPanel.setLayout(gridListLayout);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH;
+        listPanel.setLayout(layout);
 
         nextButton.addActionListener(new ActionListener() {
             @Override
@@ -55,33 +58,48 @@ public class ConclusionForm {
 
     public void clearListPanel() {
         listPanel.removeAll();
+        itemCount = 0;
     }
 
-    public void addItem(Map<String, String> record) {
+    public void addItem(Map<String, String> record, Double cfValue) {
+
         System.out.println("ConclusionForm->addItem");
         System.out.println("-------------");
 
         System.out.println(record.get("Name of Organisation"));
         System.out.println(record.get("website"));
 
-        JPanel itemPanel = new JPanel();
-        GridLayout gridLayout = new GridLayout(2, 1);
-        itemPanel.setLayout(gridLayout);
-
+        constraints.gridx = 0;
+        constraints.gridy = (itemCount * 2);
+        constraints.weightx = 1;
+        constraints.weighty = 1;
         Component charityName = new JLabel(WordUtils.capitalizeFully(record.get("Name of Organisation")));
-        itemPanel.add(charityName);
+        listPanel.add(charityName, constraints);
 
-        JPanel itemDetailPanel = new JPanel();
-        GridLayout gridDetailLayout = new GridLayout(1, 2);
-        itemDetailPanel.setLayout(gridDetailLayout);
+        constraints.gridx = 1;
+        constraints.gridy = (itemCount * 2);
+        constraints.weightx = 0.1;
+        constraints.weighty = 1;
+        JProgressBar cfProgessBar = new JProgressBar();
+        cfProgessBar.setValue((int)(cfValue * 100));
+        cfProgessBar.setString(String.format("%.4f", cfValue));
+        cfProgessBar.setStringPainted(true);
+        listPanel.add(cfProgessBar, constraints);
 
-        itemDetailPanel.add(createHyperLink(record.get("website")));
-        itemDetailPanel.add(createDetailLink(record));
+        constraints.gridx = 0;
+        constraints.gridy = (itemCount * 2) + 1;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        Component linkButton = createHyperLink(record.get("website"));
+        listPanel.add(linkButton, constraints);
 
-        itemPanel.add(itemDetailPanel);
+        constraints.gridx = 1;
+        constraints.gridy = (itemCount * 2) + 1;
+        constraints.weightx = 0.1;
+        constraints.weighty = 1;
+        listPanel.add(createDetailLink(record), constraints);
 
-        listPanel.add(itemPanel);
-
+        itemCount += 1;
         System.out.println("#############");
     }
 
