@@ -6,13 +6,7 @@ public class RecommendedCharityModel {
 
     public String CharityName;
 
-    public double RecommendedValue;
-
-    public String UEN;
-
-    public String GetCharityNameAndRecommendedValueAppended(){
-        return this.CharityName + " " + this.RecommendedValue + System.lineSeparator();
-    }
+    public Double RecommendedValue;
 
     public RecommendedCharityModel(String charityName, String recommendedValue){
         if (charityName != null && !charityName.isEmpty())

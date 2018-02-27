@@ -7,6 +7,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.BreakIterator;
+import java.util.*;
+import java.util.stream.*;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 public class Helpers {
     public String getFullpath(String filePath) {
@@ -39,6 +45,7 @@ public class Helpers {
 
     /*****************/
     /* wrapLabelText */
+
     /*****************/
     public void wrapLabelText(
             JLabel label,
@@ -61,7 +68,7 @@ public class Helpers {
         boundary.setText(text);
 
         StringBuffer trial = new StringBuffer();
-        StringBuffer real = new StringBuffer("<html><center>");
+        StringBuffer real = new StringBuffer("<html>");
 
         int start = boundary.first();
         for (int end = boundary.next(); end != BreakIterator.DONE;
@@ -92,5 +99,53 @@ public class Helpers {
         real.append("</html>");
 
         label.setText(real.toString());
+    }
+
+    public LinkedHashMap<String, Map<String, String>> readCSV(String filePath, String keyColumn) throws IOException {
+        try (
+                Reader reader = new BufferedReader(new FileReader(new Helpers().getFullpath(filePath)));
+                CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                        .withFirstRecordAsHeader()
+                        .withIgnoreHeaderCase()
+                        .withTrim())
+        ) {
+            LinkedHashMap<String, Map<String, String>> hashMap = new LinkedHashMap<>();
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+                hashMap.put(csvRecord.get(keyColumn), csvRecord.toMap());
+            }
+            return hashMap;
+
+        }
+    }
+
+    public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Boolean asc) {
+        if (asc) {
+            return map.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (e1, e2) -> e1,
+                            LinkedHashMap::new
+                    ));
+        } else {
+            return map.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (e1, e2) -> e1,
+                            LinkedHashMap::new
+                    ));
+
+        }
+    }
+
+    public <K, V> Map<K, V> getFirstN(Map<K, V> map, Integer count) {
+        return map.entrySet().stream().limit(count)
+                .collect(LinkedHashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), LinkedHashMap::putAll);
     }
 }

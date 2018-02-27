@@ -3,11 +3,11 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import net.sf.clipsrules.jni.*;
 
-import java.util.List;
-
+import org.apache.commons.lang3.text.WordUtils;
 
 
 /* Implement FindFact which returns just a FactAddressValue or null */
@@ -55,6 +55,7 @@ public class CharityRecommender {
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
+    private DetailForm detailForm = new DetailForm(this);
 
     private ButtonGroup radioButtonsGroup;
     private List<JCheckBox> checkboxGroup;
@@ -74,8 +75,9 @@ public class CharityRecommender {
     private ClipsAssertsHandler clipsAssertsHandler;
 
     // For result retrieval
-    private Vector<String> goal_names = new Vector<>();
-    private Vector<Float> goal_values = new Vector<>();
+    private Vector<String> goalNames = new Vector<>();
+    private Vector<Double> goalValues = new Vector<>();
+    private Map<String, Double> goals = new HashMap<>();
 
     // For final list of recommended charities
     private List<RecommendedCharityModel> recommendedCharities;
@@ -89,7 +91,7 @@ public class CharityRecommender {
         /*=================================*/
         /* Give the frame an initial size. */
         /*=================================*/
-        mainFrame.setSize(600, 500);
+        mainFrame.setSize(600, 550);
 
         /*=============================================================*/
         /* Terminate the program when the user closes the application. */
@@ -108,6 +110,7 @@ public class CharityRecommender {
         mainFrame.getContentPane().add(greetingForm.getMainPanel(), "greetingPanel");
         mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
         mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
+        mainFrame.getContentPane().add(detailForm.getMainPanel(), "detailPanel");
 
         /*=================================*/
         /* Set Default Form to be visible. */
@@ -167,7 +170,7 @@ public class CharityRecommender {
     /*******************/
     private void handleGreetingRespose(FactAddressValue factAddressValue) throws Exception {
         System.out.println("Show Greeting Page");
-        System.out.println("#############");
+        System.out.println("------------------");
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
         cardLayout.show(mainFrame.getContentPane(), "greetingPanel");
 
@@ -180,7 +183,7 @@ public class CharityRecommender {
 
     private void handleInterviewResponse(FactAddressValue factAddressValue) throws Exception {
         System.out.println("Show Interview Page");
-        System.out.println("#############");
+        System.out.println("-------------------");
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
         cardLayout.show(mainFrame.getContentPane(), "interviewPanel");
 
@@ -267,8 +270,6 @@ public class CharityRecommender {
             }
 
             rButton.setActionCommand(buttonAnswer);
-            System.out.println(interviewForm.getChoicePanel());
-            System.out.println(rButton);
             radioButtonsGroup.add(rButton);
             interviewForm.getChoicePanel().add(rButton);
 
@@ -282,35 +283,39 @@ public class CharityRecommender {
         }
     }
 
-    private void handleConclusionResponse(FactAddressValue factAddressValue) throws Exception {
+    private void handleConclusionResponse() throws Exception {
         System.out.println("Show Conclusion Page");
-        System.out.println("#############");
+        System.out.println("--------------------");
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
         cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
 
-        /*====================================*/
+        /*===============================*/
+        /* Load charities data from CSV. */
+        /*===============================*/
+        HashMap<String, Map<String, String>> csvRecords = new Helpers().readCSV("/data/charity_details.csv", "clips_name");
+
+        /*=========================*/
         /* Display charities list. */
-        /*====================================*/
-        String theText = "";
-        recommendedCharities = new ArrayList<RecommendedCharityModel>();
-        getGoals();
-        for (int i = 0; i < goal_names.size(); i++) {
-            RecommendedCharityModel recommendedCharity = new RecommendedCharityModel(goal_names.elementAt(i).toString(), goal_values.elementAt(i).toString());
-            recommendedCharities.add(recommendedCharity);
-        }
+        /*=========================*/
+        loadGoals();
 
-        // Sort the recommended charities by their recommendation level in descending order
-        Collections.sort(recommendedCharities, new Comparator<RecommendedCharityModel>() {
-            public int compare(RecommendedCharityModel c1, RecommendedCharityModel c2) {
-                return -Double.compare(c1.RecommendedValue, c2.RecommendedValue);
-            }
+        conclusionForm.clearListPanel();
+        goals = new Helpers().getFirstN(goals, 10);
+        goals.forEach((charityNameId, charityCfValue) -> {
+            conclusionForm.addItem(csvRecords.get(charityNameId));
         });
+    }
 
-        // get the value of the text to show
-        for (RecommendedCharityModel charityModel : recommendedCharities) {
-            theText += charityModel.GetCharityNameAndRecommendedValueAppended();
-        }
-        conclusionForm.setTextLabel(theText);
+    private void handleDetailResponse(Map<String, String> data) {
+        System.out.println("Show Detail Page");
+        System.out.println("--------------------");
+
+        detailForm.loadDetail(data);
+
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "detailPanel");
+
+        System.out.println(data);
     }
 
     private void handleResponse() throws Exception {
@@ -320,20 +325,19 @@ public class CharityRecommender {
 
         String state = factValue.getSlotValue("state").toString();
         switch (state) {
+            case "greeting":
+                this.state = State.GREETING;
+                handleGreetingRespose(factValue);
+                break;
             case "interview":
                 this.state = State.INTERVIEW;
                 handleInterviewResponse(factValue);
                 break;
             case "conclusion":
                 this.state = State.CONCLUSION;
-                handleConclusionResponse(factValue);
-                break;
-            case "greeting":
-                this.state = State.GREETING;
-                handleGreetingRespose(factValue);
+                handleConclusionResponse();
                 break;
         }
-
     }
 
     /**************/
@@ -400,19 +404,27 @@ public class CharityRecommender {
         System.out.println("#############");
     }
 
-    private void getGoals() {
-
+    private void loadGoals() {
+        System.out.println("### Load Goals ###");
+        goals.clear();
         for (FactInstance factInstance : latest_facts) {
             FactInstance fi = factInstance;
             if (fi.getRelationName().equals("current_goal")) {
                 for (SlotValue sv : fi.getSlotValues()) {
                     if (sv.getSlotName().equals("goal"))
-                        goal_names.add(sv.getSlotValue());
+                        goalNames.add(sv.getSlotValue());
                     else if (sv.getSlotName().equals("cf"))
-                        goal_values.add(Float.parseFloat(sv.getSlotValue()));
+                        goalValues.add(Double.parseDouble(sv.getSlotValue()));
                 }
             }
         }
+        System.out.println("------------------");
+        System.out.println("##### Sort it ####");
+        for (int i = 0; i < goalNames.size(); i++) {
+            goals.put(goalNames.elementAt(i), goalValues.elementAt(i));
+        }
+        goals = new Helpers().sortByValue(goals, false);
+        System.out.println("##################");
     }
 
     public void startInterview() throws CLIPSException {
@@ -444,13 +456,20 @@ public class CharityRecommender {
         } else {
             theAnswer = radioButtonsGroup.getSelection().getActionCommand();
             Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
-            if (answers != null)
-            {
+            if (answers != null) {
                 variableAsserts.addAll(answers);
             }
         }
 
         processRules();
+    }
+
+    public void openDetail(Map<String, String> data) {
+        handleDetailResponse(data);
+    }
+
+    public void showConclusion() throws Exception {
+        handleConclusionResponse();
     }
 
     private boolean nothingSelected() {
@@ -492,8 +511,6 @@ public class CharityRecommender {
     public void restartInterview() throws CLIPSException {
         variableAsserts.clear();
         priorAnswers.clear();
-        goal_names.clear();
-        goal_values.clear();
         recommendedCharities.clear();
         processRules();
     }
@@ -507,28 +524,7 @@ public class CharityRecommender {
         processRules();
     }
 
-
-    public static void createNewDatabase(String fileName) {
-
-        /*
-        String url = "jdbc:sqlite:/Users/pierlim/IdeaProjects/Test/" + fileName;
-
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-                DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
-                System.out.println("A new database has been created.");
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        */
-    }
-
     public static void main(String args[]) {
-        createNewDatabase("test.db"); // For the case that we need to use external database to lookup more details
-
         // Create the frame on the event dispatching thread.
         SwingUtilities.invokeLater(
                 new Runnable() {
