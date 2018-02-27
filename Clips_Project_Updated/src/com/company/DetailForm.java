@@ -1,9 +1,13 @@
 package com.company;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.WeakHashMap;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 public class DetailForm {
@@ -15,7 +19,6 @@ public class DetailForm {
     private JPanel textPanel;
     private JLabel titleLabel;
     private JPanel detailPanel;
-    private JPanel listPanel;
     private JLabel uenLabel;
     private JLabel statusLabel;
     private JLabel typeLabel;
@@ -25,10 +28,15 @@ public class DetailForm {
     private JLabel primarySectorLabel;
     private JLabel subSectorLabel;
     private JLabel addressLabel;
+    private JPanel otherPanel;
+    private JPanel listPanel;
+    private Integer itemCount = 0;
+    private Helpers helpers = new Helpers();
 
     DetailForm(CharityRecommender recommender) {
 
         charityRecommender = recommender;
+        listPanel.setLayout(new GridLayout(5, 1));
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -46,16 +54,39 @@ public class DetailForm {
         return mainPanel;
     }
 
-    public void loadDetail(Map<String, String> data) {
-        titleLabel.setText(WordUtils.capitalizeFully(data.get("Name of Organisation")));
-        uenLabel.setText(data.get("UEN"));
-        statusLabel.setText(data.get("status"));
-        dateOfRegLabel.setText(data.get("date_of_reg"));
-        ipcPeriodLabel.setText(data.get("IPC Period"));
-        ipcStatusLabel.setText(data.get("ipc_status"));
-        primarySectorLabel.setText(data.get("Sector"));
-        subSectorLabel.setText(data.get("Classification"));
-        typeLabel.setText(data.get("Type"));
-        addressLabel.setText(data.get("Address"));
+    public void loadDetail(Map<String, String> item) {
+        titleLabel.setText(WordUtils.capitalizeFully(item.get("Name of Organisation")));
+        uenLabel.setText(item.get("UEN"));
+        statusLabel.setText(item.get("status"));
+        dateOfRegLabel.setText(item.get("date_of_reg"));
+        ipcPeriodLabel.setText(item.get("IPC Period"));
+        ipcStatusLabel.setText(item.get("ipc_status"));
+        primarySectorLabel.setText(item.get("Sector"));
+        subSectorLabel.setText(item.get("Classification"));
+        typeLabel.setText(item.get("Type"));
+        addressLabel.setText(item.get("Address"));
+    }
+
+    public void loadSimilarCharities(ArrayList<Map<String, String>> list) {
+        listPanel.removeAll();
+        itemCount = 0;
+        for (Map<String, String> record : list) {
+            if (itemCount < 5) {
+                JPanel itemPanel = new JPanel();
+                itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.PAGE_AXIS));
+
+                String name = record.get("Name of Organisation");
+                System.out.println(name);
+
+                JLabel nameLabel = new JLabel(WordUtils.capitalizeFully(name));
+                nameLabel.setFont(new Font("Default", Font.ITALIC, 12));
+                itemPanel.add(nameLabel);
+                itemPanel.add(new JLabel("UEN: " + record.get("UEN")));
+                itemPanel.add(new JLabel(record.get("Sector") + " - " + record.get("Classification")));
+
+                listPanel.add(itemPanel);
+            }
+            itemCount += 1;
+        }
     }
 }

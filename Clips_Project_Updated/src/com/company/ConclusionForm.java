@@ -26,6 +26,7 @@ public class ConclusionForm {
     private GridBagLayout layout = new GridBagLayout();
     private GridBagConstraints constraints = new GridBagConstraints();
     private Integer itemCount = 0;
+    private Helpers helpers = new Helpers();
 
     ConclusionForm(CharityRecommender recommender) {
 
@@ -61,20 +62,20 @@ public class ConclusionForm {
         itemCount = 0;
     }
 
-    public void addItem(Map<String, String> record, Double cfValue) {
+    public void addItem(Map<String, String> item, Double cfValue) {
 
         System.out.println("ConclusionForm->addItem");
         System.out.println("-------------");
 
-        System.out.println(record.get("Name of Organisation"));
-        System.out.println(record.get("website"));
+        System.out.println(item.get("Name of Organisation"));
+        System.out.println(item.get("website"));
 
         constraints.gridx = 0;
         constraints.gridy = (itemCount * 2);
         constraints.weightx = 0.7;
         constraints.weighty = 0.5;
         constraints.insets = new Insets(0,0,0,0);
-        Component charityName = new JLabel(WordUtils.capitalizeFully(record.get("Name of Organisation")));
+        Component charityName = new JLabel(WordUtils.capitalizeFully(item.get("Name of Organisation")));
         listPanel.add(charityName, constraints);
 
         constraints.gridx = 1;
@@ -93,7 +94,7 @@ public class ConclusionForm {
         constraints.weightx = 0.7;
         constraints.weighty = 0.5;
         constraints.insets = new Insets(0,0,7,0);
-        Component linkButton = createHyperLink(record.get("website"));
+        Component linkButton = helpers.createHyperLink(item.get("website"));
         listPanel.add(linkButton, constraints);
 
         constraints.gridx = 1;
@@ -101,83 +102,15 @@ public class ConclusionForm {
         constraints.weightx = 0.3;
         constraints.weighty = 0.5;
         constraints.insets = new Insets(0,0,7,0);
-        listPanel.add(createDetailLink(record), constraints);
-
-        itemCount += 1;
-        System.out.println("#############");
-    }
-
-    private Component createDetailLink(Map<String, String> record) {
-        JPanel panel = new JPanel();
-        FlowLayout layout = new FlowLayout();
-        layout.setAlignment(FlowLayout.RIGHT);
-        layout.setHgap(0);
-        layout.setVgap(0);
-        panel.setLayout(layout);
-
-        JButton button = new JButton("<HTML><U>View Details</U></HTML>");
-        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setForeground(Color.BLUE);
-        button.setBorderPainted(false);
-        button.setOpaque(false);
-        button.setBackground(Color.WHITE);
-        button.setToolTipText("Look into " + record.get("Name of Organisation"));
-
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                charityRecommender.openDetail(record);
+                charityRecommender.openDetail(item);
             }
         };
-        button.addActionListener(actionListener);
+        listPanel.add(helpers.createDetailLink(item, actionListener), constraints);
 
-        panel.add(button);
-        return panel;
-    }
-
-    private Component createHyperLink(String link) {
-        JPanel panel = new JPanel();
-        FlowLayout layout = new FlowLayout();
-        layout.setAlignment(FlowLayout.LEFT);
-        layout.setHgap(0);
-        layout.setVgap(0);
-        panel.setLayout(layout);
-
-        try {
-            if (!link.contains("http")) {
-                link = "http://" + link;
-            }
-            final URI uri = new URI(link);
-            JButton button = new JButton("<HTML><U>" + uri.toString() + "</U></HTML>");
-            button.setHorizontalAlignment(SwingConstants.LEFT);
-            button.setForeground(Color.BLUE);
-            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            button.setBorderPainted(false);
-            button.setOpaque(false);
-            button.setBackground(Color.WHITE);
-            button.setToolTipText(uri.toString());
-            ActionListener actionListener = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (Desktop.isDesktopSupported()) {
-                        try {
-                            Desktop.getDesktop().browse(uri);
-                        } catch (IOException ex) {
-                            /* TODO: error handling */
-                            ex.printStackTrace();
-                        }
-                    } else { /* TODO: error handling */ }
-                }
-            };
-            button.addActionListener(actionListener);
-            panel.add(button);
-        } catch (URISyntaxException e) {
-            JLabel noLinkLabel = new JLabel("No Website");
-            noLinkLabel.setForeground(Color.GRAY);
-            panel.add(noLinkLabel);
-        }
-        return panel;
+        itemCount += 1;
+        System.out.println("#############");
     }
 }

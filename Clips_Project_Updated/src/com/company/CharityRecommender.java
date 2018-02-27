@@ -2,6 +2,7 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -78,15 +79,22 @@ public class CharityRecommender {
     private Vector<String> goalNames = new Vector<>();
     private Vector<Double> goalValues = new Vector<>();
     private Map<String, Double> goals = new HashMap<>();
-
-    // For final list of recommended charities
-    private List<RecommendedCharityModel> recommendedCharities;
+    private HashMap<String, Map<String, String>> csvRecords;
 
     private void initializeInterface() {
         /*================================*/
         /* Create a new JFrame container. */
         /*================================*/
         mainFrame = new JFrame(charityResources.getString("CharityRecommender"));
+
+        /*===============================*/
+        /* Load charities data from CSV. */
+        /*===============================*/
+        try {
+            csvRecords = new Helpers().readCSV("/data/charity_details.csv", "clips_name");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         /*=================================*/
         /* Give the frame an initial size. */
@@ -283,16 +291,27 @@ public class CharityRecommender {
         }
     }
 
+    private ArrayList<Map<String, String>> getNeighbours(Map<String, String> item) {
+        ArrayList<Map<String, String>> neighbours = new ArrayList<>();
+        for (int i = 1; i <= 15; i++) {
+            String uen = item.get("Neighbour " + i + " UEN");
+            if (!uen.equals("")) {
+                Map<String, String> neighbour = new HashMap<>();
+                neighbour.put("UEN", uen);
+                neighbour.put("Name of Organisation", item.get("Neighbour " + i + " Name of Organisation"));
+                neighbour.put("Sector", item.get("Neighbour " + i + " Sector"));
+                neighbour.put("Classification", item.get("Neighbour " + i + " Classification"));
+                neighbours.add(neighbour);
+            }
+        }
+        return neighbours;
+    }
+
     private void handleConclusionResponse() throws Exception {
         System.out.println("Show Conclusion Page");
         System.out.println("--------------------");
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
         cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
-
-        /*===============================*/
-        /* Load charities data from CSV. */
-        /*===============================*/
-        HashMap<String, Map<String, String>> csvRecords = new Helpers().readCSV("/data/charity_details.csv", "clips_name");
 
         /*=========================*/
         /* Display charities list. */
@@ -306,16 +325,16 @@ public class CharityRecommender {
         });
     }
 
-    private void handleDetailResponse(Map<String, String> data) {
+    private void handleDetailResponse(Map<String, String> item) {
         System.out.println("Show Detail Page");
         System.out.println("--------------------");
 
-        detailForm.loadDetail(data);
+        ArrayList<Map<String, String>> neighbours = getNeighbours(item, csvRecords);
+        detailForm.loadDetail(item);
+        detailForm.loadSimilarCharities(neighbours);
 
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
         cardLayout.show(mainFrame.getContentPane(), "detailPanel");
-
-        System.out.println(data);
     }
 
     private void handleResponse() throws Exception {
@@ -511,7 +530,6 @@ public class CharityRecommender {
     public void restartInterview() throws CLIPSException {
         variableAsserts.clear();
         priorAnswers.clear();
-        recommendedCharities.clear();
         processRules();
     }
 

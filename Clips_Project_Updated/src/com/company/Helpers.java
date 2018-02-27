@@ -4,8 +4,12 @@ package com.company;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.BreakIterator;
 import java.util.*;
 import java.util.stream.*;
@@ -99,6 +103,73 @@ public class Helpers {
         real.append("</html>");
 
         label.setText(real.toString());
+    }
+
+    public Component createDetailLink(Map<String, String> record, ActionListener actionListener) {
+        JPanel panel = new JPanel();
+        FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.RIGHT);
+        layout.setHgap(0);
+        layout.setVgap(0);
+        panel.setLayout(layout);
+
+        JButton button = new JButton("<HTML><U>View Details</U></HTML>");
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setForeground(Color.BLUE);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setBackground(Color.WHITE);
+        button.setToolTipText("Look into " + record.get("Name of Organisation"));
+        button.addActionListener(actionListener);
+
+        panel.add(button);
+        return panel;
+    }
+
+    public Component createHyperLink(String link) {
+        JPanel panel = new JPanel();
+        FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.LEFT);
+        layout.setHgap(0);
+        layout.setVgap(0);
+        panel.setLayout(layout);
+
+        try {
+            if (!link.contains("http")) {
+                link = "http://" + link;
+            }
+            final URI uri = new URI(link);
+            JButton button = new JButton("<HTML><U>" + uri.toString() + "</U></HTML>");
+            button.setHorizontalAlignment(SwingConstants.LEFT);
+            button.setForeground(Color.BLUE);
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            button.setBorderPainted(false);
+            button.setOpaque(false);
+            button.setBackground(Color.WHITE);
+            button.setToolTipText(uri.toString());
+            ActionListener actionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            Desktop.getDesktop().browse(uri);
+                        } catch (IOException ex) {
+                            /* TODO: error handling */
+                            ex.printStackTrace();
+                        }
+                    } else { /* TODO: error handling */ }
+                }
+            };
+            button.addActionListener(actionListener);
+            panel.add(button);
+        } catch (URISyntaxException e) {
+            JLabel noLinkLabel = new JLabel("N/A");
+            noLinkLabel.setForeground(Color.GRAY);
+            panel.add(noLinkLabel);
+        }
+        return panel;
     }
 
     public LinkedHashMap<String, Map<String, String>> readCSV(String filePath, String keyColumn) throws IOException {
