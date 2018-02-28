@@ -15,6 +15,7 @@ public class InterviewForm {
     private JButton nextButton;
     private JButton prevButton;
     private JLabel textLabel;
+    private JButton jumpToConclusionButton;
 
     InterviewForm(CharityRecommender recommender) {
 
