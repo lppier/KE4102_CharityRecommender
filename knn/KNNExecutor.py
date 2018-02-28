@@ -56,7 +56,7 @@ class KNNExecutor:
 
                     distance = distances[idx, neighbor_number]
                     print("Distance: " + str(distance))
-                    if distance > 0 and set(filter_value_test) == set(filter_value_training):
+                    if distance > 0.02 and set(filter_value_test) == set(filter_value_training):
                         output += self.getTextForOutput(training_df[Configurations.knn_columns_to_select].iloc[neighbor])
 
                 output += "\n"
@@ -71,7 +71,7 @@ class KNNExecutor:
         text = ""
         if charity_details is not None:
             for column in Configurations.knn_columns_to_select:
-                text += "\"" + charity_details[column] + "\"" + ","
+                text += "\"" + str(charity_details[column]) + "\"" + ","
 
         return text
 
