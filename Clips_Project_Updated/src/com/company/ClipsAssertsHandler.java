@@ -644,7 +644,7 @@ public class ClipsAssertsHandler {
                 c_ans.add("(assert (current_question conclusion))");
 
                 Vector<String> d_ans = new Vector<>();
-                d_ans.add("(assert (nameofvariable (name professional_contemporay_ethnic)(cf 0.7)(true_or_false TRUE)))");
+                d_ans.add("(assert (nameofvariable (name professional_contemporary_and_ethnic_dance)(cf 0.7)(true_or_false TRUE)))");
                 d_ans.add("(assert (current_question conclusion))");
 
                 Vector<String> e_ans = new Vector<>();
