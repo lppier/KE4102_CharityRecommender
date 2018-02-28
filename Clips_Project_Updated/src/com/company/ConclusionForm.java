@@ -36,18 +36,14 @@ public class ConclusionForm {
     private ActionListener restartActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                charityRecommender.restartInterview();
-            } catch (CLIPSException e1) {
-                e1.printStackTrace();
-            }
+            charityRecommender.restartInterview();
         }
     };
 
     private ActionListener backActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-                charityRecommender.handleBackFromJumpConclusion();
+            charityRecommender.handleBackFromJumpConclusion();
         }
     };
 

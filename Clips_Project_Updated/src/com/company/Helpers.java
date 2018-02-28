@@ -1,12 +1,9 @@
 package com.company;
 
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,30 +16,25 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class Helpers {
-    public String getFullpath(String filePath) {
-        return getClass().getResource(filePath).getFile();
-    }
 
     public String getFileData(String filePath) throws IOException {
         String contents = "";
-        try (BufferedReader br = new BufferedReader(new FileReader(getFullpath(filePath)))) {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filePath)));
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
 
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            contents = sb.toString();
+        while (line != null) {
+            sb.append(line);
+            sb.append(System.lineSeparator());
+            line = br.readLine();
         }
+        contents = sb.toString();
 
         return contents;
     }
 
-    public Image loadImage(String filePath, Integer width, Integer height) throws IOException {
-        BufferedImage img = ImageIO.read(new File(getFullpath(filePath)));
-        ImageIcon icon = new ImageIcon(img);
+    public Image loadImage(String filePath, Integer width, Integer height) {
+        ImageIcon icon = new ImageIcon(getClass().getResource(filePath));
         Image image = icon.getImage();
         return image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
@@ -173,11 +165,11 @@ public class Helpers {
 
     public LinkedHashMap<String, Map<String, String>> readCSV(String filePath, String keyColumn) throws IOException {
         try (
-                Reader reader = new BufferedReader(new FileReader(new Helpers().getFullpath(filePath)));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filePath)));
                 CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
                         .withIgnoreHeaderCase()
-                        .withTrim())
+                        .withTrim());
         ) {
             LinkedHashMap<String, Map<String, String>> hashMap = new LinkedHashMap<>();
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
@@ -185,7 +177,6 @@ public class Helpers {
                 hashMap.put(csvRecord.get(keyColumn), csvRecord.toMap());
             }
             return hashMap;
-
         }
     }
 

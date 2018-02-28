@@ -4,7 +4,6 @@ import net.sf.clipsrules.jni.CLIPSException;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import javax.swing.*;
 
 public class GreetingForm {
@@ -23,12 +22,7 @@ public class GreetingForm {
 
         Helpers helpers = new Helpers();
 
-        try {
-            ImageIcon icon = new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 800, 515));
-            imageLabel.setIcon(icon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        imageLabel.setIcon(new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 800, 515)));
 
         nextButton.addActionListener(new ActionListener() {
             @Override

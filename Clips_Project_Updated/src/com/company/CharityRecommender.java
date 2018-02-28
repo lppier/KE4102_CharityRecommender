@@ -1,16 +1,12 @@
 package com.company;
 
-import javax.security.auth.login.Configuration;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
 import net.sf.clipsrules.jni.*;
-
-import org.apache.commons.lang3.text.WordUtils;
 
 
 /* Implement FindFact which returns just a FactAddressValue or null */
@@ -58,7 +54,6 @@ public class CharityRecommender {
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
-    //private ConclusionForm jumpConclusionForm = new ConclusionForm(this);
     private DetailForm detailForm = new DetailForm(this);
 
     private ButtonGroup radioButtonsGroup;
@@ -224,7 +219,7 @@ public class CharityRecommender {
         interviewForm.setTextLabel(theText);
 
         executionThread = null;
-        isExecuting = false;
+        this.isExecuting = false;
     }
 
     private void setupCheckBoxButtons(FactAddressValue factAddressValue) {
@@ -351,8 +346,8 @@ public class CharityRecommender {
         latest_facts = clips.getFactList(); // don't call getFactList() too often, just once here
 //        printFacts();
         currentUIFactValue = clips.findFact("UI-state");
-        String state = currentUIFactValue.getSlotValue("state").toString();
-        switch (state) {
+        String currentState = currentUIFactValue.getSlotValue("state").toString();
+        switch (currentState) {
             case "greeting":
                 this.state = State.GREETING;
                 handleGreetingRespose(currentUIFactValue);
@@ -522,16 +517,6 @@ public class CharityRecommender {
         });
 
         System.out.println("#######################");
-
-//        JButton restartBtn = jumpConclusionForm.getRestartButton();
-//        restartBtn.setText("Back");
-//
-//
-//        jumpConclusionForm.clearListPanel();
-//        goals = new Helpers().getFirstN(goals, 10);
-//        goals.forEach((charityNameId, charityCfValue) -> {
-//            jumpConclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
-//        });
     }
 
     public void openDetail(Map<String, String> data) {
@@ -582,10 +567,9 @@ public class CharityRecommender {
                 tempAsserts.remove(branchStr);
     }
 
-    public void restartInterview() throws CLIPSException {
+    public void restartInterview() {
         variableAsserts.clear();
         priorAnswers.clear();
-//        processRules();
 
         mainFrame.dispose();
 
@@ -609,10 +593,6 @@ public class CharityRecommender {
     }
 
     public void prevButtonAction() throws CLIPSException {
-//        lastAnswer = priorAnswers.get(priorAnswers.size() - 1);
-//
-//        variableAsserts.remove(variableAsserts.size() - 1);
-//        priorAnswers.remove(priorAnswers.size() - 1);
         variableAsserts = priorAnswers;
         processRules();
     }
