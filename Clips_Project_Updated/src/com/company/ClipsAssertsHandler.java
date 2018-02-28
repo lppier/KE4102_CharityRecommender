@@ -19,6 +19,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_fin_eff_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_gov_compl_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_sad_stories_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_established_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_past_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_parents_sector_hash = new Hashtable<>();
@@ -164,37 +165,60 @@ public class ClipsAssertsHandler {
             {
                 // charity_research_hash (likert scale)
                 Vector<String> a_ans = new Vector<>();
-                a_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.3)(true_or_false TRUE)))");
-                a_ans.add("(assert (nameofvariable (name sub_gov_no)(cf 0.3)(true_or_false TRUE)))");
-                a_ans.add("(assert (nameofvariable (name gov_rating_low)(cf 0.3)(true_or_false TRUE)))");
-                a_ans.add("(assert (current_question charity_established))");
+                //a_ans.add("(bind ?*research_variable* 0)");
+                a_ans.add("(assert (research 0))");
+                a_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> b_ans = new Vector<>();
-                b_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.2)(true_or_false TRUE)))");
-                b_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf 0.2)(true_or_false TRUE)))");
-                b_ans.add("(assert (nameofvariable (name gov_rating_low)(cf 0.2)(true_or_false TRUE)))");
-                b_ans.add("(assert (current_question charity_established))");
+                b_ans.add("(assert (research 0.1))");
+                b_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> c_ans = new Vector<>();
-                c_ans.add("(assert (current_question charity_established))");
+                c_ans.add("(assert (research 0.2))");
+                c_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> d_ans = new Vector<>();
-                d_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.5)(true_or_false TRUE)))");
-                d_ans.add("(assert (nameofvariable (name sub_gov_not_req)(cf 0.5)(true_or_false TRUE)))");
-                d_ans.add("(assert (nameofvariable (name gov_rate_med)(cf 0.5)(true_or_false TRUE)))");
-                d_ans.add("(assert (current_question charity_established))");
+                d_ans.add("(assert (research 0.3))");
+                d_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> e_ans = new Vector<>();
-                e_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.8)(true_or_false TRUE)))");
-                e_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf 0.8)(true_or_false TRUE)))");
-                e_ans.add("(assert (nameofvariable (name gov_rate_high)(cf 0.8)(true_or_false TRUE)))");
-                e_ans.add("(assert (current_question charity_established))");
+                b_ans.add("(assert (research 0.4))");
+                e_ans.add("(assert (current_question charity_sad_stories))");
 
                 charity_research_hash.put("a", a_ans);
                 charity_research_hash.put("b", b_ans);
                 charity_research_hash.put("c", c_ans);
                 charity_research_hash.put("d", d_ans);
                 charity_research_hash.put("e", e_ans);
+            }
+
+            {
+                // charity_sad_stories (likert scale)
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (emotional 0.4))");
+                a_ans.add("(assert (current_question charity_established))");
+
+                Vector<String> b_ans = new Vector<>();
+                b_ans.add("(assert (emotional 0.3))");
+                b_ans.add("(assert (current_question charity_established))");
+
+                Vector<String> c_ans = new Vector<>();
+                c_ans.add("(assert (emotional 0.2))");
+                c_ans.add("(assert (current_question charity_established))");
+
+                Vector<String> d_ans = new Vector<>();
+                d_ans.add("(assert (emotional 0.1))");
+                d_ans.add("(assert (current_question charity_established))");
+
+                Vector<String> e_ans = new Vector<>();
+                e_ans.add("(assert (emotional 0))");
+                e_ans.add("(assert (current_question charity_established))");
+
+                charity_sad_stories_hash.put("a", a_ans);
+                charity_sad_stories_hash.put("b", b_ans);
+                charity_sad_stories_hash.put("c", c_ans);
+                charity_sad_stories_hash.put("d", d_ans);
+                charity_sad_stories_hash.put("e", e_ans);
             }
 
             {   //  charity_established qn
@@ -678,7 +702,7 @@ public class ClipsAssertsHandler {
             // ---------------------- Arts and Heritage Sub-Sector Questions --------------------- //
 
             {
-                // charity_research_hash (likert scale)
+                // arts_and_heritage_support (likert scale)
                 Vector<String> a_ans = new Vector<>();
                 a_ans.add("(assert (nameofvariable (name historical_and_cultural_conservation)(cf -0.5)(true_or_false TRUE)))");
                 a_ans.add("(assert (current_question arts_and_heritage_subsector))");
@@ -958,6 +982,8 @@ public class ClipsAssertsHandler {
                 return charity_gov_compl_hash.get(theAnswer);
             case "charity_research":
                 return charity_research_hash.get(theAnswer);
+            case "charity_sad_stories":
+                return charity_sad_stories_hash.get(theAnswer);
             case "charity_established":
                 return charity_established_hash.get(theAnswer);
             case "charity_past":

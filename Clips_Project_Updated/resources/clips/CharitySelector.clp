@@ -525,6 +525,34 @@
      (retract ?fcq)
 )
 
+(defrule charity_sad_stories
+    (continue_interview)
+    (current_question charity_sad_stories)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Sad stories about neglected pets and the working conditions in sweat shops make me very sad.")
+                (relation-asserted charity_sad_stories)
+                (valid-answers a b c d e)
+                (display-answers "Strongly Disagree" "Disagree" "Neutral" "Agree" "Strongly Agree")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule research_emotions
+  (emotional ?emo-cf)
+  (research ?research-cf)
+  =>
+  (assert (nameofvariable (name ratio_eff_high) (cf (* (min ?research-cf ?emo-cf) 0.5))(true_or_false TRUE)))
+  (assert (nameofvariable (name sub_gov_no) (cf (* (min ?research-cf ?emo-cf) 0.4))(true_or_false TRUE)))
+)
+
 (defrule charity_established
     (continue_interview)
     (current_question charity_established)
