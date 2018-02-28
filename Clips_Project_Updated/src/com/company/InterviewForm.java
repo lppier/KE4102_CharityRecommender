@@ -46,6 +46,17 @@ public class InterviewForm {
                 }
             }
         });
+
+        jumpToConclusionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    charityRecommender.jumpToConclusion();
+                } catch (CLIPSException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     public JPanel getMainPanel() {

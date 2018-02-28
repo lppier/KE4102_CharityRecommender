@@ -56,6 +56,7 @@ public class CharityRecommender {
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
+    private ConclusionForm jumpConclusionForm = new ConclusionForm(this);
     private DetailForm detailForm = new DetailForm(this);
 
     private ButtonGroup radioButtonsGroup;
@@ -119,6 +120,7 @@ public class CharityRecommender {
         mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
         mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
         mainFrame.getContentPane().add(detailForm.getMainPanel(), "detailPanel");
+        mainFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
 
         /*=================================*/
         /* Set Default Form to be visible. */
@@ -481,6 +483,23 @@ public class CharityRecommender {
         }
 
         processRules();
+    }
+
+    public void jumpToConclusion() throws CLIPSException {
+        System.out.println("Jumping to conclusions!");
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "jumpConclusionPanel");
+
+        /*=========================*/
+        /* Display charities list. */
+        /*=========================*/
+        loadGoals();
+
+        jumpConclusionForm.clearListPanel();
+        goals = new Helpers().getFirstN(goals, 10);
+        goals.forEach((charityNameId, charityCfValue) -> {
+            jumpConclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
+        });
     }
 
     public void openDetail(Map<String, String> data) {
