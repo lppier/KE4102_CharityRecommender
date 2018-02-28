@@ -142,7 +142,7 @@
     (current_fact (fact singapore_national_paralympic_council_ltd) (cf 0.5) (all_vars sports  medium money   disability_sports exist_short  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_low has_website   ))
     (current_fact (fact special_olympics_asia_pacific_ltd) (cf 0.5) (all_vars sports no_tax_deduct large money inkind  non_nsas exist_long   sub_fin_no ratio_eff_med fin_health_poor sub_gov_no gov_rate_med  media_exposure  ))
     (current_fact (fact singapore_athletic_association) (cf 0.5) (all_vars sports no_tax_deduct medium money inkind volunteer nsas exist_medium  gov_grants sub_fin_yes ratio_eff_high  sub_gov_not_req gov_rate_high has_website   ))
-    (current_fact (fact salvation_army_the) (cf 0.5) (all_vars social_and_welfare no_tax_deduct large money inkind volunteer community exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rate_high has_website media_exposure  ))
+    ;(current_fact (fact salvation_army_the) (cf 0.5) (all_vars social_and_welfare no_tax_deduct large money inkind volunteer community exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rate_high has_website media_exposure  ))
     ;Current Goals are listed here.
     (current_goal (goal ngee_ann_cultural_centre_limited) (cf 0.5))
     (current_goal (goal singapore_indian_fine_arts_society_the) (cf 0.5))
@@ -197,7 +197,7 @@
     (current_goal (goal singapore_national_paralympic_council_ltd) (cf 0.5))
     (current_goal (goal special_olympics_asia_pacific_ltd) (cf 0.5))
     (current_goal (goal singapore_athletic_association) (cf 0.5))
-    (current_goal (goal salvation_army_the) (cf 0.5))
+    ;(current_goal (goal salvation_army_the) (cf 0.5))
     (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
 
     (UI-state
@@ -1036,8 +1036,8 @@
      (assert (UI-state
                 (question "Which of the following health subsectors are you interested in giving to?")
                 (relation-asserted social_subsector)
-                (valid-answers a b c d e f g )
-                (display-answers "Children and Youth" "Community" "Disability Adult" "Eldercare" "Family" "Support Groups" "Community")
+                (valid-answers a b c d e f )
+                (display-answers "Children and Youth" "Community" "Disability Adult" "Eldercare" "Family" "Support Groups")
                 (state interview)
                 (is-multi-choice yes)
               )

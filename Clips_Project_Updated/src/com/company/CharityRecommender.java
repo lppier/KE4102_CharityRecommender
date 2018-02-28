@@ -1,7 +1,9 @@
 package com.company;
 
+import javax.security.auth.login.Configuration;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -53,11 +55,10 @@ public class CharityRecommender {
 
     private Boolean isMultiChoiceQn = false;
     private JFrame mainFrame;
-    private JFrame jumpFrame;
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
-    private ConclusionForm jumpConclusionForm = new ConclusionForm(this);
+    //private ConclusionForm jumpConclusionForm = new ConclusionForm(this);
     private DetailForm detailForm = new DetailForm(this);
 
     private ButtonGroup radioButtonsGroup;
@@ -76,6 +77,7 @@ public class CharityRecommender {
     private List<FactInstance> latest_facts;
 
     private ClipsAssertsHandler clipsAssertsHandler;
+    private FactAddressValue currentUIFactValue; // for tracking UI state
 
     // For result retrieval
     private Vector<String> goalNames = new Vector<>();
@@ -88,7 +90,7 @@ public class CharityRecommender {
         /* Create a new JFrame container. */
         /*================================*/
         mainFrame = new JFrame(charityResources.getString("CharityRecommender"));
-        jumpFrame = new JFrame(charityResources.getString("CharityRecommender"));
+
         /*===============================*/
         /* Load charities data from CSV. */
         /*===============================*/
@@ -102,18 +104,17 @@ public class CharityRecommender {
         /* Give the frame an initial size. */
         /*=================================*/
         mainFrame.setSize(600, 550);
-        jumpFrame.setSize(600, 550);
 
         /*=============================================================*/
         /* Terminate the program when the user closes the application. */
         /*=============================================================*/
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jumpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         /*==============================*/
         /* Prevent frame to be resized. */
         /*==============================*/
         mainFrame.setResizable(false);
-        jumpFrame.setResizable(false);
+
         /*===========================================*/
         /* Add multiple type of form into the frame. */
         /*===========================================*/
@@ -122,8 +123,7 @@ public class CharityRecommender {
         mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
         mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
         mainFrame.getContentPane().add(detailForm.getMainPanel(), "detailPanel");
-
-        jumpFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
+        //mainFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
 
         /*=================================*/
         /* Set Default Form to be visible. */
@@ -315,8 +315,6 @@ public class CharityRecommender {
     private void handleConclusionResponse() throws Exception {
         System.out.println("Show Conclusion Page");
         System.out.println("--------------------");
-        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
-        cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
 
         /*=========================*/
         /* Display charities list. */
@@ -328,6 +326,11 @@ public class CharityRecommender {
         goals.forEach((charityNameId, charityCfValue) -> {
             conclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
         });
+
+        conclusionForm.setState(ConclusionForm.State.FINAL);
+
+        CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
+        cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
     }
 
     private void handleDetailResponse(Map<String, String> item) {
@@ -344,23 +347,30 @@ public class CharityRecommender {
 
     private void handleResponse() throws Exception {
         latest_facts = clips.getFactList(); // don't call getFactList() too often, just once here
-        printFacts();
-        FactAddressValue factValue = clips.findFact("UI-state");
-
-        String state = factValue.getSlotValue("state").toString();
+//        printFacts();
+        currentUIFactValue = clips.findFact("UI-state");
+        String state = currentUIFactValue.getSlotValue("state").toString();
         switch (state) {
             case "greeting":
                 this.state = State.GREETING;
-                handleGreetingRespose(factValue);
+                handleGreetingRespose(currentUIFactValue);
                 break;
             case "interview":
                 this.state = State.INTERVIEW;
-                handleInterviewResponse(factValue);
+                handleInterviewResponse(currentUIFactValue);
                 break;
             case "conclusion":
                 this.state = State.CONCLUSION;
                 handleConclusionResponse();
                 break;
+        }
+    }
+
+    public void handleBackFromJumpConclusion() {
+        try {
+            handleInterviewResponse(currentUIFactValue);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -490,19 +500,36 @@ public class CharityRecommender {
 
     public void jumpToConclusion() throws CLIPSException {
         System.out.println("Jumping to conclusions!");
+        System.out.println("-----------------------");
+
         CardLayout cardLayout = (CardLayout) (mainFrame.getContentPane().getLayout());
-        cardLayout.show(mainFrame.getContentPane(), "jumpConclusionPanel");
+        cardLayout.show(mainFrame.getContentPane(), "conclusionPanel");
 
         /*=========================*/
         /* Display charities list. */
         /*=========================*/
         loadGoals();
+        conclusionForm.setState(ConclusionForm.State.INTERMEDIATE);
 
-        jumpConclusionForm.clearListPanel();
+        conclusionForm.clearListPanel();
         goals = new Helpers().getFirstN(goals, 10);
+        System.out.println(goals);
+
         goals.forEach((charityNameId, charityCfValue) -> {
-            jumpConclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
+            conclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
         });
+
+        System.out.println("#######################");
+
+//        JButton restartBtn = jumpConclusionForm.getRestartButton();
+//        restartBtn.setText("Back");
+//
+//
+//        jumpConclusionForm.clearListPanel();
+//        goals = new Helpers().getFirstN(goals, 10);
+//        goals.forEach((charityNameId, charityCfValue) -> {
+//            jumpConclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
+//        });
     }
 
     public void openDetail(Map<String, String> data) {
@@ -552,7 +579,27 @@ public class CharityRecommender {
     public void restartInterview() throws CLIPSException {
         variableAsserts.clear();
         priorAnswers.clear();
-        processRules();
+//        processRules();
+
+        mainFrame.dispose();
+
+        clips = new Environment();
+
+        try {
+            String clipsCode = new Helpers().getFileData("/clips/CharitySelector.clp");
+            clips.loadFromString(clipsCode);
+
+            processRules();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        /*===================================*/
+        /* Initialize user interface. */
+        /*===================================*/
+        initializeInterface();
     }
 
     public void prevButtonAction() throws CLIPSException {

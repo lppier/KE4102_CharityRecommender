@@ -836,9 +836,6 @@ public class ClipsAssertsHandler {
                 f_ans.add("(assert (nameofvariable (name support_groups)(cf 0.7)(true_or_false TRUE)))");
                 f_ans.add("(assert (current_question conclusion))");
 
-                Vector<String> g_ans = new Vector<>();
-                g_ans.add("(assert (nameofvariable (name community)(cf 0.7)(true_or_false TRUE)))");
-                g_ans.add("(assert (current_question conclusion))");
 
                 social_subsector_hash.put("a", a_ans);
                 social_subsector_hash.put("b", b_ans);
@@ -846,7 +843,6 @@ public class ClipsAssertsHandler {
                 social_subsector_hash.put("d", d_ans);
                 social_subsector_hash.put("e", e_ans);
                 social_subsector_hash.put("f", f_ans);
-                social_subsector_hash.put("g", g_ans);
             }
             // ---------------------- Sports Sub-Sector Questions --------------------- //
 

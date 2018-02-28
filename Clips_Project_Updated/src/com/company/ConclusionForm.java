@@ -7,17 +7,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
-import java.net.URI;
 
 public class ConclusionForm {
+
+    public enum State {
+        INTERMEDIATE, FINAL
+    }
+
     private CharityRecommender charityRecommender;
     private JPanel mainPanel;
     private JPanel buttonsPanel;
     private JPanel titlePanel;
-    private JButton nextButton;
+
+    private JButton restartButton;
     private JPanel rightBorder;
     private JPanel textPanel;
     private JPanel leftBorder;
@@ -28,6 +31,42 @@ public class ConclusionForm {
     private Integer itemCount = 0;
     private Helpers helpers = new Helpers();
 
+    private State state = State.INTERMEDIATE;
+
+    private ActionListener restartActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                charityRecommender.restartInterview();
+            } catch (CLIPSException e1) {
+                e1.printStackTrace();
+            }
+        }
+    };
+
+    private ActionListener backActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                charityRecommender.handleBackFromJumpConclusion();
+        }
+    };
+
+    public JButton getRestartButton() {
+        return restartButton;
+    }
+
+    public void setState(State newState) {
+        state = newState;
+        if (state == State.INTERMEDIATE) {
+            restartButton.addActionListener(backActionListener);
+            restartButton.setText("Back");
+        } else {
+            restartButton.addActionListener(restartActionListener);
+            restartButton.setText("Restart");
+
+        }
+    }
+
     ConclusionForm(CharityRecommender recommender) {
 
         charityRecommender = recommender;
@@ -35,17 +74,6 @@ public class ConclusionForm {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.anchor = GridBagConstraints.NORTH;
         listPanel.setLayout(layout);
-
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    charityRecommender.restartInterview();
-                } catch (CLIPSException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
     }
 
     public JPanel getMainPanel() {
