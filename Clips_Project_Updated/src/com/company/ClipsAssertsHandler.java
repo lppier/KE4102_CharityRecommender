@@ -86,13 +86,13 @@ public class ClipsAssertsHandler {
             {   // charity_size qn
                 Vector<String> small_ans = new Vector<>();
                 small_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))");
-                small_ans.add("(assert (current_question charity_investment))");
+                small_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> medium_ans = new Vector<>();
                 medium_ans.add("(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE)))");
-                medium_ans.add("(assert (current_question charity_investment))");
+                medium_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> large_ans = new Vector<>();
                 large_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
-                large_ans.add("(assert (current_question charity_investment))");
+                large_ans.add("(assert (current_question section_charity_attributes))");
                 charity_size_hash.put("small", small_ans);
                 charity_size_hash.put("medium", medium_ans);
                 charity_size_hash.put("large", large_ans);
