@@ -113,7 +113,7 @@ public class Helpers {
         layout.setVgap(0);
         panel.setLayout(layout);
 
-        JButton button = new JButton("<HTML><U>View Details</U></HTML>");
+        JButton button = new JButton("<html><u>View Details</u></html>");
         button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setForeground(Color.BLUE);
@@ -140,8 +140,7 @@ public class Helpers {
                 link = "http://" + link;
             }
             final URI uri = new URI(link);
-            JButton button = new JButton("<HTML><U>" + uri.toString() + "</U></HTML>");
-            button.setHorizontalAlignment(SwingConstants.LEFT);
+            JButton button = new JButton(String.format("<html><u>%s</u></html>", uri.toString()));
             button.setForeground(Color.BLUE);
             button.setCursor(new Cursor(Cursor.HAND_CURSOR));
             button.setBorder(BorderFactory.createLineBorder(Color.BLACK));

@@ -99,7 +99,7 @@ public class CharityRecommender {
         /*=================================*/
         /* Give the frame an initial size. */
         /*=================================*/
-        mainFrame.setSize(600, 550);
+        mainFrame.setSize(800, 600);
 
         /*=============================================================*/
         /* Terminate the program when the user closes the application. */
@@ -301,6 +301,7 @@ public class CharityRecommender {
                 neighbour.put("Name of Organisation", item.get("Neighbour " + i + " Name of Organisation"));
                 neighbour.put("Sector", item.get("Neighbour " + i + " Sector"));
                 neighbour.put("Classification", item.get("Neighbour " + i + " Classification"));
+                neighbour.put("Website", item.get("Neighbour " + i + " Website"));
                 neighbours.add(neighbour);
             }
         }

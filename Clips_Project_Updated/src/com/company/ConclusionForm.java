@@ -74,17 +74,17 @@ public class ConclusionForm {
         constraints.gridy = (itemCount * 2);
         constraints.weightx = 0.7;
         constraints.weighty = 0.5;
-        constraints.insets = new Insets(0,0,0,0);
-        Component charityName = new JLabel(WordUtils.capitalizeFully(item.get("Name of Organisation")));
-        listPanel.add(charityName, constraints);
+        constraints.insets = new Insets(0, 0, 0, 0);
+        Component charityNameLabel = new JLabel(String.format("%s (UEN: %s)", WordUtils.capitalizeFully(item.get("Name of Organisation")), item.get("UEN")));
+        listPanel.add(charityNameLabel, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = (itemCount * 2);
         constraints.weightx = 0.3;
         constraints.weighty = 0.5;
-        constraints.insets = new Insets(0,0,0,0);
+        constraints.insets = new Insets(0, 0, 0, 0);
         JProgressBar cfProgessBar = new JProgressBar();
-        cfProgessBar.setValue((int)(cfValue * 100));
+        cfProgessBar.setValue((int) (cfValue * 100));
         cfProgessBar.setString(String.format("%.4f", cfValue));
         cfProgessBar.setStringPainted(true);
         listPanel.add(cfProgessBar, constraints);
@@ -93,7 +93,7 @@ public class ConclusionForm {
         constraints.gridy = (itemCount * 2) + 1;
         constraints.weightx = 0.7;
         constraints.weighty = 0.5;
-        constraints.insets = new Insets(0,0,7,0);
+        constraints.insets = new Insets(0, 0, 7, 0);
         Component linkButton = helpers.createHyperLink(item.get("website"));
         listPanel.add(linkButton, constraints);
 
@@ -101,7 +101,7 @@ public class ConclusionForm {
         constraints.gridy = (itemCount * 2) + 1;
         constraints.weightx = 0.3;
         constraints.weighty = 0.5;
-        constraints.insets = new Insets(0,0,7,0);
+        constraints.insets = new Insets(0, 0, 7, 0);
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
