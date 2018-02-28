@@ -4,5 +4,4 @@ web_scraper/node_modules
 web_scraper/data/main/*.csv
 web_scraper/data/final/*.csv
 web_scraper/data/detail/*.csv
-
-Clips_Project_Updated/out/artifacts
+/.DS_Store
