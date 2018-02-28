@@ -22,7 +22,7 @@ public class GreetingForm {
 
         Helpers helpers = new Helpers();
 
-        imageLabel.setIcon(new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 800, 515)));
+        imageLabel.setIcon(new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 800, 500)));
 
         nextButton.addActionListener(new ActionListener() {
             @Override
