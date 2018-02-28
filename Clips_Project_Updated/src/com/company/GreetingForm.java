@@ -24,7 +24,7 @@ public class GreetingForm {
         Helpers helpers = new Helpers();
 
         try {
-            ImageIcon icon = new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 600, 400));
+            ImageIcon icon = new ImageIcon(helpers.loadImage("/img/charity-01.jpg", 800, 515));
             imageLabel.setIcon(icon);
         } catch (IOException e) {
             e.printStackTrace();

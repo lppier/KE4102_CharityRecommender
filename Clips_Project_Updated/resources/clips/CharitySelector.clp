@@ -1034,7 +1034,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Which of the following health subsectors are you interested in giving to?")
+                (question "Which of the following social and welfare subsectors are you interested in giving to?")
                 (relation-asserted social_subsector)
                 (valid-answers a b c d e f )
                 (display-answers "Children and Youth" "Community" "Disability Adult" "Eldercare" "Family" "Support Groups")
