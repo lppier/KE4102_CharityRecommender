@@ -72,6 +72,9 @@ public class DetailForm {
     }
 
     public void loadSimilarCharities(ArrayList<Map<String, String>> list) {
+        System.out.println("Load Similar Charities");
+        System.out.println("----------------------");
+
         listPanel.removeAll();
         itemCount = 0;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
@@ -81,9 +84,19 @@ public class DetailForm {
                 itemPanel.setLayout(new GridBagLayout());
 
                 String name = record.get("Name of Organisation");
-                System.out.println(name);
+                String uen = record.get("UEN");
+                String website = record.get("Website");
+                String primary_sector = record.get("Sector");
+                String sub_sector = record.get("Classification");
 
-                JLabel nameLabel = new JLabel(String.format("%s (UEN: %s)", WordUtils.capitalizeFully(name), record.get("UEN")));
+                System.out.println(String.format("Name: %s", name));
+                System.out.println(String.format("UEN: %s", uen));
+                System.out.println(String.format("Website: %s", website));
+                System.out.println(String.format("Sector: %s", primary_sector));
+                System.out.println(String.format("Sub Sector: %s", sub_sector));
+                System.out.println("----------------------");
+
+                JLabel nameLabel = new JLabel(String.format("%s (UEN: %s)", WordUtils.capitalizeFully(name), uen));
                 nameLabel.setFont(new Font("Default", Font.ITALIC, 12));
                 gridBagConstraints.weightx = 1;
                 gridBagConstraints.weighty = 1;
@@ -95,13 +108,19 @@ public class DetailForm {
                 gridBagConstraints.weighty = 1;
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 1;
-                itemPanel.add(helpers.createHyperLink(record.get("Website")), gridBagConstraints);
+                itemPanel.add(helpers.createHyperLink(website), gridBagConstraints);
 
                 gridBagConstraints.weightx = 1;
-                gridBagConstraints.weighty = 3;
+                gridBagConstraints.weighty = 1;
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 2;
-                itemPanel.add(new JLabel(String.format("<html>%s - %s</html>", record.get("Sector"), record.get("Classification"))), gridBagConstraints);
+                itemPanel.add(new JLabel(String.format("%s - %s", primary_sector, sub_sector)), gridBagConstraints);
+
+                gridBagConstraints.weightx = 1;
+                gridBagConstraints.weighty = 1;
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 3;
+                itemPanel.add(new JLabel(" "), gridBagConstraints);
 
                 listPanel.add(itemPanel);
             }
