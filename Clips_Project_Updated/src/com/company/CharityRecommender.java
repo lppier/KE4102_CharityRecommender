@@ -53,6 +53,7 @@ public class CharityRecommender {
 
     private Boolean isMultiChoiceQn = false;
     private JFrame mainFrame;
+    private JFrame jumpFrame;
     private GreetingForm greetingForm = new GreetingForm(this);
     private InterviewForm interviewForm = new InterviewForm(this);
     private ConclusionForm conclusionForm = new ConclusionForm(this);
@@ -87,7 +88,7 @@ public class CharityRecommender {
         /* Create a new JFrame container. */
         /*================================*/
         mainFrame = new JFrame(charityResources.getString("CharityRecommender"));
-
+        jumpFrame = new JFrame(charityResources.getString("CharityRecommender"));
         /*===============================*/
         /* Load charities data from CSV. */
         /*===============================*/
@@ -101,17 +102,18 @@ public class CharityRecommender {
         /* Give the frame an initial size. */
         /*=================================*/
         mainFrame.setSize(600, 550);
+        jumpFrame.setSize(600, 550);
 
         /*=============================================================*/
         /* Terminate the program when the user closes the application. */
         /*=============================================================*/
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        jumpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*==============================*/
         /* Prevent frame to be resized. */
         /*==============================*/
         mainFrame.setResizable(false);
-
+        jumpFrame.setResizable(false);
         /*===========================================*/
         /* Add multiple type of form into the frame. */
         /*===========================================*/
@@ -120,7 +122,8 @@ public class CharityRecommender {
         mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
         mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
         mainFrame.getContentPane().add(detailForm.getMainPanel(), "detailPanel");
-        mainFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
+
+        jumpFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
 
         /*=================================*/
         /* Set Default Form to be visible. */
