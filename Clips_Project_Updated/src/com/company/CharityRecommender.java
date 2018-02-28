@@ -537,7 +537,11 @@ public class CharityRecommender {
     }
 
     public void showConclusion() throws Exception {
-        handleConclusionResponse();
+
+        if (conclusionForm.getState()==ConclusionForm.State.INTERMEDIATE)
+            jumpToConclusion();
+        else
+            handleConclusionResponse();
     }
 
     private boolean nothingSelected() {

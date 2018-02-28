@@ -55,6 +55,10 @@ public class ConclusionForm {
         return restartButton;
     }
 
+    public State getState() {
+        return state;
+    }
+
     public void setState(State newState) {
         state = newState;
         if (state == State.INTERMEDIATE) {
