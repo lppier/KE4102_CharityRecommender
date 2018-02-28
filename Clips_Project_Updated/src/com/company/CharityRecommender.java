@@ -344,7 +344,7 @@ public class CharityRecommender {
 
     private void handleResponse() throws Exception {
         latest_facts = clips.getFactList(); // don't call getFactList() too often, just once here
-//        printFacts();
+        printFacts();
         currentUIFactValue = clips.findFact("UI-state");
         String currentState = currentUIFactValue.getSlotValue("state").toString();
         switch (currentState) {

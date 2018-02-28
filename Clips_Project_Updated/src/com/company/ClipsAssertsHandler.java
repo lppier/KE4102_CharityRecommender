@@ -28,6 +28,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_friends_above_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_friends_below_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_media_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> charity_website_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_influence_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> tax_return_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> religious_subsector_hash = new Hashtable<>();
@@ -474,11 +475,21 @@ public class ClipsAssertsHandler {
             {   // charity_media
                 Vector<String> y_ans = new Vector<>();
                 y_ans.add("(assert (nameofvariable (name media_exposure)(cf 0.2)(true_or_false TRUE)))");
+                y_ans.add("(assert (current_question charity_website))");
+                Vector<String> n_ans = new Vector<>();
+                n_ans.add("(assert (current_question charity_website))");
+                charity_media_hash.put("y", y_ans);
+                charity_media_hash.put("n", n_ans);
+            }
+
+            {   // charity_website
+                Vector<String> y_ans = new Vector<>();
+                y_ans.add("(assert (nameofvariable (name has_website)(cf 0.2)(true_or_false TRUE)))");
                 y_ans.add("(assert (current_question charity_influence))");
                 Vector<String> n_ans = new Vector<>();
                 n_ans.add("(assert (current_question charity_influence))");
-                charity_media_hash.put("y", y_ans);
-                charity_media_hash.put("n", n_ans);
+                charity_website_hash.put("y", y_ans);
+                charity_website_hash.put("n", n_ans);
             }
 
             {
@@ -965,6 +976,8 @@ public class ClipsAssertsHandler {
                 return charity_received_help_hash.get(theAnswer);
             case "charity_media":
                 return charity_media_hash.get(theAnswer);
+            case "charity_website":
+                return charity_website_hash.get(theAnswer);
             case "charity_influence":
                 return charity_influence_hash.get(theAnswer);
             case "arts_and_heritage_support":

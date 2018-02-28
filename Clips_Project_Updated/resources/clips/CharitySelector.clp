@@ -706,6 +706,28 @@
      (retract ?fcq)
 )
 
+(defrule charity_website
+    (continue_interview)
+    (current_question charity_website)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "Do you prefer to give to charities that have a website?")
+                (relation-asserted charity_website)
+                (valid-answers y n)
+                (display-answers "Yes" "No")
+                (state interview)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+
+
 (defrule charity_influence
     (continue_interview)
     (current_question charity_influence)
