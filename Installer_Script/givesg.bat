@@ -1,0 +1,1 @@
+java -Djava.library.path="%~dp0CLIPSJNI" -jar "%~dp0givesg.jar"
