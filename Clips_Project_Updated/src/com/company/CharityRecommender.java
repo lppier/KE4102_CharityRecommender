@@ -118,7 +118,6 @@ public class CharityRecommender {
         mainFrame.getContentPane().add(interviewForm.getMainPanel(), "interviewPanel");
         mainFrame.getContentPane().add(conclusionForm.getMainPanel(), "conclusionPanel");
         mainFrame.getContentPane().add(detailForm.getMainPanel(), "detailPanel");
-        //mainFrame.getContentPane().add(jumpConclusionForm.getMainPanel(), "jumpConclusionPanel");
 
         /*=================================*/
         /* Set Default Form to be visible. */
@@ -485,7 +484,14 @@ public class CharityRecommender {
             variableAsserts.addAll(multiChoiceAsserts);
 
         } else {
-            theAnswer = radioButtonsGroup.getSelection().getActionCommand();
+
+            // Check current UIState if hasGraphic is yes
+            String hasGraphicStr = (currentUIFactValue.getSlotValue("hasGraphic")).toString();
+            if (hasGraphicStr.equals("yes"))
+                theAnswer = "section";
+            else
+                theAnswer = radioButtonsGroup.getSelection().getActionCommand();
+
             Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
             if (answers != null) {
                 variableAsserts.addAll(answers);

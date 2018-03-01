@@ -5,3 +5,5 @@ web_scraper/data/main/*.csv
 web_scraper/data/final/*.csv
 web_scraper/data/detail/*.csv
 /.DS_Store
+
+*.class

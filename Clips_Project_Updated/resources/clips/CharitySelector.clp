@@ -439,7 +439,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Nothing here")
+                (question "The following questions will obtain your preference for the attributes of the charity.")
                 (relation-asserted section_charity_attributes)
                 (valid-answers)
                 (display-answers)

@@ -20,6 +20,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_gov_compl_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_sad_stories_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> section_charity_attributes_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_established_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_past_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_parents_sector_hash = new Hashtable<>();
@@ -196,29 +197,35 @@ public class ClipsAssertsHandler {
                 // charity_sad_stories (likert scale)
                 Vector<String> a_ans = new Vector<>();
                 a_ans.add("(assert (emotional 0.4))");
-                a_ans.add("(assert (current_question charity_size))");
+                a_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> b_ans = new Vector<>();
                 b_ans.add("(assert (emotional 0.3))");
-                b_ans.add("(assert (current_question charity_size))");
+                b_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> c_ans = new Vector<>();
                 c_ans.add("(assert (emotional 0.2))");
-                c_ans.add("(assert (current_question charity_size))");
+                c_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> d_ans = new Vector<>();
                 d_ans.add("(assert (emotional 0.1))");
-                d_ans.add("(assert (current_question charity_size))");
+                d_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> e_ans = new Vector<>();
                 e_ans.add("(assert (emotional 0))");
-                e_ans.add("(assert (current_question charity_size))");
+                e_ans.add("(assert (current_question section_charity_attributes))");
 
                 charity_sad_stories_hash.put("a", a_ans);
                 charity_sad_stories_hash.put("b", b_ans);
                 charity_sad_stories_hash.put("c", c_ans);
                 charity_sad_stories_hash.put("d", d_ans);
                 charity_sad_stories_hash.put("e", e_ans);
+            }
+
+            {
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (current_question charity_size))");
+                section_charity_attributes_hash.put("section", a_ans);
             }
 
             {   //  charity_established qn
@@ -984,6 +991,8 @@ public class ClipsAssertsHandler {
                 return charity_research_hash.get(theAnswer);
             case "charity_sad_stories":
                 return charity_sad_stories_hash.get(theAnswer);
+            case "section_charity_attributes":
+                return section_charity_attributes_hash.get(theAnswer);
             case "charity_established":
                 return charity_established_hash.get(theAnswer);
             case "charity_past":
