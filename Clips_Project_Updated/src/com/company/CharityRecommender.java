@@ -602,6 +602,11 @@ public class CharityRecommender {
 
         mainFrame.dispose();
 
+        greetingForm = new GreetingForm(this);
+        interviewForm = new InterviewForm(this);
+        conclusionForm = new ConclusionForm(this);
+        detailForm = new DetailForm(this);
+
         clips = new Environment();
 
         try {

@@ -1003,7 +1003,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "What interests you most in arts and heritage in Singapore")
+                (question "What interests you most in arts and heritage in Singapore?")
                 (relation-asserted arts_and_heritage_subsector)
                 (valid-answers a b c d e f g )
                 (display-answers "Historical and Cultural Conservation" "Music and Orchestras" "Literary Arts" "Professional Contemporary Ethnic" "Theatre and Dramatic Arts" "Traditional Ethnic Performing Arts" "Visual Arts")
