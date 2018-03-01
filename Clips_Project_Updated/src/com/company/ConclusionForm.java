@@ -92,12 +92,12 @@ public class ConclusionForm {
 
     public void addItem(Map<String, String> item, Double cfValue) {
 
-        System.out.println("ConclusionForm->addItem");
-        System.out.println("-------------");
+//        System.out.println("ConclusionForm->addItem");
+//        System.out.println("-------------");
 
         try {
-            System.out.println(item.get("Name of Organisation"));
-            System.out.println(item.get("website"));
+//            System.out.println(item.get("Name of Organisation"));
+//            System.out.println(item.get("website"));
 
             constraints.gridx = 0;
             constraints.gridy = (itemCount * 2);
@@ -143,6 +143,6 @@ public class ConclusionForm {
         }
 
         itemCount += 1;
-        System.out.println("#############");
+        //System.out.println("#############");
     }
 }
