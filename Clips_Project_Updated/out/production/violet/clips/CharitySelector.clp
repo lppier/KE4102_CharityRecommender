@@ -606,6 +606,56 @@
   (retract ?csd)
 )
 
+(defrule experience_employees
+    (continue_interview)
+    (current_question experience_employees)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "I care about the amount of experience a charity's employees have.")
+                (relation-asserted experience_employees)
+                (valid-answers a b c d e)
+                (display-answers "Highly Disagree" "Disagree" "Neutral" "Agree" "Highly Agree")
+                (state interview)
+                (hasGraphic no)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule multiple_accounting
+    (continue_interview)
+    (current_question multiple_accounting)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "I prefer charities that have been examined multiple times by accountants.")
+                (relation-asserted multiple_accounting)
+                (valid-answers a b c d e)
+                (display-answers "Highly Disagree" "Disagree" "Neutral" "Agree" "Highly Agree")
+                (state interview)
+                (hasGraphic no)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule experienced_and_accounted
+  (old ?old-cf)
+  (recent ?recent-cf)
+  =>
+  (assert (nameofvariable (name exist_long) (cf (* (max ?old-cf ?recent-cf) 0.3))(true_or_false TRUE)))
+  (assert (nameofvariable (name exist_medium) (cf (* (max ?old-cf ?recent-cf) 0.1))(true_or_false TRUE)))
+)
+
 (defrule charity_established
     (continue_interview)
     (current_question charity_established)
