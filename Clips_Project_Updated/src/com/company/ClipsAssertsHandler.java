@@ -1041,6 +1041,12 @@ public class ClipsAssertsHandler {
                 others_children_hash.put("n", n_ans);
             }
 
+            {   // others_children
+                Vector<String> n_ans = new Vector<>();
+                n_ans.add("(assert (current_question charity_investment))");
+                section_charity_attributes_hash.put("n", n_ans);
+            }
+
 
 
         } catch (MissingResourceException mre) {
