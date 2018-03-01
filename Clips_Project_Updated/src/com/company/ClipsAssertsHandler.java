@@ -235,15 +235,15 @@ public class ClipsAssertsHandler {
                 charity_sad_stories_hash.put("e", e_ans);
             }
 
-            {
+            {  // section_charity_attributes
                 Vector<String> a_ans = new Vector<>();
-                a_ans.add("(assert (current_question charity_past))");
+                a_ans.add("(assert (current_question charity_size))");
                 section_charity_attributes_hash.put("section", a_ans);
             }
 
-            {
+            {   // section_external_influence
                 Vector<String> a_ans = new Vector<>();
-                a_ans.add("(assert (current_question ))");
+                a_ans.add("(assert (current_question charity_past))");
                 section_external_influence_hash.put("section", a_ans);
             }
 
@@ -624,23 +624,23 @@ public class ClipsAssertsHandler {
                 // multiple_accounting (likert scale)
                 Vector<String> a_ans = new Vector<>();
                 a_ans.add("(assert (recent 0.4))");
-                a_ans.add("(assert (current_question charity_past))");
+                a_ans.add("(assert (current_question section_external_influence))");
 
                 Vector<String> b_ans = new Vector<>();
                 b_ans.add("(assert (recent 0.3))");
-                b_ans.add("(assert (current_question charity_past))");
+                b_ans.add("(assert (current_question section_external_influence))");
 
                 Vector<String> c_ans = new Vector<>();
                 c_ans.add("(assert (recent 0.2))");
-                c_ans.add("(assert (current_question charity_past))");
+                c_ans.add("(assert (current_question section_external_influence))");
 
                 Vector<String> d_ans = new Vector<>();
                 d_ans.add("(assert (recent 0.1))");
-                d_ans.add("(assert (current_question charity_past))");
+                d_ans.add("(assert (current_question section_external_influence))");
 
                 Vector<String> e_ans = new Vector<>();
                 e_ans.add("(assert (recent 0))");
-                e_ans.add("(assert (current_question charity_past))");
+                e_ans.add("(assert (current_question section_external_influence))");
 
                 multiple_accounting_hash.put("a", a_ans);
                 multiple_accounting_hash.put("b", b_ans);
@@ -1135,7 +1135,8 @@ public class ClipsAssertsHandler {
                 return experience_employees_hash.get(theAnswer);
             case "multiple_accounting":
                 return multiple_accounting_hash.get(theAnswer);
-
+            case "section_external_influence":
+                return section_external_influence_hash.get(theAnswer);
             default:
 
         }

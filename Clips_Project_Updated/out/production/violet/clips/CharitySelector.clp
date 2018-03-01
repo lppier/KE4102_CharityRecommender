@@ -656,6 +656,27 @@
   (assert (nameofvariable (name exist_medium) (cf (* (max ?old-cf ?recent-cf) 0.1))(true_or_false TRUE)))
 )
 
+(defrule section_external_influence
+    (continue_interview)
+    (current_question section_external_influence)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "The following questions will be to understand if other's choices influence your decision.")
+                (relation-asserted section_external_influence)
+                (valid-answers)
+                (display-answers)
+                (state interview)
+                (hasGraphic yes)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 (defrule charity_established
     (continue_interview)
     (current_question charity_established)
