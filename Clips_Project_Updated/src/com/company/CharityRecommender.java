@@ -69,6 +69,7 @@ public class CharityRecommender {
     private String relationAsserted;
     private ArrayList<String> variableAsserts;
     private ArrayList<String> priorAnswers;
+    private Stack<Integer> numberOfAssertStatements;
     private List<FactInstance> latest_facts;
 
     private ClipsAssertsHandler clipsAssertsHandler;
@@ -139,6 +140,7 @@ public class CharityRecommender {
 
         variableAsserts = new ArrayList<String>();
         priorAnswers = new ArrayList<String>();
+        numberOfAssertStatements = new Stack<>();
 
         return true;
     }
@@ -470,6 +472,7 @@ public class CharityRecommender {
         String theAnswer;
         ArrayList<String> multiChoiceAsserts = new ArrayList<>();
         priorAnswers = (ArrayList<String>) variableAsserts.clone();
+        numberOfAssertStatements.push(priorAnswers.size()); // keep track for "prev" functionality
 
         if (isMultiChoiceQn) {
             for (JCheckBox btn : checkboxGroup) {
@@ -599,6 +602,10 @@ public class CharityRecommender {
     }
 
     public void prevButtonAction() throws CLIPSException {
+        System.out.println(priorAnswers.size());
+        Integer last_number_of_statements = numberOfAssertStatements.pop();
+        while (priorAnswers.size() != last_number_of_statements)
+            priorAnswers.remove(priorAnswers.size()-1);
         variableAsserts = priorAnswers;
         processRules();
     }
