@@ -51,6 +51,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> social_subsector_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> experience_employees_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> multiple_accounting_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> section_external_influence_hash = new Hashtable<>();
 
     public boolean initializeHashes() {
         try {
@@ -236,8 +237,14 @@ public class ClipsAssertsHandler {
 
             {
                 Vector<String> a_ans = new Vector<>();
-                a_ans.add("(assert (current_question charity_size))");
+                a_ans.add("(assert (current_question charity_past))");
                 section_charity_attributes_hash.put("section", a_ans);
+            }
+
+            {
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (current_question ))");
+                section_external_influence_hash.put("section", a_ans);
             }
 
             {   //  charity_established qn
