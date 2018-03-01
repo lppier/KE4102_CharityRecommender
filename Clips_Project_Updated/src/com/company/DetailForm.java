@@ -72,8 +72,8 @@ public class DetailForm {
     }
 
     public void loadSimilarCharities(ArrayList<Map<String, String>> list) {
-        System.out.println("Load Similar Charities");
-        System.out.println("----------------------");
+//        System.out.println("Load Similar Charities");
+//        System.out.println("----------------------");
 
         listPanel.removeAll();
         itemCount = 0;
@@ -89,12 +89,12 @@ public class DetailForm {
                 String primary_sector = record.get("Sector");
                 String sub_sector = record.get("Classification");
 
-                System.out.println(String.format("Name: %s", name));
-                System.out.println(String.format("UEN: %s", uen));
-                System.out.println(String.format("Website: %s", website));
-                System.out.println(String.format("Sector: %s", primary_sector));
-                System.out.println(String.format("Sub Sector: %s", sub_sector));
-                System.out.println("----------------------");
+//                System.out.println(String.format("Name: %s", name));
+//                System.out.println(String.format("UEN: %s", uen));
+//                System.out.println(String.format("Website: %s", website));
+//                System.out.println(String.format("Sector: %s", primary_sector));
+//                System.out.println(String.format("Sub Sector: %s", sub_sector));
+//                System.out.println("----------------------");
 
                 JLabel nameLabel = new JLabel(String.format("%s (UEN: %s)", WordUtils.capitalizeFully(name), uen));
                 nameLabel.setFont(new Font("Default", Font.ITALIC, 12));

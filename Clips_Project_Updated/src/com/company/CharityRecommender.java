@@ -87,6 +87,8 @@ public class CharityRecommender {
         /*================================*/
         mainFrame = new JFrame(charityResources.getString("CharityRecommender"));
 
+        Image icon = new Helpers().loadImage("/img/charity_icon.png", 80, 80);
+        mainFrame.setIconImage(icon);
         /*===============================*/
         /* Load charities data from CSV. */
         /*===============================*/
@@ -203,6 +205,23 @@ public class CharityRecommender {
 
         String isMultiChoiceStr = ((LexemeValue) factAddressValue.getSlotValue("is-multi-choice")).getValue();
         isMultiChoiceQn = isMultiChoiceStr.equals("yes");
+
+        String hasGraphicStr = (currentUIFactValue.getSlotValue("hasGraphic")).toString();
+        Helpers helpers = new Helpers();
+
+        if (hasGraphicStr.equals("A")) {
+            interviewForm.getImageLabel().setIcon(new ImageIcon(helpers.loadImage("/img/charity-A.jpg", 765, 485)));
+            interviewForm.getImageLabel().setVisible(true);
+        } else if (hasGraphicStr.equals("B")) {
+            interviewForm.getImageLabel().setIcon(new ImageIcon(helpers.loadImage("/img/charity-B.jpg", 765, 485)));
+            interviewForm.getImageLabel().setVisible(true);
+        } else if (hasGraphicStr.equals("C")) {
+            interviewForm.getImageLabel().setIcon(new ImageIcon(helpers.loadImage("/img/charity-C.jpg", 765, 485)));
+            interviewForm.getImageLabel().setVisible(true);
+        }
+        else if (hasGraphicStr.equals("no")) {
+            interviewForm.getImageLabel().setVisible(false);
+        }
 
         if (isMultiChoiceQn)
             setupCheckBoxButtons(factAddressValue);
@@ -321,7 +340,7 @@ public class CharityRecommender {
         conclusionForm.clearListPanel();
         goals = new Helpers().getFirstN(goals, 10);
         goals.forEach((charityNameId, charityCfValue) -> {
-            System.out.println(String.format("CharityRecommender->handleConclusionResponse: addItem %s", charityNameId));
+            //System.out.println(String.format("CharityRecommender->handleConclusionResponse: addItem %s", charityNameId));
             conclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
         });
 
@@ -490,10 +509,11 @@ public class CharityRecommender {
 
             // Check current UIState if hasGraphic is yes
             String hasGraphicStr = (currentUIFactValue.getSlotValue("hasGraphic")).toString();
-            if (hasGraphicStr.equals("yes"))
+            if (hasGraphicStr.equals("A") || hasGraphicStr.equals("B") || hasGraphicStr.equals("C") ) {
                 theAnswer = "section";
-            else
+            } else {
                 theAnswer = radioButtonsGroup.getSelection().getActionCommand();
+            }
 
             Vector<String> answers = clipsAssertsHandler.getSingleAnswers(relationAsserted, theAnswer);
             if (answers != null) {
@@ -534,7 +554,7 @@ public class CharityRecommender {
 
     public void showConclusion() throws Exception {
 
-        if (conclusionForm.getState()==ConclusionForm.State.INTERMEDIATE)
+        if (conclusionForm.getState() == ConclusionForm.State.INTERMEDIATE)
             jumpToConclusion();
         else
             handleConclusionResponse();
@@ -605,7 +625,7 @@ public class CharityRecommender {
         System.out.println(priorAnswers.size());
         Integer last_number_of_statements = numberOfAssertStatements.pop();
         while (priorAnswers.size() != last_number_of_statements)
-            priorAnswers.remove(priorAnswers.size()-1);
+            priorAnswers.remove(priorAnswers.size() - 1);
         variableAsserts = priorAnswers;
         processRules();
     }

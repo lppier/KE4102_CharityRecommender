@@ -16,6 +16,11 @@ public class InterviewForm {
     private JButton prevButton;
     private JLabel textLabel;
     private JButton jumpToConclusionButton;
+    private JLabel imageLabel;
+
+    public JLabel getImageLabel() {
+        return imageLabel;
+    }
 
     InterviewForm(CharityRecommender recommender) {
 
@@ -25,6 +30,9 @@ public class InterviewForm {
         // https://stackoverflow.com/questions/9639017/intellij-gui-creator-jpanel-gives-runtime-null-pointer-exception-upon-adding-an
         choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.PAGE_AXIS));
 
+        Helpers helpers = new Helpers();
+        imageLabel.setIcon(new ImageIcon(helpers.loadImage("/img/charity-A.jpg", 765, 485)));
+        imageLabel.setVisible(false);
         prevButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
