@@ -361,29 +361,32 @@
 
 ;**** Rules for branching corporate/individual donations
 (defrule donation_from_corporate
-  (corporate)
+  ?c <- (corporate)
   (or (donation_type_money)
       (donation_type_volunteering)
       (donation_type_kind)
   )
   =>
   (assert (current_question tax_exemption))
+  (retract ?c) ; safeguard against further accidental triggering
 )
 
 (defrule donation_from_individual_money
-  (individual)
-  (donation_type_money)
+  ?i <- (individual)
+  ?dtm <- (donation_type_money)
   =>
   (assert (current_question tax_exemption))
+  (retract ?i) ; safeguard against further accidental triggering
 )
 
 (defrule donation_from_individual_kind_volunteering
-  (individual)
+  ?i <- (individual)
   (or (donation_type_volunteering)
       (donation_type_kind)
   )
   =>
   (assert (current_question charity_research))
+  (retract ?i) ; safeguard against further accidental triggering
 )
 
 ;**** Rule2: Ask if want tax
@@ -439,12 +442,12 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Nothing here")
+                (question "The following questions will obtain your preference for the attributes of the charity.")
                 (relation-asserted section_charity_attributes)
                 (valid-answers)
                 (display-answers)
                 (state interview)
-                (hasGraphic yes)
+                (hasGraphic A)
                 (is-multi-choice no)
               )
      )
@@ -584,6 +587,94 @@
   =>
   (assert (nameofvariable (name ratio_eff_high) (cf (* (min ?research-cf ?emo-cf) 0.5))(true_or_false TRUE)))
   (assert (nameofvariable (name sub_gov_no) (cf (* (min ?research-cf ?emo-cf) 0.4))(true_or_false TRUE)))
+)
+
+(defrule charity_size_branch1
+  ?csd <- (charity_size_done)
+  (is_rational)
+  =>
+  (assert (current_question charity_investment))
+  (assert (continue_interview))
+  (retract ?csd)
+)
+
+(defrule charity_size_branch2
+  ?csd <- (charity_size_done)
+  =>
+  (assert (current_question section_sector))
+  (assert (continue_interview))
+  (retract ?csd)
+)
+
+(defrule experience_employees
+    (continue_interview)
+    (current_question experience_employees)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "I care about the amount of experience a charity's employees have.")
+                (relation-asserted experience_employees)
+                (valid-answers a b c d e)
+                (display-answers "Highly Disagree" "Disagree" "Neutral" "Agree" "Highly Agree")
+                (state interview)
+                (hasGraphic no)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule multiple_accounting
+    (continue_interview)
+    (current_question multiple_accounting)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "I prefer charities that have been examined multiple times by accountants.")
+                (relation-asserted multiple_accounting)
+                (valid-answers a b c d e)
+                (display-answers "Highly Disagree" "Disagree" "Neutral" "Agree" "Highly Agree")
+                (state interview)
+                (hasGraphic no)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule experienced_and_accounted
+  (old ?old-cf)
+  (recent ?recent-cf)
+  =>
+  (assert (nameofvariable (name exist_long) (cf (* (max ?old-cf ?recent-cf) 0.3))(true_or_false TRUE)))
+  (assert (nameofvariable (name exist_medium) (cf (* (max ?old-cf ?recent-cf) 0.1))(true_or_false TRUE)))
+)
+
+(defrule section_external_influence
+    (continue_interview)
+    (current_question section_external_influence)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "The following questions will be to understand if other's choices influence your decision.")
+                (relation-asserted section_external_influence)
+                (valid-answers)
+                (display-answers)
+                (state interview)
+                (hasGraphic C)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
 )
 
 (defrule charity_established
@@ -834,6 +925,27 @@
                 (display-answers "Buddhism" "Christianity" "Hinduism" "Islam" "Taoism" "Others")
                 (state interview)
                 (hasGraphic no)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
+(defrule section_sector
+    (continue_interview)
+    (current_question section_sector)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "The following questions will gauge your preference for the sector in which the charity operates.")
+                (relation-asserted section_sector)
+                (valid-answers)
+                (display-answers)
+                (state interview)
+                (hasGraphic B)
                 (is-multi-choice no)
               )
      )
@@ -1124,11 +1236,11 @@
      (assert  (UI-state
                 (question "Which area of sports are you interested to donate to?")
                 (relation-asserted sports_subsector)
-                (valid-answers b c h i)
+                (valid-answers a b c d)
                 (display-answers "Competitive Sports" "Disabiity Sports" "Non-National Sports Association Affliated" "NSAs")
                 (state interview)
                 (hasGraphic no)
-                (is-multi-choice no)
+                (is-multi-choice yes)
               )
      )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
