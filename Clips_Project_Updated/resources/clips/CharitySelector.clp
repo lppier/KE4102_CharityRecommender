@@ -361,29 +361,32 @@
 
 ;**** Rules for branching corporate/individual donations
 (defrule donation_from_corporate
-  (corporate)
+  ?c <- (corporate)
   (or (donation_type_money)
       (donation_type_volunteering)
       (donation_type_kind)
   )
   =>
   (assert (current_question tax_exemption))
+  (retract ?c) ; safeguard against further accidental triggering
 )
 
 (defrule donation_from_individual_money
-  (individual)
-  (donation_type_money)
+  ?i <- (individual)
+  ?dtm <- (donation_type_money)
   =>
   (assert (current_question tax_exemption))
+  (retract ?i) ; safeguard against further accidental triggering
 )
 
 (defrule donation_from_individual_kind_volunteering
-  (individual)
+  ?i <- (individual)
   (or (donation_type_volunteering)
       (donation_type_kind)
   )
   =>
   (assert (current_question charity_research))
+  (retract ?i) ; safeguard against further accidental triggering
 )
 
 ;**** Rule2: Ask if want tax
@@ -587,18 +590,20 @@
 )
 
 (defrule charity_size_branch1
-  (charity_size_done)
+  ?csd <- (charity_size_done)
   (is_rational)
   =>
   (assert (current_question charity_investment))
   (assert (continue_interview))
+  (retract ?csd)
 )
 
 (defrule charity_size_branch2
-  (charity_size_done)
+  ?csd <- (charity_size_done)
   =>
   (assert (current_question sector_preference))
   (assert (continue_interview))
+  (retract ?csd)
 )
 
 (defrule charity_established
