@@ -601,7 +601,7 @@
 (defrule charity_size_branch2
   ?csd <- (charity_size_done)
   =>
-  (assert (current_question sector_preference))
+  (assert (current_question section_sector))
   (assert (continue_interview))
   (retract ?csd)
 )
@@ -911,6 +911,27 @@
      (retract ?fcq)
 )
 
+(defrule section_sector
+    (continue_interview)
+    (current_question section_sector)
+     ?f1 <- (UI-state (question ?q)(relation-asserted ?ra)(valid-answers ?va)(display-answers ?da) (state ?s))
+     ?fci <- (continue_interview)
+     ?fcq <- (current_question ?f)
+=>   (retract ?f1)
+     (assert (UI-state
+                (question "The following questions will gauge your preference for the sector in which the charity operates.")
+                (relation-asserted section_sector)
+                (valid-answers)
+                (display-answers)
+                (state interview)
+                (hasGraphic yes)
+                (is-multi-choice no)
+              )
+     )
+     (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)
+     (retract ?fcq)
+)
+
 (defrule sector_preference
     (continue_interview)
     (current_question sector_preference)
@@ -1194,11 +1215,11 @@
      (assert  (UI-state
                 (question "Which area of sports are you interested to donate to?")
                 (relation-asserted sports_subsector)
-                (valid-answers b c h i)
+                (valid-answers a b c d)
                 (display-answers "Competitive Sports" "Disabiity Sports" "Non-National Sports Association Affliated" "NSAs")
                 (state interview)
                 (hasGraphic no)
-                (is-multi-choice no)
+                (is-multi-choice yes)
               )
      )
      (retract ?fci) ; don't continue interview unless UI says so (UI will assert continue-interview on next button clicked)

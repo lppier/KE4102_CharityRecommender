@@ -21,6 +21,7 @@ public class ClipsAssertsHandler {
     private Hashtable<String, Vector<String>> charity_research_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_sad_stories_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> section_charity_attributes_hash = new Hashtable<>();
+    private Hashtable<String, Vector<String>> section_sector_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_established_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_past_hash = new Hashtable<>();
     private Hashtable<String, Vector<String>> charity_parents_sector_hash = new Hashtable<>();
@@ -160,10 +161,10 @@ public class ClipsAssertsHandler {
                 Vector<String> y_ans = new Vector<>();
                 y_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf 1)(true_or_false TRUE)))");
                 y_ans.add("(assert (nameofvariable (name sub_gov_no)(cf -0.1)(true_or_false TRUE)))");
-                y_ans.add("(assert (current_question sector_preference))");
+                y_ans.add("(assert (current_question section_sector))");
                 Vector<String> n_ans = new Vector<>();
                 n_ans.add("(assert (nameofvariable (name sub_gov_yes)(cf -0.4)(true_or_false TRUE)))");
-                n_ans.add("(assert (current_question sector_preference))");
+                n_ans.add("(assert (current_question section_sector))");
                 charity_gov_compl_hash.put("y", y_ans);
                 charity_gov_compl_hash.put("n", n_ans);
             }
@@ -668,6 +669,12 @@ public class ClipsAssertsHandler {
             }
 
             {
+                Vector<String> a_ans = new Vector<>();
+                a_ans.add("(assert (current_question sector_preference))");
+                section_sector_hash.put("section", a_ans);
+            }
+
+            {
                 // sector_preferences
                 Vector<String> arts_heritage_ans = new Vector<>();
                 Vector<String> community_ans = new Vector<>();
@@ -1085,6 +1092,8 @@ public class ClipsAssertsHandler {
                 return charity_website_hash.get(theAnswer);
             case "charity_influence":
                 return charity_influence_hash.get(theAnswer);
+            case "section_sector":
+                return section_sector_hash.get(theAnswer);
             case "arts_and_heritage_support":
                 return arts_and_heritage_support_hash.get(theAnswer);
             case "arts_and_heritage_subsector":
