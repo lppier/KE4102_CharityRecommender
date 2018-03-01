@@ -439,7 +439,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Nothing here")
+                (question "The following questions will obtain your preference for the attributes of the charity.")
                 (relation-asserted section_charity_attributes)
                 (valid-answers)
                 (display-answers)
@@ -584,6 +584,21 @@
   =>
   (assert (nameofvariable (name ratio_eff_high) (cf (* (min ?research-cf ?emo-cf) 0.5))(true_or_false TRUE)))
   (assert (nameofvariable (name sub_gov_no) (cf (* (min ?research-cf ?emo-cf) 0.4))(true_or_false TRUE)))
+)
+
+(defrule charity_size_branch1
+  (charity_size_done)
+  (is_rational)
+  =>
+  (assert (current_question charity_investment))
+  (assert (continue_interview))
+)
+
+(defrule charity_size_branch2
+  (charity_size_done)
+  =>
+  (assert (current_question sector_preference))
+  (assert (continue_interview))
 )
 
 (defrule charity_established

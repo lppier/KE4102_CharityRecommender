@@ -86,13 +86,16 @@ public class ClipsAssertsHandler {
             {   // charity_size qn
                 Vector<String> small_ans = new Vector<>();
                 small_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))");
-                small_ans.add("(assert (current_question section_charity_attributes))");
+                small_ans.add("(assert (charity_size_done))");
+                //small_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> medium_ans = new Vector<>();
                 medium_ans.add("(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE)))");
-                medium_ans.add("(assert (current_question section_charity_attributes))");
+                medium_ans.add("(assert (charity_size_done))");
+                //medium_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> large_ans = new Vector<>();
                 large_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
-                large_ans.add("(assert (current_question section_charity_attributes))");
+                large_ans.add("(assert (charity_size_done))");
+                //large_ans.add("(assert (current_question section_charity_attributes))");
                 charity_size_hash.put("small", small_ans);
                 charity_size_hash.put("medium", medium_ans);
                 charity_size_hash.put("large", large_ans);
@@ -176,14 +179,17 @@ public class ClipsAssertsHandler {
 
                 Vector<String> c_ans = new Vector<>();
                 c_ans.add("(assert (research 0.2))");
+                c_ans.add("(assert (is_rational))");
                 c_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> d_ans = new Vector<>();
                 d_ans.add("(assert (research 0.3))");
+                d_ans.add("(assert (is_rational))");
                 d_ans.add("(assert (current_question charity_sad_stories))");
 
                 Vector<String> e_ans = new Vector<>();
-                b_ans.add("(assert (research 0.4))");
+                e_ans.add("(assert (research 0.4))");
+                e_ans.add("(assert (is_rational))");
                 e_ans.add("(assert (current_question charity_sad_stories))");
 
                 charity_research_hash.put("a", a_ans);
@@ -197,14 +203,17 @@ public class ClipsAssertsHandler {
                 // charity_sad_stories (likert scale)
                 Vector<String> a_ans = new Vector<>();
                 a_ans.add("(assert (emotional 0.4))");
+                a_ans.add("(assert (is_rational))");
                 a_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> b_ans = new Vector<>();
                 b_ans.add("(assert (emotional 0.3))");
+                b_ans.add("(assert (is_rational))");
                 b_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> c_ans = new Vector<>();
                 c_ans.add("(assert (emotional 0.2))");
+                c_ans.add("(assert (is_rational))");
                 c_ans.add("(assert (current_question section_charity_attributes))");
 
                 Vector<String> d_ans = new Vector<>();
