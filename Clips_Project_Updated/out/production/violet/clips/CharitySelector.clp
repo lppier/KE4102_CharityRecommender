@@ -24,7 +24,7 @@
 
 (deftemplate current_goal (slot goal) (slot cf)) ;; the top-level
 (deftemplate working_goal (slot goal) (slot cf)) ;; 
-(deftemplate branch_indicator (slot name) (slot cf) (slot true_or_false))
+;(deftemplate branch_indicator (slot name) (slot cf) (slot true_or_false))
 (deftemplate recommendation
       (slot ngee_ann_cultural_centre_limited)
       (slot singapore_indian_fine_arts_society_the)
@@ -199,7 +199,7 @@
     (current_goal (goal special_olympics_asia_pacific_ltd) (cf 0.5))
     (current_goal (goal singapore_athletic_association) (cf 0.5))
     (current_goal (goal salvation_army_the) (cf 0.5))
-    (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
+    ;(branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
 
     (UI-state
           (question "Welcome to Charity Recommender! Do you want to start the recommendation?")
@@ -815,7 +815,7 @@
                 (question "If you are married, what type of charity does your spouse contribute to?")
                 (relation-asserted charity_spouse)
                 (valid-answers a e h c r sw sp o t)
-                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above")
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above / Not Married")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
@@ -898,7 +898,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you have role models who donate to charity? If so, which sector do they donate to?")
+                (question "If you have a role model who donates to charity,to which sector does he/she donates?")
                 (relation-asserted charity_influence)
                 (valid-answers a e h c r sw sp o t)
                 (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above")
