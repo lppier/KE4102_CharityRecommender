@@ -24,7 +24,7 @@
 
 (deftemplate current_goal (slot goal) (slot cf)) ;; the top-level
 (deftemplate working_goal (slot goal) (slot cf)) ;; 
-(deftemplate branch_indicator (slot name) (slot cf) (slot true_or_false))
+;(deftemplate branch_indicator (slot name) (slot cf) (slot true_or_false))
 (deftemplate recommendation
       (slot ngee_ann_cultural_centre_limited)
       (slot singapore_indian_fine_arts_society_the)
@@ -199,7 +199,7 @@
     (current_goal (goal special_olympics_asia_pacific_ltd) (cf 0.5))
     (current_goal (goal singapore_athletic_association) (cf 0.5))
     (current_goal (goal salvation_army_the) (cf 0.5))
-    (branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
+    ;(branch_indicator (name only_kind_or_time) (true_or_false UNKNOWN))
 
     (UI-state
           (question "Welcome to Charity Recommender! Do you want to start the recommendation?")
@@ -399,7 +399,7 @@
 =>
     (retract ?f1)
     (assert (UI-state
-                (question "Do you want tax exemption for your donation?")
+                (question "Would you prefer your charity to have a tax exemption status?")
                 (relation-asserted tax_exemption)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -463,7 +463,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to donate to charities which invest for profit?")
+                (question "Do you mind donating to charities which do commerical investments?")
                 (relation-asserted charity_investment)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -484,10 +484,10 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to donate to charities which are Government funded?")
+                (question "Do you prefer government funded charities or non-government funded charities?")
                 (relation-asserted charity_gov_funded)
                 (valid-answers y n)
-                (display-answers "Yes" "No")
+                (display-answers "Government Funded" "Non-Government Funded")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
@@ -505,10 +505,10 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "How financially efficient the charity should be?")
+                (question "Please indicate the level of program efficiency of the charity. (money spent on charitable causes vs money spent on other activities)")
                 (relation-asserted charity_fin_eff)
                 (valid-answers l m h)
-                (display-answers "Low" "Medium" "High")
+                (display-answers "Low Amount to Charitable Causes" "Medium Amount to Charitable Causes" "High Amount to Charitable Causes")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
@@ -568,7 +568,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Sad stories about neglected pets and the working conditions in sweat shops make me very sad.")
+                (question "When I read depressing news I feel emotionally affected.")
                 (relation-asserted charity_sad_stories)
                 (valid-answers a b c d e)
                 (display-answers "Strongly Disagree" "Disagree" "Neutral" "Agree" "Strongly Agree")
@@ -815,7 +815,7 @@
                 (question "If you are married, what type of charity does your spouse contribute to?")
                 (relation-asserted charity_spouse)
                 (valid-answers a e h c r sw sp o t)
-                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above")
+                (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above / Not Married")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
@@ -854,7 +854,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to give to charities that you have heard about in the media?")
+                (question "Do you prefer charities that have a large media coverage?")
                 (relation-asserted charity_media)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -898,7 +898,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you have role models who donate to charity? If so, which sector do they donate to?")
+                (question "If you have a role model who donates to charity,to which sector does he/she donates?")
                 (relation-asserted charity_influence)
                 (valid-answers a e h c r sw sp o t)
                 (display-answers "Arts and Heritage" "Education" "Health" "Community" "Religious" "Social and Welfare" "Sports" "Others" "None of the Above")
