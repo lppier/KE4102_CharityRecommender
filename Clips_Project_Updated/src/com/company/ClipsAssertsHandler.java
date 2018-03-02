@@ -650,16 +650,41 @@ public class ClipsAssertsHandler {
                 Vector<String> islam_ans = new Vector<>();
                 Vector<String> taoism_ans = new Vector<>();
                 Vector<String> others_ans = new Vector<>();
-                buddhism_ans.add("(assert (nameofvariable (name buddhism)(cf 0.7)(true_or_false TRUE)))");
+                buddhism_ans.add("(assert (nameofvariable (name buddhism)(cf 0.9)(true_or_false TRUE)))");
+                buddhism_ans.add("(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))");
+                buddhism_ans.add("(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))");
+                buddhism_ans.add("(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))");
+                buddhism_ans.add("(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))");
                 buddhism_ans.add("(assert (current_question experience_employees))");
-                christianity_ans.add("(assert (nameofvariable (name christianity)(cf 0.7)(true_or_false TRUE)))");
+
+                christianity_ans.add("(assert (nameofvariable (name christianity)(cf 0.9)(true_or_false TRUE)))");
+                christianity_ans.add("(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))");
+                christianity_ans.add("(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))");
+                christianity_ans.add("(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))");
+                christianity_ans.add("(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))");
                 christianity_ans.add("(assert (current_question experience_employees))");
-                hinduism_ans.add("(assert (nameofvariable (name hinduism)(cf 0.7)(true_or_false TRUE)))");
+
+                hinduism_ans.add("(assert (nameofvariable (name hinduism)(cf 0.9)(true_or_false TRUE)))");
+                hinduism_ans.add("(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))");
+                hinduism_ans.add("(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))");
+                hinduism_ans.add("(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))");
+                hinduism_ans.add("(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))");
                 hinduism_ans.add("(assert (current_question experience_employees))");
-                islam_ans.add("(assert (nameofvariable (name islam)(cf 0.7)(true_or_false TRUE)))");
+
+                islam_ans.add("(assert (nameofvariable (name islam)(cf 0.9)(true_or_false TRUE)))");
+                islam_ans.add("(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))");
+                islam_ans.add("(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))");
+                islam_ans.add("(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))");
+                islam_ans.add("(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))");
                 islam_ans.add("(assert (current_question experience_employees))");
-                taoism_ans.add("(assert (nameofvariable (name taoism)(cf 0.7)(true_or_false TRUE)))");
+
+                taoism_ans.add("(assert (nameofvariable (name taoism)(cf 0.9)(true_or_false TRUE)))");
+                taoism_ans.add("(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))");
+                taoism_ans.add("(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))");
+                taoism_ans.add("(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))");
+                taoism_ans.add("(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))");
                 taoism_ans.add("(assert (current_question experience_employees))");
+
                 others_ans.add("(assert (current_question experience_employees))"); // others no effect
                 religious_subsector_hash.put("b", buddhism_ans);
                 religious_subsector_hash.put("c", christianity_ans);
