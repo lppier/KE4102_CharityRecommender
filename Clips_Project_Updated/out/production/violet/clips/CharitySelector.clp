@@ -487,7 +487,7 @@
                 (question "Do you prefer government funded charities or non-government funded charities?")
                 (relation-asserted charity_gov_funded)
                 (valid-answers y n)
-                (display-answers "Yes" "No")
+                (display-answers "Government Funded" "Non-Government Funded")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
