@@ -399,7 +399,7 @@
 =>
     (retract ?f1)
     (assert (UI-state
-                (question "Do you want tax exemption for your donation?")
+                (question "Would you prefer your charity to have a tax exemption status?")
                 (relation-asserted tax_exemption)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -463,7 +463,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to donate to charities which invest for profit?")
+                (question "Do you mind donating to charities which do commerical investments?")
                 (relation-asserted charity_investment)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -484,7 +484,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to donate to charities which are Government funded?")
+                (question "Do you prefer government funded charities or non-government funded charities?")
                 (relation-asserted charity_gov_funded)
                 (valid-answers y n)
                 (display-answers "Yes" "No")
@@ -505,10 +505,10 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "How financially efficient the charity should be?")
+                (question "Please indicate the level of program efficiency of the charity. (money spent on charitable causes vs money spent on other activities)")
                 (relation-asserted charity_fin_eff)
                 (valid-answers l m h)
-                (display-answers "Low" "Medium" "High")
+                (display-answers "Low Amount to Charitable Causes" "Medium Amount to Charitable Causes" "High Amount to Charitable Causes")
                 (state interview)
                 (hasGraphic no)
                 (is-multi-choice no)
@@ -568,7 +568,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Sad stories about neglected pets and the working conditions in sweat shops make me very sad.")
+                (question "When I read depressing news I feel emotionally affected.")
                 (relation-asserted charity_sad_stories)
                 (valid-answers a b c d e)
                 (display-answers "Strongly Disagree" "Disagree" "Neutral" "Agree" "Strongly Agree")
@@ -854,7 +854,7 @@
      ?fcq <- (current_question ?f)
 =>   (retract ?f1)
      (assert (UI-state
-                (question "Do you prefer to give to charities that you have heard about in the media?")
+                (question "Do you prefer charities that have a large media coverage?")
                 (relation-asserted charity_media)
                 (valid-answers y n)
                 (display-answers "Yes" "No")

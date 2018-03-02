@@ -91,15 +91,12 @@ public class ClipsAssertsHandler {
                 Vector<String> small_ans = new Vector<>();
                 small_ans.add("(assert (nameofvariable (name small)(cf 0.3)(true_or_false TRUE)))");
                 small_ans.add("(assert (charity_size_done))");
-                //small_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> medium_ans = new Vector<>();
                 medium_ans.add("(assert (nameofvariable (name medium)(cf 0.3)(true_or_false TRUE)))");
                 medium_ans.add("(assert (charity_size_done))");
-                //medium_ans.add("(assert (current_question section_charity_attributes))");
                 Vector<String> large_ans = new Vector<>();
                 large_ans.add("(assert (nameofvariable (name large)(cf 0.3)(true_or_false TRUE)))");
                 large_ans.add("(assert (charity_size_done))");
-                //large_ans.add("(assert (current_question section_charity_attributes))");
                 charity_size_hash.put("small", small_ans);
                 charity_size_hash.put("medium", medium_ans);
                 charity_size_hash.put("large", large_ans);
@@ -107,11 +104,10 @@ public class ClipsAssertsHandler {
 
             {   // charity_invest qn
                 Vector<String> yes_ans = new Vector<>();
-                yes_ans.add("(assert (nameofvariable (name invest_reserves)(cf 0.7)(true_or_false TRUE)))");
+                yes_ans.add("(assert (nameofvariable (name invest_reserves)(cf -0.3)(true_or_false TRUE)))");
                 yes_ans.add("(assert (current_question charity_gov_funded))");
 
                 Vector<String> no_ans = new Vector<>();
-                no_ans.add("(assert (nameofvariable (name invest_reserves)(cf -0.7)(true_or_false TRUE)))");
                 no_ans.add("(assert (current_question charity_gov_funded))");
 
                 charity_invest_hash.put("y", yes_ans);
@@ -137,7 +133,6 @@ public class ClipsAssertsHandler {
                 y_ans.add("(assert (nameofvariable (name no_tax_deduct)(cf -1)(true_or_false TRUE)))");
                     y_ans.add("(assert (current_question charity_research))");
                 Vector<String> n_ans = new Vector<>();
-                n_ans.add("(assert (nameofvariable (name no_tax_deduct)(cf 0.1)(true_or_false TRUE)))");
                 n_ans.add("(assert (current_question charity_research))");
                 tax_return_hash.put("y", y_ans);
                 tax_return_hash.put("n", n_ans);

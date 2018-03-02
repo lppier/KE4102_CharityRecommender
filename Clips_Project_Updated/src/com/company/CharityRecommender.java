@@ -599,6 +599,8 @@ public class CharityRecommender {
     public void restartInterview() {
         variableAsserts.clear();
         priorAnswers.clear();
+        numberOfAssertStatements.clear();
+        latest_facts.clear();
 
         mainFrame.dispose();
 
