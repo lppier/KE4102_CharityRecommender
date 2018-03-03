@@ -114,7 +114,7 @@ public class ConclusionForm {
             JProgressBar cfProgessBar = new JProgressBar();
             cfProgessBar.setValue((int) (cfValue * 100));
             cfProgessBar.setString(String.format("%.4f", cfValue));
-            cfProgessBar.setStringPainted(true);
+            cfProgessBar.setStringPainted(false);
             listPanel.add(cfProgessBar, constraints);
 
             constraints.gridx = 0;
