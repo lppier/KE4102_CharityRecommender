@@ -96,8 +96,7 @@ public class ConclusionForm {
 //        System.out.println("-------------");
 
         try {
-//            System.out.println(item.get("Name of Organisation"));
-//            System.out.println(item.get("website"));
+            System.out.println(String.format("%s: CF %s", item.get("Name of Organisation"), cfValue.toString()));
 
             constraints.gridx = 0;
             constraints.gridy = (itemCount * 2);

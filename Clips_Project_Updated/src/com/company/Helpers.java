@@ -180,6 +180,10 @@ public class Helpers {
         }
     }
 
+    public TreeMap<String, Double> sortByKey(Map<String, Double> map) {
+        return new TreeMap<String, Double>(map);
+    }
+
     public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Boolean asc) {
         if (asc) {
             return map.entrySet()

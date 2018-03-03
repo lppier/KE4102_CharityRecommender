@@ -474,7 +474,10 @@ public class CharityRecommender {
         for (int i = 0; i < goalNames.size(); i++) {
             goals.put(goalNames.elementAt(i), goalValues.elementAt(i));
         }
-        goals = new Helpers().sortByValue(goals, false);
+
+        Helpers helpers = new Helpers();
+        goals = helpers.sortByKey(goals);
+        goals = helpers.sortByValue(goals, false);
         System.out.println("##################");
     }
 
@@ -539,7 +542,6 @@ public class CharityRecommender {
 
         conclusionForm.clearListPanel();
         goals = new Helpers().getFirstN(goals, 10);
-        System.out.println(goals);
 
         goals.forEach((charityNameId, charityCfValue) -> {
             conclusionForm.addItem(csvRecords.get(charityNameId), charityCfValue);
