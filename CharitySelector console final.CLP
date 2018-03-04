@@ -29,7 +29,6 @@
 
 ;Loading the facts
 (deffacts load-facts
-
 	(current_fact (fact ngee_ann_cultural_centre_limited) (cf 0.5) (all_vars arts_and_heritage no_tax_deduct medium money   historical_and_cultural_conservation exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website   )( name "NGEE ANN CULTURAL CENTRE LIMITED"))
 	(current_fact (fact singapore_indian_fine_arts_society_the) (cf 0.5) (all_vars arts_and_heritage no_tax_deduct medium money   music_and_orchestras exist_long  gov_grants sub_fin_yes ratio_eff_high  sub_gov_not_req gov_rating_low has_website media_exposure  )( name "Singapore Indian Fine Arts Society, The"))
 	(current_fact (fact national_book_development_council_of_singapore_the) (cf 0.5) (all_vars arts_and_heritage  medium money   literary_arts exist_long  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "National Book Development Council of Singapore, The"))
@@ -42,7 +41,7 @@
 	(current_fact (fact radin_mas_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  medium money   central exist_long   sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "RADIN MAS CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
 	(current_fact (fact kaki_bukit_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  medium money   north_east exist_long  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high  media_exposure  )( name "KAKI BUKIT CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
 	(current_fact (fact kebun_baru_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  small money   north_west exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high  media_exposure  )( name "KEBUN BARU CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
-	(current_fact (fact fengshan_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  small money   south_east exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high  media_exposure  )( name "FENGSHAN CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
+	(current_fact (fact fengshan_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  large money   south_east exist_long   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high  media_exposure  )( name "FENGSHAN CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
 	(current_fact (fact bukit_batok_ccc_community_development_and_welfare_fund) (cf 0.5) (all_vars community  medium money   south_west exist_long invest_reserves  sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website media_exposure  )( name "BUKIT BATOK CCC COMMUNITY DEVELOPMENT AND WELFARE FUND"))
 	(current_fact (fact the_friends_of_the_university_of_warwick_in_singapore) (cf 0.5) (all_vars education  small money   foreign_educational_institutions_and_funds exist_short   sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_mid  media_exposure  )( name "The Friends of The University of Warwick in Singapore"))
 	(current_fact (fact methodist_schools_foundation) (cf 0.5) (all_vars education  medium money   foundations_and_trusts exist_long invest_reserves  sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website   )( name "METHODIST SCHOOLS' FOUNDATION"))
@@ -59,7 +58,7 @@
 	(current_fact (fact grace_lodge) (cf 0.5) (all_vars health  large money  volunteer nursing_home exist_long  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Grace Lodge"))
 	(current_fact (fact alzheimers_disease_association) (cf 0.5) (all_vars health  large money  volunteer community_based_services exist_long  gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Alzheimer's Disease Association"))
 	(current_fact (fact kidney_dialysis_foundation_limited) (cf 0.5) (all_vars health  large money  volunteer renal_dialysis exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "KIDNEY DIALYSIS FOUNDATION LIMITED"))
-	(current_fact (fact public_free_clinic_society) (cf 0.5) (all_vars health  large money  volunteer tcm_clinic exist_long invest_reserves  sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Public Free Clinic Society"))
+	(current_fact (fact public_free_clinic_society) (cf 0.5) (all_vars health  large money  volunteer tcm_clinic exist_long invest_reserves  sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high media_exposure  )( name "Public Free Clinic Society"))
 	(current_fact (fact alexandra_health_fund_limited) (cf 0.5) (all_vars health  medium money  volunteer trust_and_research_funds exist_short invest_reserves  sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high  media_exposure  )( name "ALEXANDRA HEALTH FUND LIMITED"))
 	(current_fact (fact society_for_the_prevention_of_cruelty_to_animals_singapore) (cf 0.5) (all_vars others  medium money inkind volunteer animal_welfare exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "SOCIETY FOR THE PREVENTION OF CRUELTY TO ANIMALS, SINGAPORE"))
 	(current_fact (fact blossom_world_society) (cf 0.5) (all_vars others  medium money   children_and_youth exist_short  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Blossom World Society"))
@@ -68,15 +67,15 @@
 	(current_fact (fact the_law_society_of_singapore_pro_bono_learning_and_support_services) (cf 0.5) (all_vars others  medium money   humanitarian_aid exist_long  gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website media_exposure  )( name "THE LAW SOCIETY OF SINGAPORE PRO BONO, LEARNING AND SUPPORT SERVICES"))
 	(current_fact (fact singapore_indian_development_association_sinda) (cf 0.5) (all_vars others  large money  volunteer self_help_groups exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Singapore Indian Development Association (SINDA)"))
 	(current_fact (fact singapore_institute_of_international_affairs_endowment_fund) (cf 0.5) (all_vars others  medium money   think_tanks exist_long   sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "SINGAPORE INSTITUTE OF INTERNATIONAL AFFAIRS ENDOWMENT FUND"))
-	(current_fact (fact singapore_buddhist_federation_the) (cf 0.5) (all_vars religious no_tax_deduct medium money  volunteer buddhism exist_long  gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Singapore Buddhist Federation, The"))
+	(current_fact (fact singapore_buddhist_federation_the) (cf 0.5) (all_vars religious no_tax_deduct medium money buddhism exist_long  gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website )( name "Singapore Buddhist Federation, The"))
 	(current_fact (fact new_creation_church) (cf 0.5) (all_vars religious no_tax_deduct large money  volunteer christianity exist_long  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_mid has_website media_exposure  )( name "NEW CREATION CHURCH"))
-	(current_fact (fact holy_tree_sri_bala_subramaniar_temple) (cf 0.5) (all_vars religious no_tax_deduct medium money  volunteer hinduism exist_long   sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Holy Tree Sri Bala Subramaniar Temple"))
+	(current_fact (fact holy_tree_sri_bala_subramaniar_temple) (cf 0.5) (all_vars religious no_tax_deduct medium money hinduism exist_long   sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website)( name "Holy Tree Sri Bala Subramaniar Temple"))
 	(current_fact (fact muslim_converts_association_of_singapore) (cf 0.5) (all_vars religious no_tax_deduct medium money  volunteer islam exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Muslim Converts' Association of Singapore"))
 	(current_fact (fact xian_gu_tian) (cf 0.5) (all_vars religious no_tax_deduct medium money   taoism exist_long   sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high    )( name "Xian Gu Tian"))
-	(current_fact (fact fei_yue_community_services) (cf 0.5) (all_vars social_and_welfare  large money  volunteer children_and_youth exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Fei Yue Community Services"))
+	(current_fact (fact fei_yue_community_services) (cf 0.5) (all_vars social_and_welfare  large money  volunteer children_and_youth exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website )( name "Fei Yue Community Services"))
 	(current_fact (fact caritas_singapore_agape_fund) (cf 0.5) (all_vars social_and_welfare no_tax_deduct large money   community exist_long invest_reserves  sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Caritas Singapore Agape Fund"))
-	(current_fact (fact association_for_persons_with_special_needs) (cf 0.5) (all_vars social_and_welfare  large money inkind volunteer disability_adult exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_mid has_website media_exposure  )( name "Association for Persons with Special Needs"))
-	(current_fact (fact apex_day_rehabilitation_centre_for_elderly) (cf 0.5) (all_vars social_and_welfare  medium money  volunteer eldercare exist_long  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website   )( name "Apex Day Rehabilitation Centre For Elderly"))
+	(current_fact (fact association_for_persons_with_special_needs) (cf 0.5) (all_vars social_and_welfare  large money inkind disability_adult exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_high  sub_gov_yes gov_rating_mid has_website )( name "Association for Persons with Special Needs"))
+	(current_fact (fact apex_day_rehabilitation_centre_for_elderly) (cf 0.5) (all_vars social_and_welfare  medium money  volunteer eldercare gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website   )( name "Apex Day Rehabilitation Centre For Elderly"))
 	(current_fact (fact family_life_society) (cf 0.5) (all_vars social_and_welfare  medium money  volunteer family exist_long invest_reserves gov_grants sub_fin_yes ratio_eff_med  sub_gov_yes gov_rating_high has_website media_exposure  )( name "Family Life Society"))
 	(current_fact (fact heb___ashram_halfway_house) (cf 0.5) (all_vars social_and_welfare  medium money   support_groups exit_medium  gov_grants sub_fin_yes ratio_eff_low  sub_gov_yes gov_rating_high has_website media_exposure  )( name "HEB - ASHRAM HALFWAY HOUSE"))
 	(current_fact (fact footballplus_ltd) (cf 0.5) (all_vars sports  small money   competitive_sports exist_short  gov_grants sub_fin_yes ratio_eff_high fin_health_poor sub_gov_yes gov_rating_mid has_website   )( name "FOOTBALLPLUS LTD."))
@@ -156,14 +155,17 @@
     ?branch_indicator <- (branch_indicator (name first_question) (true_or_false UNKNOWN))
     =>	
     (printout t crlf "
+    	______________________________________________________________________
+    	
 	Hi, welcome to our CLIPS engine. 
 	We notice that instead of using our beautiful GUI program in JAVA, 
 	you use the CLIPS program. Please note that this will lead to a lesser
 	user experience.
+	______________________________________________________________________
 
 That said, the first question is: 
 
-Are you a corporate or a individual user? 
+Are you a corporate or an individual user? 
 c = corporate, i = individual (type in c/i and then press the ENTER button)? ") 
 	(bind ?response (read))
 (switch ?response
@@ -387,7 +389,10 @@ c = corporate, i = individual (type in c/i and then press the ENTER button)? ")
 ;Rule: Arts and Heritage
 (defrule arts_and_heritage_support
 	(current_question arts_and_heritage_support)
-=>	(printout t crlf "I support conserving history and traditional cultures?(1/2/3/4/5)")
+=>	
+	(printout t crlf "Do you agree with the following statement:")
+	(printout t crlf "I support conserving history and traditional cultures")
+	(printout t crlf "1 = strongly disagree, 2 = disagree, 3 = neutral, 4 = agree, 5 = strongly agree (type in 1/2/3/4/5)")
 	(bind ?response (read))
 	(switch ?response
 		(case 1 then   (assert (nameofvariable (name historical_and_cultural_conservation)(cf -0.5)(true_or_false TRUE))))
@@ -535,34 +540,34 @@ c = corporate, i = individual (type in c/i and then press the ENTER button)? ")
 	(switch ?response
 ;The choice for religion has a very high impact and our experts said that they are mutually exclusive, so that is why we excluded the other ones
 		(case 1 then    (assert (nameofvariable (name buddhism)(cf 0.9)(true_or_false TRUE)))
-				(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))
+				(assert (nameofvariable (name christianity)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name hinduism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name islam)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name taoism)(cf -0.8)(true_or_false TRUE)))
 			)
 		(case 2 then 	(assert (nameofvariable (name christianity)(cf 0.9)(true_or_false TRUE)))
-				(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))
+				(assert (nameofvariable (name buddhism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name hinduism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name islam)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name taoism)(cf -0.8)(true_or_false TRUE)))
 			)
 		(case 3 then 	(assert (nameofvariable (name hinduism)(cf 0.9)(true_or_false TRUE)))
-				(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))
+				(assert (nameofvariable (name buddhism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name christianity)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name islam)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name taoism)(cf -0.8)(true_or_false TRUE)))
 			)
 		(case 4 then 	(assert (nameofvariable (name islam)(cf 0.9)(true_or_false TRUE)))
-				(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name taoism)(cf -0.4)(true_or_false TRUE)))
+				(assert (nameofvariable (name buddhism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name christianity)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name hinduism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name taoism)(cf -0.8)(true_or_false TRUE)))
 			)
 		(case 5 then 	(assert (nameofvariable (name taoism)(cf 0.9)(true_or_false TRUE)))
-				(assert (nameofvariable (name buddhism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name christianity)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name hinduism)(cf -0.4)(true_or_false TRUE)))
-				(assert (nameofvariable (name islam)(cf -0.4)(true_or_false TRUE)))
+				(assert (nameofvariable (name buddhism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name christianity)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name hinduism)(cf -0.8)(true_or_false TRUE)))
+				(assert (nameofvariable (name islam)(cf -0.8)(true_or_false TRUE)))
 			)
 	)
 )
@@ -660,8 +665,10 @@ c = corporate, i = individual (type in c/i and then press the ENTER button)? ")
 ;**** Rule11: If a user prefers charities have a lot of experience OR prefers charities that focus on short term, update cf:
 (defrule years_established
 =>	(printout t crlf " Please indicate to what extent you agree with the following statements:
-When I support charities, I care about the experience of the employees (rate 1/2/3/4/5).
+When I support charities, I care about the experience of the employees.
 	") 
+	(printout t crlf "1 = strongly disagree, 2 = disagree, 3 = neutral, 4 = agree, 5 = strongly agree (type in 1/2/3/4/5)
+	")
 	(bind ?response1 (read))
 	(switch ?response1
 		(case 1 then    (bind ?*old_variable* 0))
@@ -671,8 +678,10 @@ When I support charities, I care about the experience of the employees (rate 1/2
 		(case 5 then 	(bind ?*old_variable* 0.4))		
 	)
 	(printout t crlf)
-	(printout t crlf "I prefer charities that have been examined multiple times by accountants (rate 1/2/3/4/5).
+	(printout t crlf "I prefer charities that have been examined multiple times by accountants.
 	") 
+	(printout t crlf "1 = strongly disagree, 2 = disagree, 3 = neutral, 4 = agree, 5 = strongly agree (type in 1/2/3/4/5)
+	")
 	; new charities have had less checks by the accountant:
 	(bind ?response2 (read))
 	(switch ?response2
@@ -738,11 +747,11 @@ When I support charities, I care about the experience of the employees (rate 1/2
 ;**** Rule3:  sectors friends donate to and user age(considering their age >12 need to add code to check  age
 (defrule charity_friends_Sector
 	(current_question charity_friends_above)
-=>	(printout t crlf "Please choose the type of the charity to which your friends donate to.(Please enter the option number)")
-    (printout t crlf "1.Arts_and_heritage")
+=>	(printout t crlf "Please choose the type of the charity to which your friends donate to (please enter the option number)")
+   	(printout t crlf "1.Arts_and_heritage")
 	(printout t crlf "2.Education")
 	(printout t crlf "3.Health")
-    (printout t crlf "4.Community")
+    	(printout t crlf "4.Community")
 	(printout t crlf "5.Religious")
 	(printout t crlf "6.Social and Welfare")
 	(printout t crlf "7.Sports")
@@ -765,7 +774,7 @@ When I support charities, I care about the experience of the employees (rate 1/2
 ;**** Rule3:  sectors friends donate to and user age(considering their age <12 need to add code to check  age
 (defrule charity_friends_Sector2
 	(current_question charity_friends_below)
-=>	(printout t crlf "Please choose the type of the charity to which your friends donate to.(Please enter the option number)")
+=>	(printout t crlf "Please choose the type of the charity to which your friends donate to (please enter the option number)")
     (printout t crlf "1.Arts_and_heritage")
 	(printout t crlf "2.Education")
 	(printout t crlf "3.Health")
@@ -792,7 +801,7 @@ When I support charities, I care about the experience of the employees (rate 1/2
 ;**** Rule21:  Influence of spouse Sectors spouse donate to 
 (defrule charity_spouse
 	(current_question charity_spouse)
-=>	(printout t crlf "Please choose the type of the charity to which your spouse donate to.(Please enter the option number)")
+=>	(printout t crlf "Please choose the type of the charity to which your spouse donate to please enter the option number)")
     (printout t crlf "1.Arts_and_heritage")
 	(printout t crlf "2.Education")
 	(printout t crlf "3.Health")
@@ -848,11 +857,10 @@ When I support charities, I care about the experience of the employees (rate 1/2
 
 ;**** New Rule:  Do you want to donate to charities which are constantly in media
 (defrule charity_media
-=>	(printout t crlf "Do you prefer charities that have a large media coverage? (y/n)") 
+=>	(printout t crlf "Do you prefer charities to have a large or small media coverage? (s/l)") 
 	(bind ?response (read))
     (if (eq ?response y) then 
-        (assert (nameofvariable (name media_exposure)(cf 0.2)(true_or_false TRUE)))
-		
+        (assert (nameofvariable (name media_exposure)(cf 0.2)(true_or_false TRUE)))	
 	)
 )
 
@@ -869,7 +877,8 @@ When I support charities, I care about the experience of the employees (rate 1/2
 
 ;**** Rule35:  Influence of positive public figure
 (defrule charity_influence
-=>	(printout t crlf "If you have a role model that donates to charity, to which sector does he or she donates (Please enter the option number)?") 
+=>	(printout t crlf "If you have a role model that donates to charity, to which sector does he or she donates (please enter the option number)?
+	") 
 	(printout t crlf "1.Arts_and_heritage")
 	(printout t crlf "2.Education")
 	(printout t crlf "3.Health")
@@ -892,7 +901,7 @@ When I support charities, I care about the experience of the employees (rate 1/2
 		)
 	(printout t crlf "Our charity recommender has finished the calculations!
 		")
-	(printout t crlf "Please note that our user-friendly version provides for a much nicer list with a website and a nice suggestion of other charities")
+	(printout t crlf "Please note that our user-friendly JAVA multi-platform version provides for a much nicer list with a website and a nice suggestion of other charities")
 
 	(printout t crlf "Our charity recommender recommends:")
 	(assert (get_recommendations))	
