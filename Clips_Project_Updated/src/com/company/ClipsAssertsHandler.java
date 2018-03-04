@@ -143,10 +143,10 @@ public class ClipsAssertsHandler {
                 low_ans.add("(assert (nameofvariable (name ratio_eff_low)(cf 0.4)(true_or_false TRUE)))");
                 low_ans.add("(assert (current_question charity_gov_compl))");
                 Vector<String> medium_ans = new Vector<>();
-                medium_ans.add("(assert (nameofvariable (name ratio_eff_med)(cf 0.5)(true_or_false TRUE)))");
+                medium_ans.add("(assert (nameofvariable (name ratio_eff_med)(cf 0.4)(true_or_false TRUE)))");
                 medium_ans.add("(assert (current_question charity_gov_compl))");
                 Vector<String> high_ans = new Vector<>();
-                high_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.8)(true_or_false TRUE)))");
+                high_ans.add("(assert (nameofvariable (name ratio_eff_high)(cf 0.4)(true_or_false TRUE)))");
                 high_ans.add("(assert (current_question charity_gov_compl))");
                 charity_fin_eff_hash.put("l", low_ans);
                 charity_fin_eff_hash.put("m", medium_ans);
@@ -754,7 +754,7 @@ public class ClipsAssertsHandler {
                 c_ans.add("(assert (current_question experience_employees))");
 
                 Vector<String> d_ans = new Vector<>();
-                d_ans.add("(assert (nameofvariable (name professional_contemporary_and_ethnic_dance)(cf 0.7)(true_or_false TRUE)))");
+                d_ans.add("(assert (nameofvariable (name diseases_and_illnessess_support_group)(cf 0.7)(true_or_false TRUE)))");
                 d_ans.add("(assert (current_question experience_employees))");
 
                 Vector<String> e_ans = new Vector<>();
