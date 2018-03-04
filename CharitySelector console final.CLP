@@ -330,8 +330,8 @@ c = corporate, i = individual (type in c/i and then press the ENTER button)? ")
 	(bind ?response (read))
 	(switch ?response
 		(case l then (assert (nameofvariable (name ratio_eff_low)(cf 0.4)(true_or_false TRUE))))
-		(case m then (assert (nameofvariable (name ratio_eff_med)(cf 0.5)(true_or_false TRUE))))
-		(case h then (assert (nameofvariable (name ratio_eff_high)(cf 0.8)(true_or_false TRUE))))
+		(case m then (assert (nameofvariable (name ratio_eff_med)(cf 0.4)(true_or_false TRUE))))
+		(case h then (assert (nameofvariable (name ratio_eff_high)(cf 0.4)(true_or_false TRUE))))
 	)
 )
 
