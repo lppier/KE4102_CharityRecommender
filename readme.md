@@ -1,4 +1,4 @@
-## KE4102 INTELLIGENT SYSTEMS AND TECHNIQUES FOR BUSINESS ANALYTICS Group Project 
+## GIVE@SG - A Charity Recommender for Singapore
 
 This was a group project demonstrating the use of CLIPS in the inference of rules in a rule-based system. The end result was a Java application that demonstrated how the user could get a set of charity recommendation results. 
 The base engine is a rule-based system based on CLIPS.
