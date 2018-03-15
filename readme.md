@@ -2,7 +2,7 @@
 
 This was a group project demonstrating the use of CLIPS in the inference of rules in a rule-based system. The end result was a Java application that demonstrated how the user could get a set of charity recommendation results. 
 The base engine is a rule-based system based on CLIPS.
-Machine learning techniques such as K-nearest neighbours clustering were used to derive more results from the original set of results. 
+Machine learning techniques such as K-nearest neighbours clustering were used to derive more results from the original set of results. Personally, I worked on the Java software development and the clips inference engine. 
 
 ## Team Members
 Anurag Chatterjee                     
